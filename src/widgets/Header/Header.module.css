@@ -1,0 +1,6 @@
+.header{position:sticky;top:0;z-index:50;backdrop-filter:saturate(140%) blur(10px);background:rgba(11,12,16,.7);border-bottom:1px solid rgba(255,255,255,.06)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+.logo{font-weight:700;color:var(--text);text-decoration:none}
+.nav a{color:var(--text);opacity:.9;margin:0 10px;text-decoration:none}
+.nav a.active{opacity:1;border-bottom:2px solid var(--brand)}
+.phone{color:var(--brand);text-decoration:none;font-weight:600}
