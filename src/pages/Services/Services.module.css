@@ -1,0 +1,9 @@
+.wrap.section{} /* используем общий .section */
+.grid{ display:grid; gap:16px }
+@media (min-width: 900px){ .grid{ grid-template-columns: repeat(2, minmax(0,1fr)) } }
+
+.item{ composes: card from global } /* берём .card из globals */
+.item h3{ margin:0 0 8px; font-size:20px }
+.item p{ margin:0; color: var(--muted) }
+
+.benefits{ composes: cleanList from global; margin-top:14px }

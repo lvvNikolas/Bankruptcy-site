@@ -1,0 +1,22 @@
+/* src/pages/FAQ/FAQ.module.css */
+.wrap.section{}
+.item{
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 16px;
+}
+.item + .item{ margin-top:12px }
+
+summary{
+  cursor:pointer; list-style:none; position:relative; font-weight:600
+}
+summary::marker{ display:none }
+summary::-webkit-details-marker{ display:none }
+summary::after{
+  content: "▾"; position:absolute; right:0; top:0; transform:translateY(2px);
+}
+details[open] summary::after{ transform: rotate(180deg) translateY(-2px) }
+
+p{ color: var(--muted); margin: 8px 0 0 }

@@ -1,12 +1,245 @@
+/* =========
+   Globals: профессиональная база (центрирование секций)
+   ========= */
+
+/* 1) Цвета, отступы, брейкпоинты, шрифты */
 :root{
-  --bg:#0b0c10; --surface:#111217;
-  --text:#f2f4f7; --muted:#98a2b3;
-  --brand:#d1a24c; --radius:16px;
+  /* Цвета */
+  --bg:#0b0c10;
+  --surface:#111217;
+  --surface-2:#1a1c22;
+  --text:#f2f4f7;
+  --muted:#98a2b3;
+  --brand:#d1a24c;
+  --success:#16a34a;
+  --warning:#f59e0b;
+  --danger:#ef4444;
+
+  /* Тени и скругления */
+  --radius:16px;
+  --radius-sm:12px;
   --shadow:0 6px 24px rgba(0,0,0,.35);
-  --maxw:1200px; --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --ring:0 0 0 3px rgba(209,162,76,.35);
+
+  /* Типографика и контейнер */
+  --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  --maxw:1200px;
+
+  /* Ритм и scale */
+  --space-1:6px;
+  --space-2:10px;
+  --space-3:14px;
+  --space-4:18px;
+  --space-5:24px;
+  --space-6:32px;
+  --space-7:40px;
+  --space-8:56px;
+
+  --fs-xs:12px;
+  --fs-sm:14px;
+  --fs-md:16px;
+  --fs-lg:18px;
+  --fs-xl:clamp(22px,2.4vw,28px);
+  --fs-2xl:clamp(28px,3.2vw,40px);
+  --fs-3xl:clamp(34px,4vw,52px);
+
+  /* Breakpoints */
+  --bp-sm:480px;
+  --bp-md:768px;
+  --bp-lg:1024px;
+  --bp-xl:1280px;
 }
-body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.55}
-a{color:var(--brand);text-decoration:none}
-.container{max-width:var(--maxw);margin:0 auto;padding:0 20px}
-h1{font-size:clamp(24px,3.2vw,40px);margin:0 0 12px}
-p{margin:0 0 12px}
+
+/* 2) Базовые стили + a11y */
+*{ box-sizing:border-box; }
+html,body,#root{ height:100%; }
+html{ scroll-behavior:smooth; }
+:target{ scroll-margin-top: 80px; }
+
+body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--text);
+  background:
+    radial-gradient(900px 500px at -10% 10%, rgba(56,189,248,.06), transparent 60%),
+    radial-gradient(1200px 600px at 70% -10%, rgba(209,162,76,.10), transparent 60%),
+    var(--bg);
+  line-height:1.6;
+  font-size:var(--fs-md);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+img,svg,video,canvas{ max-width:100%; height:auto; display:block; }
+button,input,textarea,select{ font:inherit; color:inherit; background:transparent; }
+
+::selection{ background:rgba(209,162,76,.25); color:var(--text); }
+
+/* 3) Контейнер, секции, типографика */
+.container{ max-width:var(--maxw); margin:0 auto; padding:0 20px; }
+
+.section{ padding: var(--space-8) 0; }
+.section .container{ text-align:center; }              /* ← центрируем контент секций */
+.sectionHead{
+  margin:0 0 var(--space-3);
+  font-size:var(--fs-2xl);
+  font-weight:700;
+  text-align:center;                                   /* ← заголовок по центру */
+}
+.sectionLead{
+  color:var(--muted);
+  max-width:760px;
+  margin:0 auto var(--space-5);                        /* ← фиксированная ширина + центр */
+  text-align:center;                                   /* ← лид по центру */
+}
+
+h1,h2,h3,h4{ line-height:1.25; margin:0 0 var(--space-3); }
+h1{ font-size:var(--fs-3xl); }
+h2{ font-size:var(--fs-2xl); }
+h3{ font-size:var(--fs-xl); }
+p{ margin:0 0 var(--space-3); }
+small{ font-size:var(--fs-sm); color:var(--muted); }
+
+/* 4) Ссылки и интерактив */
+a{
+  color:var(--brand);
+  text-decoration:none;
+  transition:opacity .15s ease, color .15s ease, border-color .15s ease;
+}
+a:hover{ opacity:.9; }
+a:focus-visible{ outline:none; box-shadow:var(--ring); border-radius:8px; }
+
+/* 5) Кнопки и инпуты */
+.btn{
+  appearance:none;
+  border:0;
+  border-radius:12px;
+  padding:12px 16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:transform .06s ease, box-shadow .15s ease, background-color .15s ease;
+}
+.btn:active{ transform:translateY(1px); }
+.btn:focus-visible{ outline:none; box-shadow:var(--ring); }
+
+.btn-primary{ background:var(--brand); color:#111217; }
+.btn-ghost{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.12); }
+.btn-surface{ background:var(--surface-2); color:var(--text); }
+
+/* Форма — по центру, но поля остаются на всю ширину */
+.input, .select, .textarea{
+  width:100%;
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,.12);
+  color:var(--text);
+  padding:12px 14px;
+  border-radius:12px;
+  transition:border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  text-align:left;                                     /* ← читаемость форм */
+  margin:0 auto;
+  max-width:560px;                                     /* ← удобно на широких экранах */
+}
+.input:focus, .select:focus, .textarea:focus{
+  outline:none; border-color:rgba(209,162,76,.45); box-shadow:var(--ring);
+}
+.help{ font-size:var(--fs-sm); color:var(--muted); }
+.error{ color:var(--danger); font-size:var(--fs-sm); }
+
+/* 6) Карточки и сетки */
+.card{
+  background:var(--surface);
+  border:1px solid rgba(255,255,255,.08);
+  color:var(--text);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:18px;
+}
+.cards{
+  display:grid;
+  gap:16px;
+  justify-items:center;                                /* ← содержимое card по центру */
+}
+@media (min-width: 900px){
+  .cards{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+
+/* 7) Утилиты отступов и текста */
+.mt-0{ margin-top:0!important; }
+.mt-1{ margin-top:var(--space-2)!important; }
+.mt-2{ margin-top:var(--space-3)!important; }
+.mt-3{ margin-top:var(--space-4)!important; }
+.mt-4{ margin-top:var(--space-5)!important; }
+
+.mb-0{ margin-bottom:0!important; }
+.mb-1{ margin-bottom:var(--space-2)!important; }
+.mb-2{ margin-bottom:var(--space-3)!important; }
+.mb-3{ margin-bottom:var(--space-4)!important; }
+.mb-4{ margin-bottom:var(--space-5)!important; }
+
+.text-muted{ color:var(--muted)!important; }
+.text-center{ text-align:center!important; }
+.text-left{ text-align:left!important; }
+
+/* Flex/Grid helpers для быстрого центрирования */
+.flex{ display:flex; }
+.flex-col{ flex-direction:column; }
+.items-center{ align-items:center; }
+.justify-center{ justify-content:center; }
+
+.grid{ display:grid; }
+.place-center{ place-items:center; }
+
+/* 8) Чистые списки с кастомными маркерами */
+.cleanList{ list-style:none; padding:0; margin:0; }
+.cleanList li{ padding-left:28px; position:relative; margin:10px 0; text-align:left; }
+.cleanList li::before{
+  content:"";
+  position:absolute; left:0; top:10px;
+  width:12px; height:12px; border-radius:50%;
+  border:2px solid var(--brand);
+}
+
+/* 9) Scrollbar (мягкий) */
+@supports selector(::-webkit-scrollbar){
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{
+    background:rgba(255,255,255,.15); border-radius:10px;
+    border:2px solid transparent; background-clip:padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.25); }
+}
+
+/* 10) Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+}
+
+/* 11) Мелочи для UX */
+hr{
+  border:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  margin: var(--space-6) 0;
+}
+
+/* бейдж */
+.badge{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:var(--fs-sm);
+  line-height:1;
+  border:1px solid rgba(255,255,255,.12);
+  background:var(--surface-2);
+  color:var(--text);
+}
+
+/* 12) Хэдер-оффсет для якорей (липкая шапка) */
+:target{ scroll-margin-top: 84px; }
+
+/* 13) Медиа-адаптация */
+@media (max-width: 900px){
+  .section{ padding: var(--space-6) 0; }
+  h1{ font-size: var(--fs-2xl); }
+  .sectionHead{ font-size: var(--fs-2xl); }
+}

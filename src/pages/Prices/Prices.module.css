@@ -1,0 +1,13 @@
+.wrap.section{}
+.grid{ display:grid; gap:16px; margin-top:16px }
+@media (min-width: 900px){ .grid{ grid-template-columns: repeat(3, minmax(0,1fr)) } }
+
+.plan{ composes: card from global; display:grid; gap:10px }
+.plan h3{ margin:0 }
+.amount{ font-size:28px; font-weight:700 }
+.note{ color: var(--muted); font-size:14px }
+.cta{ margin-top:8px }
+.cta button{
+  background: var(--brand); border:0; color:#111217;
+  padding:10px 14px; border-radius:12px; font-weight:600; cursor:pointer;
+}

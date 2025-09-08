@@ -1,15 +1,45 @@
-export default function Services(){
+type Props = { withHead?: boolean };
+import styles from "./Services.module.css";
+
+export default function Services({ withHead = true }: Props) {
   return (
-    <section>
-      <title>Услуги по банкротству физических лиц</title>
-      <meta name="description" content="Судебное и внесудебное банкротство, реструктуризация, сопровождение в судах." />
-      <h1>Услуги</h1>
-      <ul>
-        <li>Анализ ситуации и стратегии</li>
-        <li>Подготовка пакета документов</li>
-        <li>Сопровождение в суде, финансовый управляющий</li>
-        <li>Внесудебное банкротство (МФЦ)</li>
-      </ul>
+    <section id="uslugi" className={`${styles.wrap} section`}>
+      {withHead && (
+        <>
+          <title>Услуги по банкротству физических лиц</title>
+          <meta name="description" content="Судебное и внесудебное банкротство, реструктуризация, сопровождение в судах." />
+        </>
+      )}
+
+      <div className="container">
+        <h1 className="sectionHead">Услуги</h1>
+        <p className="sectionLead">Подберём оптимальную стратегию списания долгов и законно защитим ваши интересы.</p>
+
+        <div className={styles.grid}>
+          <div className={styles.item}>
+            <h3>Анализ и стратегия</h3>
+            <p>Оцениваем риски, активы, кредиторов. Формируем пошаговый план.</p>
+          </div>
+          <div className={styles.item}>
+            <h3>Подготовка документов</h3>
+            <p>Собираем и оформляем пакет для суда или МФЦ согласно 127-ФЗ.</p>
+          </div>
+          <div className={styles.item}>
+            <h3>Сопровождение в суде</h3>
+            <p>Представительство, взаимодействие с кредиторами, финансовый управляющий.</p>
+          </div>
+          <div className={styles.item}>
+            <h3>Внесудебное банкротство</h3>
+            <p>Полное сопровождение процедуры через МФЦ при выполнении условий.</p>
+          </div>
+        </div>
+
+        <ul className={styles.benefits}>
+          <li>Фиксированная стоимость работ</li>
+          <li>Прозрачный договор и сроки</li>
+          <li>Поддержка 7 дней в неделю</li>
+        </ul>
+      </div>
     </section>
-  )
+  );
 }
