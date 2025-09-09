@@ -1,0 +1,146 @@
+/* Контейнер кнопки */
+.wrap {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Кнопка */
+.fab {
+  background: var(--brand);
+  color: #111217;
+  font-weight: 600;
+  font-size: 15px;
+
+  border: none;
+  border-radius: 14px;
+  padding: 14px 22px 14px 44px; /* место под иконку ✉️ */
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.25),
+    0 0 0 2px rgba(209, 162, 76, 0.25);
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+
+  animation: pulse 3s infinite;
+  position: relative;
+}
+
+/* Иконка ✉️ */
+.fab::before {
+  content: "✉️";
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+}
+
+.fab:hover {
+  filter: brightness(1.08);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.35),
+    0 0 0 3px rgba(209, 162, 76, 0.35);
+  animation: none; /* отключаем пульсацию при наведении */
+}
+
+.fab:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 3px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(209, 162, 76, 0.25);
+}
+
+/* Анимация пульсации */
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(209, 162, 76, 0.45); }
+  70%  { box-shadow: 0 0 0 12px rgba(209, 162, 76, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(209, 162, 76, 0); }
+}
+
+/* Модалка */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  display: grid;
+  place-items: center;
+  z-index: 80;
+}
+
+.modal {
+  width: min(640px, calc(100vw - 32px));
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  padding: 24px;
+  position: relative;
+  animation: slideUp 0.25s ease both;
+}
+
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+}
+
+.lead {
+  color: var(--muted);
+  margin: 0 0 16px;
+  font-size: var(--fs-md);
+}
+
+.modalClose {
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-size: 22px;
+  cursor: pointer;
+  opacity: 0.8;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.modalClose:hover {
+  opacity: 1;
+  transform: rotate(90deg); /* ✕ чуть вращается при наведении */
+}
+
+/* Анимация модалки */
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* Мобильная версия: кнопка по центру */
+@media (max-width: 480px) {
+  .wrap {
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    justify-content: center;
+  }
+
+  .fab {
+    width: calc(100% - 40px);
+    max-width: 300px;
+    border-radius: 18px;
+    padding: 14px 22px 14px 44px;
+  }
+}
