@@ -1,0 +1,279 @@
+/* ========== Quiz.module.css (полная замена) ========== */
+
+/* --- Базовые размеры индикаторов (исключаем лэйаут-шифты) --- */
+:root{
+  --ind-size: 20px;     /* размер кружка/квадрата */
+  --ind-stroke: 2px;    /* толщина рамки индикатора */
+}
+
+/* Прогресс */
+.progressWrap{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  margin: 8px 0 16px;
+}
+.progressBar{
+  height: 100%;
+  width: 0%;
+  background: var(--brand);
+  transition: width .25s ease;
+}
+
+/* Сетка секции */
+.body{
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;          /* мобилка */
+}
+@media (min-width: 720px){
+  .body{ gap: 18px; }
+}
+@media (min-width: 900px){
+  .body{ grid-template-columns: 320px 1fr; } /* планшет/десктоп */
+}
+@media (min-width: 1280px){
+  .body{ grid-template-columns: 360px 1fr; }
+}
+
+/* Левая карточка-помощник */
+.assist{
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: left;
+}
+@media (min-width: 900px){
+  .assist{ position: sticky; top: 88px; } /* остаётся в зоне при скролле */
+}
+.manager{
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.avatar{
+  width: 48px; height: 48px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd19a, #b8803a);
+  box-shadow: 0 2px 10px rgba(0,0,0,.25) inset;
+}
+.managerName{ font-weight: 700; }
+.managerMeta{ font-size: 14px; color: var(--muted); }
+.note{ margin: 6px 0 12px; color: var(--text); opacity: .9; }
+
+/* Правая панель с вопросом/формой */
+.panel{
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: left;
+}
+@media (min-width: 720px){
+  .panel{ padding: 18px; }
+}
+@media (min-width: 1280px){
+  .panel{ padding: 22px; }
+}
+
+.qTitle{
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 800;
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+.qNum{
+  color: var(--brand);
+  margin-right: 6px;
+}
+
+/* Подсказка под заголовком для multiple */
+.hint{
+  color: var(--muted);
+  font-size: 14px;
+  margin: -4px 0 10px;
+}
+
+/* Варианты ответа */
+.options{
+  display: grid;
+  gap: 12px;
+}
+@media (min-width: 720px){
+  .options{ gap: 12px; }
+}
+
+/* Карточка ответа — без лэйаут-шифтов */
+.option{
+  display: grid;
+  grid-template-columns: var(--ind-size) 1fr;
+  gap: 12px;
+  align-items: center;
+
+  border: 1px solid rgba(255,255,255,.12); /* толщина фиксирована */
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+
+  transition:
+    border-color .15s ease,
+    background-color .15s ease,
+    box-shadow .15s ease,
+    filter .15s ease;
+  user-select: none;
+}
+.option:hover{ border-color: rgba(209,162,76,.35); }
+/* без translateY — ничего не «прыгает» */
+.option:active{ filter: brightness(0.98); }
+
+.optionChecked{
+  border-color: rgba(209,162,76,.65);
+  background: rgba(209,162,76,.06);
+  box-shadow: inset 0 0 0 3px rgba(209,162,76,.12); /* внутренняя подсветка */
+}
+
+.option input{ display: none; }
+
+/* Индикаторы выбора — фиксированный контейнер */
+.radio,
+.checkbox{
+  width: var(--ind-size);
+  height: var(--ind-size);
+  position: relative;
+  display: inline-block;
+
+  border: var(--ind-stroke) solid rgba(255,255,255,.5); /* толщина не меняем */
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+/* radio */
+.radio{ border-radius: 50%; }
+.optionChecked .radio{ border-color: var(--brand); }
+.radio::after{
+  content:"";
+  position:absolute; left:50%; top:50%;
+  width: calc(var(--ind-size) - 2*var(--ind-stroke) - 8px);
+  height: calc(var(--ind-size) - 2*var(--ind-stroke) - 8px);
+  border-radius: 50%;
+  background: var(--brand);
+  transform: translate(-50%,-50%) scale(0);
+  transition: transform .14s ease;
+}
+.optionChecked .radio::after{ transform: translate(-50%,-50%) scale(1); }
+
+/* checkbox */
+.checkbox{ border-radius: 5px; }
+.optionChecked .checkbox{ border-color: var(--brand); }
+.checkbox::after{
+  content:"";
+  position:absolute; left:50%; top:50%;
+  width: 8px; height: 14px;
+  border: 3px solid var(--brand);
+  border-top: 0; border-left: 0;
+  transform: translate(-50%,-55%) rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform .12s ease;
+}
+.optionChecked .checkbox::after{ transform: translate(-50%,-55%) rotate(45deg) scale(1); }
+
+/* Текст варианта */
+.label{
+  line-height: 1.45;
+  font-size: clamp(15px, 1.8vw, 16px);
+}
+
+/* Фокус клавиатурой — без сдвигов */
+.option:focus-within{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(209,162,76,.28);
+  border-color: rgba(209,162,76,.6);
+}
+
+/* Ошибки и навигация */
+.error{
+  margin-top: 8px;
+  color: #ef4444;
+  font-size: 14px;
+}
+.nav{
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+@media (max-width: 480px){
+  .nav{ gap: 8px; }
+}
+
+/* ==== Встроенная форма после завершения квиза ==== */
+.inlineFormWrap{
+  overflow: hidden;
+  animation: reveal .35s ease both;   /* мягкое появление блока */
+}
+
+@keyframes reveal{
+  from{ opacity:0; transform: translateY(10px); }
+  to  { opacity:1; transform: translateY(0); }
+}
+
+.resultTitle{
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 800;
+  margin: 0 0 10px;
+  text-align: left;
+}
+
+.summary{
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+  display: grid;
+  gap: 8px;
+}
+.summary li{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+  border: 1px solid rgba(255,255,255,.08);
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: left;
+}
+.summary li span{ color: var(--muted); font-size: 14px; }
+.summary li strong{ color: var(--text); font-weight: 700; }
+
+.inlineForm{
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: left; /* поля читаются лучше */
+}
+.inlineForm .input,
+.inlineForm .select,
+.inlineForm .textarea{
+  max-width: 100%; /* во встроенной форме поля на всю ширину карточки */
+}
+
+/* Микро-адаптация для очень маленьких экранов */
+@media (max-width: 360px){
+  .option{ grid-template-columns: 18px 1fr; padding: 12px; }
+  .label{ font-size: 14px; }
+}
+
+/* Предпочтение снижения анимаций */
+@media (prefers-reduced-motion: reduce){
+  *{
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -1,169 +1,184 @@
-/* =========
-   Globals: профессиональная база (центрирование секций)
-   ========= */
+/* =========================================================================
+   Global Styles — профессиональная база
+   Цели:
+   • единая цветовая система и масштаб
+   • аккуратное центрирование контента секций
+   • хорошие дефолты для типографики, кнопок и форм
+   • a11y: контраст, фокусы, reduced-motion
+   ========================================================================= */
 
-/* 1) Цвета, отступы, брейкпоинты, шрифты */
+/* 1) Дизайн-токены: цвета, размеры, сетка, типографика */
 :root{
-  /* Цвета */
-  --bg:#0b0c10;
-  --surface:#111217;
-  --surface-2:#1a1c22;
-  --text:#f2f4f7;
-  --muted:#98a2b3;
-  --brand:#d1a24c;
-  --success:#16a34a;
-  --warning:#f59e0b;
-  --danger:#ef4444;
+  /* Палитра */
+  --bg:        #0b0c10;
+  --surface:   #111217;
+  --surface-2: #1a1c22;
+  --text:      #f2f4f7;
+  --muted:     #98a2b3;
+  --brand:     #d1a24c;
+  --success:   #16a34a;
+  --warning:   #f59e0b;
+  --danger:    #ef4444;
 
-  /* Тени и скругления */
-  --radius:16px;
-  --radius-sm:12px;
-  --shadow:0 6px 24px rgba(0,0,0,.35);
-  --ring:0 0 0 3px rgba(209,162,76,.35);
+  /* Радиусы/тени/фокус-кольцо */
+  --radius:    16px;
+  --radius-sm: 12px;
+  --shadow:    0 6px 24px rgba(0,0,0,.35);
+  --ring:      0 0 0 3px rgba(209,162,76,.35);
 
-  /* Типографика и контейнер */
-  --font: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  --maxw:1200px;
+  /* Типографика + контейнер */
+  --font: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+          "Apple Color Emoji","Segoe UI Emoji";
+  --maxw: 1200px;
 
-  /* Ритм и scale */
-  --space-1:6px;
-  --space-2:10px;
-  --space-3:14px;
-  --space-4:18px;
-  --space-5:24px;
-  --space-6:32px;
-  --space-7:40px;
-  --space-8:56px;
+  /* Вертикальный ритм (шаги отступов) */
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 14px;
+  --space-4: 18px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --space-8: 56px;
 
-  --fs-xs:12px;
-  --fs-sm:14px;
-  --fs-md:16px;
-  --fs-lg:18px;
-  --fs-xl:clamp(22px,2.4vw,28px);
-  --fs-2xl:clamp(28px,3.2vw,40px);
-  --fs-3xl:clamp(34px,4vw,52px);
+  /* Размеры шрифтов (адаптив через clamp) */
+  --fs-xs: 12px;
+  --fs-sm: 14px;
+  --fs-md: 16px;
+  --fs-lg: 18px;
+  --fs-xl:  clamp(22px, 2.4vw, 28px);
+  --fs-2xl: clamp(28px, 3.2vw, 40px);
+  --fs-3xl: clamp(34px, 4vw, 52px);
 
-  /* Breakpoints */
-  --bp-sm:480px;
-  --bp-md:768px;
-  --bp-lg:1024px;
-  --bp-xl:1280px;
+  /* Точки перелома (для удобства в кастомных медиа) */
+  --bp-sm: 480px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1280px;
 }
 
-/* 2) Базовые стили + a11y */
-*{ box-sizing:border-box; }
-html,body,#root{ height:100%; }
-html{ scroll-behavior:smooth; }
-:target{ scroll-margin-top: 80px; }
+/* 2) Базовые дефолты + a11y */
+*{ box-sizing: border-box; }
+html, body, #root{ height:100%; }
+html{ scroll-behavior: smooth; }
+:target{ scroll-margin-top: 80px; } /* отступ для якорей под липкой шапкой */
 
 body{
-  margin:0;
-  font-family:var(--font);
-  color:var(--text);
+  margin: 0;
+  font-family: var(--font);
+  color: var(--text);
   background:
     radial-gradient(900px 500px at -10% 10%, rgba(56,189,248,.06), transparent 60%),
     radial-gradient(1200px 600px at 70% -10%, rgba(209,162,76,.10), transparent 60%),
     var(--bg);
-  line-height:1.6;
-  font-size:var(--fs-md);
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
+  line-height: 1.6;
+  font-size: var(--fs-md);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-img,svg,video,canvas{ max-width:100%; height:auto; display:block; }
-button,input,textarea,select{ font:inherit; color:inherit; background:transparent; }
+img, svg, video, canvas{ display:block; max-width:100%; height:auto; }
+button, input, textarea, select{
+  font: inherit; color: inherit; background: transparent;
+}
 
-::selection{ background:rgba(209,162,76,.25); color:var(--text); }
+::selection{ background: rgba(209,162,76,.25); color: var(--text); }
 
-/* 3) Контейнер, секции, типографика */
-.container{ max-width:var(--maxw); margin:0 auto; padding:0 20px; }
+/* 3) Контейнер, секции и типографика */
+.container{
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 20px;
+}
 
+/* Секции имеют вертикальные поля, контент по центру */
 .section{ padding: var(--space-8) 0; }
-.section .container{ text-align:center; }              /* ← центрируем контент секций */
+.section .container{ text-align: center; }
+
 .sectionHead{
-  margin:0 0 var(--space-3);
-  font-size:var(--fs-2xl);
-  font-weight:700;
-  text-align:center;                                   /* ← заголовок по центру */
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-2xl);
+  font-weight: 700;
+  text-align: center;
 }
 .sectionLead{
-  color:var(--muted);
-  max-width:760px;
-  margin:0 auto var(--space-5);                        /* ← фиксированная ширина + центр */
-  text-align:center;                                   /* ← лид по центру */
+  color: var(--muted);
+  max-width: 760px;
+  margin: 0 auto var(--space-5);
+  text-align: center;
 }
 
 h1,h2,h3,h4{ line-height:1.25; margin:0 0 var(--space-3); }
-h1{ font-size:var(--fs-3xl); }
-h2{ font-size:var(--fs-2xl); }
-h3{ font-size:var(--fs-xl); }
-p{ margin:0 0 var(--space-3); }
-small{ font-size:var(--fs-sm); color:var(--muted); }
+h1{ font-size: var(--fs-3xl); }
+h2{ font-size: var(--fs-2xl); }
+h3{ font-size: var(--fs-xl); }
+p{ margin: 0 0 var(--space-3); }
+small{ font-size: var(--fs-sm); color: var(--muted); }
 
-/* 4) Ссылки и интерактив */
+/* 4) Ссылки и интерактивные состояния */
 a{
-  color:var(--brand);
-  text-decoration:none;
-  transition:opacity .15s ease, color .15s ease, border-color .15s ease;
+  color: var(--brand);
+  text-decoration: none;
+  transition: opacity .15s ease, color .15s ease, border-color .15s ease;
 }
-a:hover{ opacity:.9; }
-a:focus-visible{ outline:none; box-shadow:var(--ring); border-radius:8px; }
+a:hover{ opacity: .9; }
+a:focus-visible{ outline:none; box-shadow: var(--ring); border-radius: 8px; }
 
-/* 5) Кнопки и инпуты */
+/* 5) Кнопки и поля форм (универсальные стили) */
 .btn{
-  appearance:none;
-  border:0;
-  border-radius:12px;
-  padding:12px 16px;
-  font-weight:600;
-  cursor:pointer;
-  transition:transform .06s ease, box-shadow .15s ease, background-color .15s ease;
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .15s ease, background-color .15s ease, filter .15s ease;
 }
-.btn:active{ transform:translateY(1px); }
-.btn:focus-visible{ outline:none; box-shadow:var(--ring); }
+.btn:active{ transform: translateY(1px); }
+.btn:focus-visible{ outline:none; box-shadow: var(--ring); }
 
-.btn-primary{ background:var(--brand); color:#111217; }
-.btn-ghost{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,.12); }
-.btn-surface{ background:var(--surface-2); color:var(--text); }
+.btn-primary{ background: var(--brand); color: #111217; }
+.btn-ghost{ background: transparent; color: var(--text); border: 1px solid rgba(255,255,255,.12); }
+.btn-surface{ background: var(--surface-2); color: var(--text); }
 
-/* Форма — по центру, но поля остаются на всю ширину */
+/* Поля форм: центрируем блок, но текст внутри выравниваем слева */
 .input, .select, .textarea{
-  width:100%;
-  background:var(--surface);
-  border:1px solid rgba(255,255,255,.12);
-  color:var(--text);
-  padding:12px 14px;
-  border-radius:12px;
-  transition:border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-  text-align:left;                                     /* ← читаемость форм */
-  margin:0 auto;
-  max-width:560px;                                     /* ← удобно на широких экранах */
+  width: 100%;
+  max-width: 560px;             /* комфортно на десктопе */
+  margin: 0 auto;               /* центр блока поля */
+  text-align: left;             /* читабельность текста */
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.12);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 .input:focus, .select:focus, .textarea:focus{
-  outline:none; border-color:rgba(209,162,76,.45); box-shadow:var(--ring);
+  outline: none; border-color: rgba(209,162,76,.45); box-shadow: var(--ring);
 }
-.help{ font-size:var(--fs-sm); color:var(--muted); }
-.error{ color:var(--danger); font-size:var(--fs-sm); }
+.help{ font-size: var(--fs-sm); color: var(--muted); }
+.error{ color: var(--danger); font-size: var(--fs-sm); }
 
 /* 6) Карточки и сетки */
 .card{
-  background:var(--surface);
-  border:1px solid rgba(255,255,255,.08);
-  color:var(--text);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:18px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  color: var(--text);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
 }
 .cards{
-  display:grid;
-  gap:16px;
-  justify-items:center;                                /* ← содержимое card по центру */
+  display: grid;
+  gap: 16px;
+  justify-items: center; /* содержимое карточек по центру */
 }
 @media (min-width: 900px){
   .cards{ grid-template-columns: repeat(3, minmax(0,1fr)); }
 }
 
-/* 7) Утилиты отступов и текста */
+/* 7) Утилиты отступов/выравнивания (минимальный набор) */
 .mt-0{ margin-top:0!important; }
 .mt-1{ margin-top:var(--space-2)!important; }
 .mt-2{ margin-top:var(--space-3)!important; }
@@ -176,70 +191,96 @@ a:focus-visible{ outline:none; box-shadow:var(--ring); border-radius:8px; }
 .mb-3{ margin-bottom:var(--space-4)!important; }
 .mb-4{ margin-bottom:var(--space-5)!important; }
 
-.text-muted{ color:var(--muted)!important; }
+.text-muted{ color: var(--muted)!important; }
 .text-center{ text-align:center!important; }
 .text-left{ text-align:left!important; }
 
-/* Flex/Grid helpers для быстрого центрирования */
-.flex{ display:flex; }
-.flex-col{ flex-direction:column; }
-.items-center{ align-items:center; }
-.justify-center{ justify-content:center; }
+/* Flex/Grid helpers: быстро центрируем контент */
+.flex{ display: flex; }
+.flex-col{ flex-direction: column; }
+.items-center{ align-items: center; }
+.justify-center{ justify-content: center; }
 
-.grid{ display:grid; }
-.place-center{ place-items:center; }
+.grid{ display: grid; }
+.place-center{ place-items: center; }
 
-/* 8) Чистые списки с кастомными маркерами */
-.cleanList{ list-style:none; padding:0; margin:0; }
-.cleanList li{ padding-left:28px; position:relative; margin:10px 0; text-align:left; }
+/* 8) Списки с кастомными маркерами */
+.cleanList{ list-style: none; padding: 0; margin: 0; }
+.cleanList li{
+  position: relative;
+  margin: 10px 0;
+  padding-left: 28px;
+  text-align: left;
+}
 .cleanList li::before{
-  content:"";
-  position:absolute; left:0; top:10px;
-  width:12px; height:12px; border-radius:50%;
-  border:2px solid var(--brand);
+  content: "";
+  position: absolute; left: 0; top: 10px;
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 2px solid var(--brand);
 }
 
-/* 9) Scrollbar (мягкий) */
+/* 9) Кастомный скроллбар (поддерживаемые браузеры) */
 @supports selector(::-webkit-scrollbar){
   ::-webkit-scrollbar{ width:10px; height:10px; }
-  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-track{ background: transparent; }
   ::-webkit-scrollbar-thumb{
-    background:rgba(255,255,255,.15); border-radius:10px;
-    border:2px solid transparent; background-clip:padding-box;
+    background: rgba(255,255,255,.15);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
-  ::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,.25); }
+  ::-webkit-scrollbar-thumb:hover{ background: rgba(255,255,255,.25); }
 }
 
-/* 10) Reduced motion */
+/* 10) Reduce motion — уважение системных настроек */
 @media (prefers-reduced-motion: reduce){
-  *{ animation:none!important; transition:none!important; scroll-behavior:auto!important; }
+  *{
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-/* 11) Мелочи для UX */
+/* 11) Мелочи UX */
 hr{
-  border:0; height:1px;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  border: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
   margin: var(--space-6) 0;
 }
 
-/* бейдж */
+/* Бейдж */
 .badge{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:999px;
-  font-size:var(--fs-sm);
-  line-height:1;
-  border:1px solid rgba(255,255,255,.12);
-  background:var(--surface-2);
-  color:var(--text);
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: var(--fs-sm);
+  line-height: 1;
+  border: 1px solid rgba(255,255,255,.12);
+  background: var(--surface-2);
+  color: var(--text);
 }
 
-/* 12) Хэдер-оффсет для якорей (липкая шапка) */
+/* 12) Хэдер-оффсет для якорей (если высота шапки растёт) */
 :target{ scroll-margin-top: 84px; }
 
-/* 13) Медиа-адаптация */
+/* 13) Адаптив секций/заголовков на планшетах и ниже */
 @media (max-width: 900px){
   .section{ padding: var(--space-6) 0; }
   h1{ font-size: var(--fs-2xl); }
   .sectionHead{ font-size: var(--fs-2xl); }
+}
+
+/* 14) Вспомогательная анимация «подсветить секцию»
+   Используется, например, при переходе к форме из квиза */
+.flash-pulse{
+  animation: ringFlash 1.2s ease-out 1;
+  border-radius: var(--radius);
+}
+
+
+
+@keyframes ringFlash{
+  0%   { box-shadow: 0 0 0 0 rgba(209,162,76,0); }
+  40%  { box-shadow: 0 0 0 8px rgba(209,162,76,.35); }
+  100% { box-shadow: 0 0 0 0 rgba(209,162,76,0); }
 }
