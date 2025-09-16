@@ -1,12 +1,12 @@
-/* ========== Quiz.module.css (полная замена) ========== */
+/* ========== Quiz.module.css (полная версия) ========== */
 
-/* --- Базовые размеры индикаторов (исключаем лэйаут-шифты) --- */
+/* — Базовые размеры индикаторов (без лэйаут-шифтов) — */
 :root{
-  --ind-size: 20px;     /* размер кружка/квадрата */
-  --ind-stroke: 2px;    /* толщина рамки индикатора */
+  --ind-size: 20px;      /* размер кружка/квадрата */
+  --ind-stroke: 2px;     /* толщина рамки индикатора */
 }
 
-/* Прогресс */
+/* ---------- Прогресс ---------- */
 .progressWrap{
   height: 8px;
   border-radius: 999px;
@@ -14,18 +14,37 @@
   overflow: hidden;
   margin: 8px 0 16px;
 }
+
+/* Ширина задаётся inline-стилем; внутри — разовый шиммер */
 .progressBar{
+  position: relative;
   height: 100%;
   width: 0%;
   background: var(--brand);
   transition: width .25s ease;
+  overflow: hidden;
+}
+.progressBar::after{
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 36px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  opacity: 0;
+  transform: translateX(100%);
+  animation: progressShimmer .7s ease .05s both;
+}
+@keyframes progressShimmer{
+  0%   { opacity: 0;  transform: translateX(100%); }
+  15%  { opacity: .55; }
+  100% { opacity: 0;  transform: translateX(-220%); }
 }
 
-/* Сетка секции */
+/* ---------- Сетка секции ---------- */
 .body{
   display: grid;
   gap: 16px;
-  grid-template-columns: 1fr;          /* мобилка */
+  grid-template-columns: 1fr;               /* мобилка */
 }
 @media (min-width: 720px){
   .body{ gap: 18px; }
@@ -37,7 +56,7 @@
   .body{ grid-template-columns: 360px 1fr; }
 }
 
-/* Левая карточка-помощник */
+/* ---------- Левая карточка-помощник ---------- */
 .assist{
   background: var(--surface);
   border: 1px solid rgba(255,255,255,.08);
@@ -47,7 +66,7 @@
   text-align: left;
 }
 @media (min-width: 900px){
-  .assist{ position: sticky; top: 88px; } /* остаётся в зоне при скролле */
+  .assist{ position: sticky; top: 88px; }
 }
 .manager{
   display: grid;
@@ -65,7 +84,7 @@
 .managerMeta{ font-size: 14px; color: var(--muted); }
 .note{ margin: 6px 0 12px; color: var(--text); opacity: .9; }
 
-/* Правая панель с вопросом/формой */
+/* ---------- Правая панель с вопросом/формой ---------- */
 .panel{
   background: var(--surface);
   border: 1px solid rgba(255,255,255,.08);
@@ -92,62 +111,70 @@
   margin-right: 6px;
 }
 
-/* Подсказка под заголовком для multiple */
 .hint{
   color: var(--muted);
   font-size: 14px;
   margin: -4px 0 10px;
 }
 
-/* Варианты ответа */
+/* ---------- Варианты ответа ---------- */
 .options{
-  display: grid;
-  gap: 12px;
+  display: grid; gap: 12px;
 }
 @media (min-width: 720px){
   .options{ gap: 12px; }
 }
 
-/* Карточка ответа — без лэйаут-шифтов */
+/* Карточка ответа — без сдвигов */
 .option{
+  position: relative;                           /* для эффекта Ping */
   display: grid;
   grid-template-columns: var(--ind-size) 1fr;
   gap: 12px;
   align-items: center;
 
-  border: 1px solid rgba(255,255,255,.12); /* толщина фиксирована */
+  border: 1px solid rgba(255,255,255,.12);
   border-radius: 14px;
   padding: 14px;
   cursor: pointer;
 
-  transition:
-    border-color .15s ease,
-    background-color .15s ease,
-    box-shadow .15s ease,
-    filter .15s ease;
+  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease, filter .15s ease;
   user-select: none;
 }
 .option:hover{ border-color: rgba(209,162,76,.35); }
-/* без translateY — ничего не «прыгает» */
-.option:active{ filter: brightness(0.98); }
+.option:active{ filter: brightness(.98); }
 
+/* Состояние выбора + деликатная «вспышка» */
 .optionChecked{
   border-color: rgba(209,162,76,.65);
   background: rgba(209,162,76,.06);
-  box-shadow: inset 0 0 0 3px rgba(209,162,76,.12); /* внутренняя подсветка */
+  box-shadow: inset 0 0 0 3px rgba(209,162,76,.12);
+}
+.optionChecked::after{
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 14px; pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(209,162,76,.25);
+  opacity: 0;
+  animation: selectPing .45s ease-out both;
+}
+@keyframes selectPing{
+  0%   { opacity: 0;  box-shadow: 0 0 0 0 rgba(209,162,76,0); }
+  35%  { opacity: .25; box-shadow: 0 0 0 6px rgba(209,162,76,.22); }
+  100% { opacity: 0;  box-shadow: 0 0 0 16px rgba(209,162,76,0); }
 }
 
+/* Реальные input спрятаны — кликаем по label */
 .option input{ display: none; }
 
-/* Индикаторы выбора — фиксированный контейнер */
+/* Индикаторы */
 .radio,
 .checkbox{
   width: var(--ind-size);
   height: var(--ind-size);
   position: relative;
   display: inline-block;
-
-  border: var(--ind-stroke) solid rgba(255,255,255,.5); /* толщина не меняем */
+  border: var(--ind-stroke) solid rgba(255,255,255,.5);
   transition: border-color .15s ease, background-color .15s ease;
 }
 
@@ -176,8 +203,7 @@
   border: 3px solid var(--brand);
   border-top: 0; border-left: 0;
   transform: translate(-50%,-55%) rotate(45deg) scale(0);
-  transform-origin: center;
-  transition: transform .12s ease;
+  transform-origin: center; transition: transform .12s ease;
 }
 .optionChecked .checkbox::after{ transform: translate(-50%,-55%) rotate(45deg) scale(1); }
 
@@ -194,31 +220,25 @@
   border-color: rgba(209,162,76,.6);
 }
 
-/* Ошибки и навигация */
+/* ---------- Ошибки и навигация ---------- */
 .error{
-  margin-top: 8px;
-  color: #ef4444;
-  font-size: 14px;
+  margin-top: 8px; color: #ef4444; font-size: 14px;
 }
 .nav{
-  display: flex;
-  gap: 10px;
-  justify-content: flex-end;
-  margin-top: 16px;
+  display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px;
 }
 @media (max-width: 480px){
   .nav{ gap: 8px; }
 }
 
-/* ==== Встроенная форма после завершения квиза ==== */
+/* ---------- Встроенная форма после завершения квиза ---------- */
 .inlineFormWrap{
   overflow: hidden;
-  animation: reveal .35s ease both;   /* мягкое появление блока */
+  animation: reveal .35s ease both;
 }
-
 @keyframes reveal{
-  from{ opacity:0; transform: translateY(10px); }
-  to  { opacity:1; transform: translateY(0); }
+  from{ opacity: 0; transform: translateY(10px); }
+  to  { opacity: 1; transform: translateY(0); }
 }
 
 .resultTitle{
@@ -229,17 +249,11 @@
 }
 
 .summary{
-  list-style: none;
-  padding: 0;
-  margin: 0 0 14px;
-  display: grid;
-  gap: 8px;
+  list-style: none; padding: 0; margin: 0 0 14px;
+  display: grid; gap: 8px;
 }
 .summary li{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  align-items: baseline;
+  display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: baseline;
   border: 1px solid rgba(255,255,255,.08);
   background: var(--surface-2);
   border-radius: 12px;
@@ -248,6 +262,14 @@
 }
 .summary li span{ color: var(--muted); font-size: 14px; }
 .summary li strong{ color: var(--text); font-weight: 700; }
+
+/* Предпочтительный канал связи (после квиза) */
+.contactPref{
+  margin: 4px 0 10px;
+  color: var(--muted);
+  font-size: 14px;
+}
+.contactPref strong{ color: var(--text); }
 
 .inlineForm{
   margin-top: 12px;
@@ -264,16 +286,18 @@
   max-width: 100%; /* во встроенной форме поля на всю ширину карточки */
 }
 
-/* Микро-адаптация для очень маленьких экранов */
+/* ---------- Микро-адаптация ---------- */
 @media (max-width: 360px){
   .option{ grid-template-columns: 18px 1fr; padding: 12px; }
   .label{ font-size: 14px; }
 }
 
-/* Предпочтение снижения анимаций */
+/* ---------- Уважение к reduced motion ---------- */
 @media (prefers-reduced-motion: reduce){
-  *{
-    transition: none !important;
+  .progressBar,
+  .progressBar::after,
+  .optionChecked::after{
     animation: none !important;
+    transition: none !important;
   }
 }

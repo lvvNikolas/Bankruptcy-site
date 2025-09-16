@@ -1,6 +1,8 @@
-import { useMemo, useRef, useState } from "react";
+// src/widgets/Quiz/Quiz.tsx
+import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./Quiz.module.css";
 import LeadForm from "@features/LeadForm/LeadForm";
+import Modal from "@shared/ui/Modal/Modal";
 
 /** Вариант ответа */
 type Option = { id: string; label: string };
@@ -13,7 +15,7 @@ type Question = {
   multiple?: boolean;
 };
 
-/** Конфигурация опроса (5 вопросов) */
+/** Конфигурация опроса (6 вопросов) */
 const QUESTIONS: Question[] = [
   {
     id: "debt_total",
@@ -44,7 +46,7 @@ const QUESTIONS: Question[] = [
   {
     id: "property",
     title: "Есть ли имущество, оформленное на вас?",
-    multiple: true, // ← многовариантный вопрос
+    multiple: true,
     options: [
       { id: "none", label: "нет" },
       { id: "car", label: "машина" },
@@ -52,6 +54,16 @@ const QUESTIONS: Question[] = [
       { id: "flat", label: "квартира" },
       { id: "house", label: "дача / частный дом" },
       { id: "other", label: "другое" },
+    ],
+  },
+  {
+    id: "loans",
+    title: "Есть автокредит или ипотека?",
+    options: [
+      { id: "mortgage", label: "Ипотека" },
+      { id: "carloan", label: "Автокредит" },
+      { id: "both", label: "И то и то" },
+      { id: "none", label: "Нет" },
     ],
   },
   {
@@ -67,26 +79,60 @@ const QUESTIONS: Question[] = [
 
 /** Значение ответа: строка (radio) или массив строк (checkbox) */
 type AnswerValue = string | string[];
-
+type Answers = Record<string, AnswerValue>;
 type Props = { withHead?: boolean };
+
+/** ключи для localStorage */
+const LS_KEY = {
+  step: "quiz.step",
+  answers: "quiz.answers",
+  completed: "quiz.completed",
+} as const;
 
 export default function Quiz({ withHead = true }: Props) {
   const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
+  const [answers, setAnswers] = useState<Answers>({});
   const [error, setError] = useState("");
-  const [completed, setCompleted] = useState(false); // ← режим: квиз закончен, показываем форму
+  const [completed, setCompleted] = useState(false);     // показ встроенной формы
+  const [showQualify, setShowQualify] = useState(false); // модал «вы подходите»
   const formRef = useRef<HTMLDivElement | null>(null);
 
   const total = QUESTIONS.length;
   const q = QUESTIONS[step];
 
-  /** Процент прогресса */
+  /** Прогресс (когда показываем форму — считаем 100%) */
   const progress = useMemo(
     () => Math.round(((completed ? total : step + 1) / total) * 100),
     [step, total, completed]
   );
 
-  /** Проверяем, есть ли ответ на текущий вопрос */
+  /** ====== восстановление состояния ====== */
+  useEffect(() => {
+    try {
+      const savedStep = Number(localStorage.getItem(LS_KEY.step) ?? "0");
+      const savedAnswers = JSON.parse(localStorage.getItem(LS_KEY.answers) ?? "{}") as Answers;
+      const savedCompleted = localStorage.getItem(LS_KEY.completed) === "1";
+      if (savedStep >= 0 && savedStep < total) setStep(savedStep);
+      if (savedAnswers && typeof savedAnswers === "object") setAnswers(savedAnswers);
+      if (savedCompleted) setCompleted(true);
+    } catch {
+      /* ignore */
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /** ====== сохранение состояния ====== */
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_KEY.step, String(step));
+      localStorage.setItem(LS_KEY.answers, JSON.stringify(answers));
+      localStorage.setItem(LS_KEY.completed, completed ? "1" : "0");
+    } catch {
+      /* приватный режим / квота — ок */
+    }
+  }, [step, answers, completed]);
+
+  /** валидация текущего шага */
   const isAnswered = (question: Question) => {
     const val = answers[question.id];
     if (question.multiple) return Array.isArray(val) && val.length > 0;
@@ -94,13 +140,11 @@ export default function Quiz({ withHead = true }: Props) {
   };
   const canProceed = completed ? true : isAnswered(q);
 
-  /** Выбор одного варианта (radio) */
+  /** выбор */
   const selectSingle = (qid: string, id: string) => {
     setAnswers((prev) => ({ ...prev, [qid]: id }));
-    setError("");
+    if (error) setError("");
   };
-
-  /** Тоггл для чекбоксов (multiple) */
   const toggleMulti = (qid: string, id: string) => {
     setAnswers((prev) => {
       const prevVal = prev[qid];
@@ -108,10 +152,10 @@ export default function Quiz({ withHead = true }: Props) {
       const next = arr.includes(id) ? arr.filter((x) => x !== id) : [...arr, id];
       return { ...prev, [qid]: next };
     });
-    setError("");
+    if (error) setError("");
   };
 
-  /** Следующий шаг */
+  /** шаги */
   const next = () => {
     if (!isAnswered(q)) {
       setError("Выберите вариант(ы) ответа");
@@ -119,39 +163,56 @@ export default function Quiz({ withHead = true }: Props) {
     }
     if (step < total - 1) setStep((s) => s + 1);
   };
-
-  /** Назад */
   const back = () => {
     if (completed) return; // в режиме формы назад не ходим
     setStep((s) => Math.max(0, s - 1));
   };
 
-  /** Завершение опроса → раскрыть встроенную форму */
+  /** завершение → модал «поздравляем» */
   const finish = () => {
     if (!isAnswered(q)) {
       setError("Выберите вариант(ы) ответа");
       return;
     }
-    // здесь можно отправить ответы в аналитику/CRM
+    // сюда можно отправить answers в аналитику/CRM
     console.log("quiz:", answers);
-    setCompleted(true);
+    setShowQualify(true);
+  };
 
-    // подождём кадр, чтобы DOM применил класс анимации, потом проскроллим к форме
+  /** перейти к форме из модалки */
+  const proceedToForm = () => {
+    setShowQualify(false);
+    setCompleted(true);
     requestAnimationFrame(() => {
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   };
 
-  /** Резюме ответов для вывода над формой */
+  /** «Пройти заново» */
+  const resetAll = () => {
+    setStep(0);
+    setAnswers({});
+    setError("");
+    setCompleted(false);
+    setShowQualify(false);
+    try {
+      localStorage.removeItem(LS_KEY.step);
+      localStorage.removeItem(LS_KEY.answers);
+      localStorage.removeItem(LS_KEY.completed);
+    } catch {}
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  /** резюме ответов для панели «Ваш результат» */
   const summary = useMemo(() => {
     const map = new Map<string, string>();
     for (const question of QUESTIONS) {
       const val = answers[question.id];
       if (val === undefined) continue;
       if (question.multiple) {
-        const arr = (val as string[]).map(
-          (id) => question.options.find((o) => o.id === id)?.label
-        ).filter(Boolean) as string[];
+        const arr = (val as string[])
+          .map((id) => question.options.find((o) => o.id === id)?.label)
+          .filter(Boolean) as string[];
         if (arr.length) map.set(question.title, arr.join(", "));
       } else {
         const label = question.options.find((o) => o.id === val)?.label;
@@ -161,13 +222,31 @@ export default function Quiz({ withHead = true }: Props) {
     return Array.from(map.entries());
   }, [answers]);
 
+  /** клавиатурная навигация (блокируем, когда открыт модал) */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (completed || showQualify) return;
+      if (e.key === "Enter") {
+        e.preventDefault();
+        step < total - 1 ? next() : finish();
+      } else if (e.key === "ArrowRight") {
+        next();
+      } else if (e.key === "ArrowLeft") {
+        back();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, completed, showQualify, answers]);
+
   return (
     <section id="quiz" className="section">
       <div className="container">
         {withHead && (
           <>
             <h2 className="sectionHead">
-              Ответьте на 5 вопросов и получите персональную консультацию
+              Ответьте на 6 вопросов и получите персональную консультацию
             </h2>
             <p className="sectionLead">
               Результат носит предварительный характер — юрист подтвердит детали по телефону.
@@ -175,13 +254,17 @@ export default function Quiz({ withHead = true }: Props) {
           </>
         )}
 
-        {/* прогресс-бар */}
+        {/* прогресс (key — перезапуск анимации полосы) */}
         <div className={styles.progressWrap} aria-label={`Прогресс: ${progress}%`}>
-          <div className={styles.progressBar} style={{ width: `${progress}%` }} />
+          <div
+            key={`${step}-${completed ? 1 : 0}`}
+            className={styles.progressBar}
+            style={{ width: `${progress}%` }}
+          />
         </div>
 
         <div className={styles.body}>
-          {/* Левая карточка-ассистент */}
+          {/* ассистент слева */}
           <aside className={styles.assist}>
             <div className={styles.manager}>
               <div className={styles.avatar} aria-hidden />
@@ -190,24 +273,25 @@ export default function Quiz({ withHead = true }: Props) {
                 <div className={styles.managerMeta}>Юрист практики банкротства</div>
               </div>
             </div>
+
             {!completed ? (
               <>
                 <p className={styles.note}>
-                  Ответьте ещё на {total - (step + 1)} вопрос(а), чтобы мы точнее оценили ваш кейс.
+                  Ответьте ещё на {Math.max(total - (step + 1), 0)} вопрос(а), чтобы мы точнее оценили ваш кейс.
                 </p>
                 <small className="text-muted">Шаг: {step + 1}/{total}</small>
               </>
             ) : (
               <>
                 <p className={styles.note}>
-                  Оставьте контакты — подготовим для вас план действий и назовём сроки/стоимость.
+                  Оставьте контакты — подготовим план действий и назовём сроки/стоимость.
                 </p>
                 <small className="text-muted">Шаг: {total}/{total}</small>
               </>
             )}
           </aside>
 
-          {/* Правая панель: либо вопросы, либо встроенная форма */}
+          {/* правая панель */}
           <div className={styles.panel}>
             {!completed ? (
               <>
@@ -219,7 +303,7 @@ export default function Quiz({ withHead = true }: Props) {
                   <div className={styles.hint}>* можно выбрать несколько вариантов ответа</div>
                 )}
 
-                {/* Варианты */}
+                {/* варианты */}
                 <div className={styles.options}>
                   {q.options.map((opt) => {
                     const checked = q.multiple
@@ -250,10 +334,14 @@ export default function Quiz({ withHead = true }: Props) {
                   })}
                 </div>
 
-                {/* Ошибка */}
-                {error && <div className={styles.error}>{error}</div>}
+                {/* ошибка шага */}
+                {error && (
+                  <div className={styles.error} role="alert" aria-live="polite">
+                    {error}
+                  </div>
+                )}
 
-                {/* Навигация */}
+                {/* навигация */}
                 <div className={styles.nav}>
                   <button
                     type="button"
@@ -286,11 +374,15 @@ export default function Quiz({ withHead = true }: Props) {
                 </div>
               </>
             ) : (
-              /* === Режим результата: резюме ответов + встроенная форма === */
+              // режим «результат + форма»
               <div ref={formRef} className={styles.inlineFormWrap}>
-                <h3 className={styles.resultTitle}>Ваш результат</h3>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12 }}>
+                  <h3 className={styles.resultTitle}>Ваш результат</h3>
+                  <button type="button" className="btn btn-ghost" onClick={resetAll}>
+                    Пройти заново
+                  </button>
+                </div>
 
-                {/* компактное резюме ответов */}
                 {summary.length > 0 && (
                   <ul className={styles.summary}>
                     {summary.map(([key, val]) => (
@@ -303,14 +395,78 @@ export default function Quiz({ withHead = true }: Props) {
                 )}
 
                 <div className={styles.inlineForm}>
-                  {/* если в LeadForm есть поддержка hidden-полей — можно передать answers/summary */}
-                  <LeadForm />
+                  <LeadForm context="quiz" />
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+
+      {/* Модалка-вердикт перед формой */}
+     <Modal
+  open={showQualify}
+  onClose={() => setShowQualify(false)}
+  title=""
+  width={560}
+>
+  <div style={{ textAlign: "left" }}>
+    {/* Заголовок */}
+    <h3
+      style={{
+        fontSize: "20px",
+        fontWeight: 700,
+        margin: "0 0 12px 0",
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+      }}
+    >
+      <span role="img" aria-label="party">🎉</span>
+      Поздравляем! Вы подходите под процедуру банкротства
+    </h3>
+
+    {/* Текст */}
+    <p style={{ marginTop: 0, marginBottom: 12, color: "var(--muted)" }}>
+      По вашим ответам вы потенциально подходите под процедуру. Юрист уточнит детали
+      и расскажет, как именно она пройдёт в вашем случае.
+    </p>
+
+    <ul style={{ margin: "0 0 16px 18px", opacity: 0.9 }}>
+      <li>оценим сроки и стоимость под вашу ситуацию;</li>
+      <li>подскажем, какие документы понадобятся;</li>
+      <li>ответим на любые вопросы.</li>
+    </ul>
+
+    {/* Кнопки */}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: 16,
+        marginTop: 24,
+        paddingBottom: 8, // отступ снизу
+      }}
+    >
+      <button
+        type="button"
+        className="btn btn-ghost"
+        style={{ minWidth: 180, height: 44 }}
+        onClick={() => setShowQualify(false)}
+      >
+        Изменить ответы
+      </button>
+      <button
+        type="button"
+        className="btn btn-primary"
+        style={{ minWidth: 180, height: 44 }}
+        onClick={proceedToForm}
+      >
+        Перейти к форме
+      </button>
+    </div>
+  </div>
+</Modal>
     </section>
   );
 }
