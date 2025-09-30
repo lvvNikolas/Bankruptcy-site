@@ -1,0 +1,109 @@
+/* src/pages/Debts/Debts.module.css */
+
+/* Акцент в заголовке */
+.red{ color: var(--brand, #d3a24c); }
+
+/* ——— Отступы секции + разделитель сверху, чтобы не сливалось с «Услугами» ——— */
+.section{
+  position: relative;
+  padding-top: 36px;       /* сверху добавили воздуха */
+  padding-bottom: 8px;
+  scroll-margin-top: 88px; /* якорь не уезжает под шапку */
+}
+.section::before{
+  content:"";
+  position: absolute; inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+  top: 0;
+}
+
+/* ——— Сетка колонок ——— */
+.grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-top: 16px;
+}
+@media (min-width: 900px){
+  .grid{ grid-template-columns: 1fr 1fr; gap: 40px; }
+}
+
+/* Заголовки колонок */
+.titleRow{
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px;
+}
+.colTitle{
+  margin: 0; line-height: 1.2; font-weight: 800;
+  font-size: clamp(18px, 2.1vw, 22px);
+}
+.colOk{ color: var(--brand, #d3a24c); }
+.colNo{ color: var(--text, #e7e7e7); }
+.lock{ opacity: .75; }
+
+/* Чипы — авто-сетка */
+.chips{
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+@media (min-width: 560px){
+  .chips{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Чип */
+.chip{
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--surface, #17191f);
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 6px 22px rgba(0,0,0,.25);
+  color: var(--text,#eaeaea);
+  font-weight: 600;
+  line-height: 1.25;
+  transition: border-color .15s ease, background-color .15s ease, filter .15s ease, transform .06s ease;
+}
+.chip:hover{ border-color: rgba(209,162,76,.35); filter: brightness(1.02); }
+.chip:active{ transform: translateY(1px); }
+
+/* Крупная иконка в круглой подложке */
+.ico{
+  display: grid; place-items: center;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.06), rgba(255,255,255,0) 60%), rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: inset 0 0 0 4px rgba(0,0,0,.20);
+  flex: 0 0 36px;
+}
+.ico :global(svg){
+  width: 20px; height: 20px;  /* ← размер самих иконок */
+}
+
+/* Правая колонка — пассивный вид */
+.disabled .chip{
+  background: rgba(255,255,255,.04);
+  color: var(--muted, #9aa3b2);
+  border-color: rgba(255,255,255,.06);
+  box-shadow: none;
+}
+.disabled .ico{ opacity: .75; }
+
+/* ——— Адаптив (всегда внизу) ——— */
+@media (max-width: 480px){
+  .section{ padding-top: 28px; }
+  .chip{ padding: 12px 14px; border-radius: 14px; gap: 10px; }
+  .ico{ width: 34px; height: 34px; flex-basis: 34px; }
+  .ico :global(svg){ width: 19px; height: 19px; }
+}
+
+@media (max-width: 360px){
+  .chip{ padding: 10px 12px; }
+  .ico{ width: 32px; height: 32px; flex-basis: 32px; }
+  .ico :global(svg){ width: 18px; height: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .chip{ transition: none !important; }
+}

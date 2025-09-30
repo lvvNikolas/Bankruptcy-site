@@ -5,6 +5,7 @@ import Prices from "@pages/Prices/Prices";
 import FAQ from "@pages/FAQ/FAQ";
 import Contacts from "@pages/Contacts/Contacts";
 import Quiz from "@pages/Quiz/Quiz";
+import Debts from "../Debts/Debts";
 import styles from "./Home.module.css";
 
 export default function Home() {
@@ -30,6 +31,7 @@ export default function Home() {
 
       {/* те же страницы как секции лендинга — без <title>/<meta> */}
       <Services withHead={false} />
+      <Debts withHead={false} />
       <Process withHead={false} />
       <Quiz   withHead={false} />
       <Prices withHead={false} />

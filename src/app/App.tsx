@@ -14,6 +14,7 @@ import Process from "@pages/Process/Process";
 import Prices from "@pages/Prices/Prices";
 import FAQ from "@pages/FAQ/FAQ";
 import Contacts from "@pages/Contacts/Contacts";
+import Debts from "@/pages/Debts/Debts";
 
 /** 404 */
 function NotFound() {
@@ -38,6 +39,7 @@ export default function App() {
     { path: "/ceny", element: <Prices /> },
     { path: "/faq", element: <FAQ /> },
     { path: "/kontakty", element: <Contacts /> },
+    {path: "/dolgi", element: <Debts /> },
     { path: "*", element: <NotFound /> }, // 404
   ]);
 
