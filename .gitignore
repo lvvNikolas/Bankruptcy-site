@@ -1,4 +1,6 @@
+# =========================
 # Logs
+# =========================
 logs
 *.log
 npm-debug.log*
@@ -7,18 +9,81 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# =========================
+# Dependency directories
+# =========================
+node_modules/
+.pnp
+.pnp.js
 
-# Editor directories and files
+# =========================
+# Build outputs
+# =========================
+dist/
+dist-ssr/
+.next/
+out/
+build/
+coverage/
+.cache/
+.cache-loader/
+tmp/
+temp/
+
+# =========================
+# Environment files
+# =========================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# =========================
+# System / Editor files
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
 .vscode/*
 !.vscode/extensions.json
-.idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# =========================
+# Miscellaneous
+# =========================
+*.local
+*.lock-wscript
+*.tsbuildinfo
+yarn.lock
+pnpm-lock.yaml
+package-lock.json
+
+# =========================
+# Runtime / Cache
+# =========================
+npm-cache/
+.yarn/
+.yarn-cache/
+.parcel-cache/
+.eslintcache
+.next/static/
+.next/cache/
+.vercel/
+firebase-debug.log
+firebase-debug.*
+functions/node_modules/
+
+# =========================
+# Optional: design & media
+# =========================
+*.psd
+*.ai
+*.sketch
+*.zip
+*.bak
+*.tmp
