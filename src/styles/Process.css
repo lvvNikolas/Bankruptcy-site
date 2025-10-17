@@ -1,0 +1,71 @@
+/* ===== Process — глобальные стили ===== */
+
+.process-wrap.section {}
+
+.process-timeline {
+  position: relative;
+  margin-top: 24px;
+  padding-left: 2px;
+}
+
+/* Вертикальная линия */
+.process-timeline::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Шаг */
+.process-step {
+  position: relative;
+  padding-left: 48px;
+  margin: 18px 0;
+}
+
+/* Номер шага */
+.process-badge {
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2px solid var(--brand);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* Заголовок и описание */
+.process-title {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.process-desc {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+/* Адаптив */
+@media (max-width: 480px) {
+  .process-step {
+    padding-left: 42px;
+  }
+  .process-badge {
+    width: 26px;
+    height: 26px;
+    font-size: 14px;
+  }
+  .process-title {
+    font-size: 17px;
+  }
+}

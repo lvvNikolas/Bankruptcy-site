@@ -1,0 +1,124 @@
+/* ====== Секция и заголовки ====== */
+.cases-sectionPad { padding-top: var(--space-8); padding-bottom: var(--space-8); }
+.cases-titleBlock { margin-bottom: var(--space-6); }
+.cases-green { color: var(--success); }
+
+/* ====== Слайдер ====== */
+.cases-slider { position: relative; }
+.cases-viewport {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+.cases-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: min(100%, 360px);
+  gap: 16px;
+  padding-bottom: 8px;
+}
+.cases-card {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  scroll-snap-align: start;
+  display: grid;
+  gap: 12px;
+}
+.cases-cardCenter { justify-items: start; }
+
+.cases-cardHead {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+.cases-avatar { width: 36px; height: 36px; display: grid; place-items: center; background: var(--surface-2); border-radius: 50%; }
+.cases-name { font-weight: 600; }
+.cases-stars { color: #eab308; }
+
+.cases-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.cases-badgeGreen {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  font-size: var(--fs-sm); line-height: 1; border: 1px solid rgba(255,255,255,.12);
+  background: rgba(22,163,74,.1); color: var(--text);
+}
+.cases-badgeCase {
+  display: inline-block; padding: 4px 10px; border-radius: 999px;
+  font-size: var(--fs-sm); line-height: 1; border: 1px solid rgba(255,255,255,.12);
+  background: var(--surface-2); color: var(--text);
+}
+
+.cases-text { color: var(--text); opacity: .95; }
+
+.cases-more {
+  appearance: none; border: 0; background: transparent; color: var(--brand);
+  font-weight: 600; cursor: pointer; text-decoration: none;
+  padding: 0; line-height: 1.2; transition: opacity .15s ease;
+}
+.cases-more:hover { opacity: .85; }
+
+/* Стрелки */
+.cases-arrows {
+  display: flex; justify-content: center; gap: 12px; margin-top: 12px;
+}
+.cases-arrow {
+  width: 36px; height: 36px; border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: var(--surface-2);
+  display: grid; place-items: center; cursor: pointer;
+  transition: filter .15s ease, opacity .15s ease;
+}
+.cases-arrow:hover { filter: brightness(1.05); }
+.cases-arrow:disabled { opacity: .5; cursor: default; }
+.cases-arrowLeft {}
+.cases-arrowRight {}
+
+/* Точки (пагинация) */
+.cases-dots { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+.cases-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,.25); border: 0;
+}
+.cases-dotActive { background: var(--brand); }
+
+/* ====== Модалка ====== */
+.cases-modalOverlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  backdrop-filter: blur(2px);
+  display: grid; place-items: center;
+  padding: 20px;
+  z-index: 1000;
+}
+.cases-modal {
+  width: 100%; max-width: 640px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  animation: cases-fadeIn .2s ease;
+}
+@keyframes cases-fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.cases-modalHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.cases-modalTitle { margin: 0; font-size: var(--fs-xl); }
+.cases-modalClose {
+  appearance: none; border: 0; background: transparent; color: var(--text);
+  font-size: 22px; line-height: 1; cursor: pointer; padding: 6px; border-radius: 10px;
+}
+.cases-modalClose:focus-visible { outline: none; box-shadow: var(--ring); }
+.cases-modalFooter { margin-top: 16px; display: flex; justify-content: flex-end; }
+
+/* Доп. мета под заголовком в модалке */
+.cases-fullMeta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+/* ====== Адаптив ====== */
+@media (max-width: 640px) {
+  .cases-track { grid-auto-columns: 88%; }
+  .cases-modal { padding: 16px; }
+}

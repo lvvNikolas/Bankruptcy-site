@@ -1,0 +1,534 @@
+/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================================
+   LeadForm.css — профессиональные стили формы (глобальные классы)
+   Использование:
+     - корневой контейнер формы:     class="leadform"
+     - строка (поле + ошибка):       class="leadform-row"
+     - сообщение об ошибке:          class="leadform-error"
+     - чекбокс согласия:             class="leadform-agree"
+     - экран "спасибо":              class="leadform-thanks"
+   Зависимости:
+     - переменные из globals.css: --surface, --text, --brand, --ring, --radius, --space-*
+   ========================================================================= */
+
+/* 1) Обёртка формы: сетка + комфортная ширина */
+.leadform {
+  display: grid;
+  grid-gap: 12px;
+  gap: 12px;                    /* базовый вертикальный ритм */
+  max-width: 560px;             /* удобно на десктопах */
+  width: 100%;
+  margin: 0 auto;               /* центрируем, если форма отдельный блок */
+  background: var(--surface);   /* лёгкая карточка (по желанию) */
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  box-shadow: var(--shadow);
+}
+
+/* 2) Строка формы: поле + возможная ошибка под ним */
+.leadform-row {
+  display: grid;
+  grid-gap: 6px;
+  gap: 6px;
+  text-align: left;             /* ошибки и подписи выравниваем слева */
+}
+
+/* 3) Текстовые поля — только внутри .leadform
+      (чтобы не влиять на другие инпуты на сайте) */
+.leadform :where(
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"],
+  input:not([type="checkbox"])
+) {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.10);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  -webkit-appearance: none;
+}
+
+/* Плейсхолдер — мягче */
+.leadform :where(input)::placeholder {
+  color: rgba(242,244,247,.55);
+}
+
+/* Фокус — фирменное кольцо */
+.leadform :where(input:focus) {
+  outline: none;
+  border-color: rgba(209,162,76,.45);
+  box-shadow: var(--ring); /* определяется в globals.css */
+}
+
+/* Валидация: подсветка ошибок через aria-invalid */
+.leadform :where(input[aria-invalid="true"]) {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.20);
+}
+
+/* 4) Сообщение об ошибке (под полем) */
+.leadform-error {
+  color: #ef4444;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+/* 5) Чекбокс согласия: сетка для галочки и текста */
+.leadform-agree {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  grid-gap: 10px;
+  gap: 10px;
+  align-items: start;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Нативный чекбокс с брендовым акцентом */
+.leadform-agree input[type="checkbox"] {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand);  /* поддержка в современных браузерах */
+  cursor: pointer;
+}
+
+/* Ссылка в тексте согласия */
+.leadform-agree a {
+  color: var(--brand);
+  text-decoration: none;
+}
+.leadform-agree a:hover { opacity: .9; }
+
+/* 6) Кнопка отправки — состояния дизейбла
+      (используешь глобальные .btn .btn-primary, здесь лишь доп. поведение) */
+.leadform button[aria-disabled="true"],
+.leadform button:disabled {
+  opacity: .75;
+  cursor: default;
+}
+
+/* 7) Экран "Спасибо" после отправки */
+.leadform-thanks {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  text-align: center;
+  animation: leadform-fadeIn .3s ease;
+}
+@keyframes leadform-fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 8) Адаптивные мелочи */
+@media (max-width: 480px) {
+  .leadform { gap: 10px; padding: var(--space-5); }
+  .leadform-row { gap: 5px; }
+  .leadform-agree { grid-template-columns: 16px 1fr; font-size: 13px; }
+  .leadform-agree input[type="checkbox"] { width:16px; height:16px; }
+}
+
+/* 9) Предпочтение снижения анимаций */
+@media (prefers-reduced-motion: reduce) {
+  .leadform,
+  .leadform * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/DebtsChats.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/* ===== DebtsChat — секция без теней/градиентов ===== */
+
+.debtschat-section{
+  background: var(--section-bg, #0f1217);
+  min-height: 100vh;                      /* на полный экран */
+  display: grid;
+  align-items: center;
+  padding-block: clamp(48px, 6vh, 96px);
+  margin-block: clamp(56px, 8vh, 96px);
+  border-block: 1px solid rgba(255,255,255,.06);
+  isolation: isolate;
+}
+
+/* Контейнер-сцена с чат-баблами */
+.debtschat-stage{
+  display: grid;
+  grid-gap: clamp(18px, 3vh, 28px);
+  gap: clamp(18px, 3vh, 28px);
+}
+
+/* Строка бабла (левая/правая) */
+.debtschat-row{
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  grid-gap: 12px;
+  gap: 12px;
+
+  transform: translateY(18px);
+  opacity: 0;
+  transition: opacity .45s ease, transform .45s ease;
+}
+.debtschat-revealed{
+  transform: none;
+  opacity: 1;
+}
+
+/* Выравнивание влево/вправо */
+.debtschat-left  { grid-template-columns: auto 1fr; justify-content: start; }
+.debtschat-right { grid-template-columns: 1fr auto; justify-content: end; }
+
+/* Сам «бабл» */
+.debtschat-bubble{
+  max-width: min(860px, 88vw);
+  background: var(--surface, #12151b);
+  color: var(--text, #eaeaea);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 20px;
+  padding: clamp(14px, 2.2vh, 20px) clamp(18px, 2.6vh, 24px);
+  position: relative;
+  line-height: 1.5;
+  font-size: clamp(16px, 2.1vw, 18px);
+}
+
+/* Хвостики без теней */
+.debtschat-left  .debtschat-bubble{ border-top-left-radius: 10px 14px; }
+.debtschat-left  .debtschat-bubble::before{
+  content:"";
+  position: absolute;
+  left: -10px; bottom: 12px;
+  width: 12px; height: 12px;
+  background: var(--surface, #12151b);
+  border-left: 1px solid rgba(255,255,255,.10);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  transform: rotate(45deg);
+}
+.debtschat-right .debtschat-bubble{ border-top-right-radius: 10px 14px; }
+.debtschat-right .debtschat-bubble::before{
+  content:"";
+  position: absolute;
+  right: -10px; bottom: 12px;
+  width: 12px; height: 12px;
+  background: var(--surface, #12151b);
+  border-right: 1px solid rgba(255,255,255,.10);
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  transform: rotate(-45deg);
+}
+
+/* Внутри HTML (поддерживаем <mark>/<strong>) */
+.debtschat-bubble mark   { background: rgba(209,162,76,.18); color: inherit; padding: 0 .15em; border-radius: 4px; }
+.debtschat-bubble strong { font-weight: 800; letter-spacing: .2px; }
+
+/* Аватар / заглушка */
+.debtschat-avatar{
+  width: clamp(44px, 6vw, 56px);
+  height: clamp(44px, 6vw, 56px);
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.10);
+  display: grid;
+  place-items: center;
+  color: var(--text, #eaeaea);
+  font-weight: 800;
+}
+.debtschat-avatarStub{ font-size: clamp(18px, 3vw, 22px); }
+
+/* Мобильные подстройки */
+@media (max-width: 560px){
+  .debtschat-bubble{
+    border-radius: 16px;
+  }
+  .debtschat-left  .debtschat-bubble::before,
+  .debtschat-right .debtschat-bubble::before{
+    bottom: 10px;
+  }
+}
+
+/* Уважение к reduce-motion */
+@media (prefers-reduced-motion: reduce){
+  .debtschat-row{
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+/*!*****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Quiz.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************/
+/* ====== Индикаторы размеров ====== */
+:root{
+  --ind-size: 20px;
+  --ind-stroke: 2px;
+}
+
+/* ---------- Прогресс ---------- */
+.quiz-progressWrap{
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  margin: 8px 0 16px;
+}
+.quiz-progressBar{
+  position: relative;
+  height: 100%;
+  width: 0%;
+  background: var(--brand);
+  transition: width .25s ease;
+  overflow: hidden;
+}
+.quiz-progressBar::after{
+  content: "";
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 36px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  opacity: 0;
+  transform: translateX(100%);
+  animation: quiz-progressShimmer .7s ease .05s both;
+}
+@keyframes quiz-progressShimmer{
+  0%   { opacity: 0;  transform: translateX(100%); }
+  15%  { opacity: .55; }
+  100% { opacity: 0;  transform: translateX(-220%); }
+}
+
+/* ---------- Сетка секции ---------- */
+.quiz-body{
+  display: grid; grid-gap: 16px; gap: 16px; grid-template-columns: 1fr;
+}
+@media (min-width: 720px){  .quiz-body{ gap: 18px; } }
+@media (min-width: 900px){  .quiz-body{ grid-template-columns: 320px 1fr; } }
+@media (min-width: 1280px){ .quiz-body{ grid-template-columns: 360px 1fr; } }
+
+/* ---------- Левая карточка ---------- */
+.quiz-assist{
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: left;
+}
+@media (min-width: 900px){ .quiz-assist{ position: -webkit-sticky; position: sticky; top: 88px; } }
+
+.quiz-manager{
+  display: grid; grid-template-columns: 48px 1fr; grid-gap: 10px; gap: 10px; align-items: center; margin-bottom: 10px;
+}
+.quiz-avatar{
+  width: 48px; height: 48px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd19a, #b8803a);
+  box-shadow: 0 2px 10px rgba(0,0,0,.25) inset;
+}
+.quiz-managerName{ font-weight: 700; }
+.quiz-managerMeta{ font-size: 14px; color: var(--muted); }
+.quiz-note{ margin: 6px 0 12px; color: var(--text); opacity: .9; }
+
+/* ---------- Правая панель ---------- */
+.quiz-panel{
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px; text-align: left;
+}
+@media (min-width: 720px){  .quiz-panel{ padding: 18px; } }
+@media (min-width: 1280px){ .quiz-panel{ padding: 22px; } }
+
+.quiz-qTitle{
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 800;
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+.quiz-qNum{ color: var(--brand); margin-right: 6px; }
+
+.quiz-hint{ color: var(--muted); font-size: 14px; margin: -4px 0 10px; }
+
+/* ---------- Варианты ответа ---------- */
+.quiz-options{ display: grid; grid-gap: 12px; gap: 12px; }
+@media (min-width: 720px){ .quiz-options{ gap: 12px; } }
+
+.quiz-option{
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--ind-size) 1fr;
+  grid-gap: 12px;
+  gap: 12px; align-items: center;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 14px; cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease, filter .15s ease;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+.quiz-option:hover{ border-color: rgba(209,162,76,.35); }
+.quiz-option:active{ filter: brightness(.98); }
+
+.quiz-optionChecked{
+  border-color: rgba(209,162,76,.65);
+  background: rgba(209,162,76,.06);
+  box-shadow: inset 0 0 0 3px rgba(209,162,76,.12);
+}
+.quiz-optionChecked::after{
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: 14px; pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(209,162,76,.25);
+  opacity: 0;
+  animation: quiz-selectPing .45s ease-out both;
+}
+@keyframes quiz-selectPing{
+  0%   { opacity: 0;  box-shadow: 0 0 0 0 rgba(209,162,76,0); }
+  35%  { opacity: .25; box-shadow: 0 0 0 6px rgba(209,162,76,.22); }
+  100% { opacity: 0;  box-shadow: 0 0 0 16px rgba(209,162,76,0); }
+}
+
+/* прячем реальные inputs */
+.quiz-option input{ display: none; }
+
+/* Индикаторы */
+.quiz-radio,
+.quiz-checkbox{
+  width: var(--ind-size); height: var(--ind-size);
+  position: relative; display: inline-block;
+  border: var(--ind-stroke) solid rgba(255,255,255,.5);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+
+/* radio */
+.quiz-radio{ border-radius: 50%; }
+.quiz-optionChecked .quiz-radio{ border-color: var(--brand); }
+.quiz-radio::after{
+  content:""; position:absolute; left:50%; top:50%;
+  width: calc(var(--ind-size) - 2*var(--ind-stroke) - 8px);
+  height: calc(var(--ind-size) - 2*var(--ind-stroke) - 8px);
+  border-radius: 50%; background: var(--brand);
+  transform: translate(-50%,-50%) scale(0);
+  transition: transform .14s ease;
+}
+.quiz-optionChecked .quiz-radio::after{ transform: translate(-50%,-50%) scale(1); }
+
+/* checkbox */
+.quiz-checkbox{ border-radius: 5px; }
+.quiz-optionChecked .quiz-checkbox{ border-color: var(--brand); }
+.quiz-checkbox::after{
+  content:""; position:absolute; left:50%; top:50%;
+  width: 8px; height: 14px;
+  border: 3px solid var(--brand);
+  border-top: 0; border-left: 0;
+  transform: translate(-50%,-55%) rotate(45deg) scale(0);
+  transform-origin: center;
+  transition: transform .12s ease;
+}
+.quiz-optionChecked .quiz-checkbox::after{ transform: translate(-50%,-55%) rotate(45deg) scale(1); }
+
+/* Текст варианта */
+.quiz-label{ line-height: 1.45; font-size: clamp(15px, 1.8vw, 16px); }
+
+/* Фокус: без сдвигов */
+.quiz-option:focus-within{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(209,162,76,.28);
+  border-color: rgba(209,162,76,.6);
+}
+
+/* ---------- Ошибки и навигация ---------- */
+.quiz-error{ margin-top: 8px; color: #ef4444; font-size: 14px; }
+.quiz-nav{ display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; }
+@media (max-width: 480px){ .quiz-nav{ gap: 8px; } }
+
+/* ---------- Встроенная форма ---------- */
+.quiz-inlineFormWrap{
+  overflow: hidden; animation: quiz-reveal .35s ease both;
+}
+@keyframes quiz-reveal{
+  from{ opacity: 0; transform: translateY(10px); }
+  to  { opacity: 1; transform: translateY(0); }
+}
+.quiz-resultTitle{
+  font-size: clamp(18px, 2.2vw, 22px); font-weight: 800; margin: 0 0 10px; text-align: left;
+}
+.quiz-summary{
+  list-style: none; padding: 0; margin: 0 0 14px; display: grid; grid-gap: 8px; gap: 8px;
+}
+.quiz-summary li{
+  display: grid; grid-template-columns: 1fr auto; grid-gap: 8px; gap: 8px; align-items: baseline;
+  border: 1px solid rgba(255,255,255,.08);
+  background: var(--surface-2);
+  border-radius: 12px; padding: 10px 12px; text-align: left;
+}
+.quiz-summary li span{ color: var(--muted); font-size: 14px; }
+.quiz-summary li strong{ color: var(--text); font-weight: 700; }
+
+.quiz-inlineForm{
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  text-align: left;
+}
+.quiz-inlineForm .input,
+.quiz-inlineForm .select,
+.quiz-inlineForm .textarea{ max-width: 100%; }
+
+/* ---------- Модалка-вердикт ---------- */
+.quiz-modalOverlay{
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.5);
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+  display: grid; place-items: center;
+  padding: 20px; z-index: 1000;
+}
+.quiz-modal{
+  width: 100%; max-width: 560px;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  animation: quiz-fadeIn .2s ease;
+}
+@keyframes quiz-fadeIn{
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.quiz-modalTitle{ margin: 0; font-size: 20px; font-weight: 700; }
+.quiz-modalClose{
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; border: 0; background: transparent; color: var(--text);
+  font-size: 22px; line-height: 1; cursor: pointer; padding: 6px; border-radius: 10px;
+}
+.quiz-modalClose:focus-visible{ outline: none; box-shadow: var(--ring); }
+.quiz-modalFooter{ margin-top: 16px; display: flex; justify-content: center; gap: 16px; }
+
+/* ---------- Микро-адаптация ---------- */
+@media (max-width: 360px){
+  .quiz-option{ grid-template-columns: 18px 1fr; padding: 12px; }
+  .quiz-label{ font-size: 14px; }
+}
+
+/* ---------- Reduce motion ---------- */
+@media (prefers-reduced-motion: reduce){
+  .quiz-progressBar,
+  .quiz-progressBar::after,
+  .quiz-optionChecked::after,
+  .quiz-modal{ animation: none !important; transition: none !important; }
+}

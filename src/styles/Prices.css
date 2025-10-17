@@ -1,0 +1,35 @@
+/* Prices — глобальные стили без CSS-modules */
+
+.prices-wrap.section {}
+
+.prices-grid {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+@media (min-width: 900px) {
+  .prices-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.prices-plan {
+  display: grid;
+  gap: 10px;
+  /* .card уже задаёт фон/бордер/радиус/тень из globals.css */
+}
+
+.prices-plan h3 { margin: 0; }
+
+.prices-amount {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.prices-note {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0; /* чуть чище поток */
+}
+
+.prices-cta { margin-top: 8px; }
+
+/* Кнопки — используем глобальные .btn .btn-primary */

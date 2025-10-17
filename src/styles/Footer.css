@@ -1,0 +1,56 @@
+/* ===== Footer — глобальная версия без CSS-modules ===== */
+
+.footer {
+  background: #0b0c10;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 40px;
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.footer-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding: 32px 0;
+}
+
+.footer-heading {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.footer-brand {
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--brand, #d3a24c);
+  font-size: 18px;
+}
+
+.footer-copy {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Ссылки — общий стиль */
+.footer a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.footer a:hover {
+  color: var(--brand, #d3a24c);
+}
+
+/* Адаптив */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}

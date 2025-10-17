@@ -1,0 +1,50 @@
+/* ===== Header — глобальные стили без CSS-modules ===== */
+
+.header{
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(17,18,23,.85), rgba(17,18,23,.55));
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.header-row{ display:flex; align-items:center; gap:14px; min-height:56px; }
+.header-logo{ font-weight:800; letter-spacing:.2px; color:var(--text); text-decoration:none; }
+
+.header-phone{
+  margin-left:auto; color:var(--brand); font-weight:700; display:none;
+  text-decoration:none;
+}
+
+/* desktop nav */
+.header-navDesktop{
+  margin-left:auto; display:none; gap:18px; align-items:center;
+}
+.header-navDesktop a{ color:var(--text); opacity:.9; text-decoration:none; }
+.header-navDesktop a:hover{ opacity:1; }
+
+.header-cta{ padding: 8px 12px; }
+
+/* burger */
+.header-burger{
+  margin-left:auto; width:36px; height:28px; display:grid; place-items:center; gap:4px; cursor:pointer;
+}
+.header-burger span{ display:block; width:22px; height:2px; background:var(--text); border-radius:2px; }
+.header-toggle{ display:none; }
+
+/* mobile nav */
+.header-navMobile{
+  position:fixed; inset:56px 0 auto 0; /* под шапкой */
+  background: rgba(17,18,23,.98);
+  display:none; flex-direction:column; gap:14px; padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.header-navMobile a{ color:var(--text); text-decoration:none; }
+
+.header-toggle:checked ~ .header-navMobile{ display:flex; }
+
+/* responsive */
+@media (min-width: 1024px){
+  .header-burger, .header-navMobile{ display:none; }
+  .header-navDesktop{ display:flex; }
+  .header-phone{ display:block; }
+}

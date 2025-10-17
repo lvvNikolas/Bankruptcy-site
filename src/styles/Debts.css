@@ -1,0 +1,117 @@
+/* ===== Debts — ПОЛНАЯ ЗАМЕНА БЕЗ ТЕНЕЙ/ГРАДИЕНТОВ ===== */
+
+/* Акцент в заголовке */
+.debts-accent { color: var(--brand, #d3a24c); }
+
+/* Секция — самостоятельная «полоса» */
+.debts-section{
+  background: var(--section-bg, #0f1217);
+  margin-block: clamp(56px, 8vh, 96px);
+  padding-block: clamp(48px, 6vh, 96px);
+  border-block: 1px solid rgba(255,255,255,.06);
+  position: relative;
+  isolation: isolate;
+}
+.debts-backdrop { position: absolute; inset: 0; pointer-events: none; }
+
+/* Хедер секции */
+.debts-hero { text-align: center; }
+.debts-heroTitle {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.2;
+}
+.debts-heroLead {
+  color: var(--muted);
+  max-width: 760px;
+  margin: 8px auto 0;
+}
+
+/* Сетка двух колонок */
+.debts-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-top: 16px;
+}
+@media (min-width: 900px){
+  .debts-grid{
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+/* Заголовки колонок */
+.debts-titleRow{
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.debts-colTitle{
+  margin: 0; line-height: 1.2; font-weight: 800;
+  font-size: clamp(18px, 2.1vw, 22px);
+}
+.debts-colOk{ color: var(--brand, #d3a24c); }
+.debts-colNo{ color: var(--text, #e7e7e7); }
+.debts-lock{ opacity: .75; }
+
+/* Сетка «чипов» */
+.debts-chips{
+  list-style: none; padding: 0; margin: 0;
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+@media (min-width: 560px){
+  .debts-chips{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Чип — без теней/градиентов */
+.debts-chip{
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: 16px;
+
+  background: var(--surface, #12151b);
+  border: 1px solid rgba(255,255,255,.10);
+
+  color: var(--text,#eaeaea);
+  font-weight: 600; line-height: 1.25;
+
+  transition: border-color .15s ease, background-color .15s ease, transform .06s ease;
+}
+.debts-chip:hover{ border-color: rgba(209,162,76,.35); }
+.debts-chip:active{ transform: translateY(1px); }
+
+/* Иконка — простой круг */
+.debts-ico{
+  display: grid; place-items: center;
+  width: 36px; height: 36px; flex: 0 0 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+}
+.debts-ico svg{ width: 20px; height: 20px; }
+
+/* Правая колонка «нельзя» — приглушение */
+.debts-disabled .debts-chip{
+  background: rgba(255,255,255,.04);
+  color: var(--muted, #9aa3b2);
+  border-color: rgba(255,255,255,.06);
+}
+.debts-disabled .debts-ico{ opacity: .8; }
+
+/* Адаптив */
+@media (max-width: 480px){
+  .debts-section{ padding-block: 36px; }
+  .debts-chip{ padding: 12px 14px; border-radius: 14px; gap: 10px; }
+  .debts-ico{ width: 34px; height: 34px; flex-basis: 34px; }
+  .debts-ico svg{ width: 19px; height: 19px; }
+}
+@media (max-width: 360px){
+  .debts-chip{ padding: 10px 12px; }
+  .debts-ico{ width: 32px; height: 32px; flex-basis: 32px; }
+  .debts-ico svg{ width: 18px; height: 18px; }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .debts-chip{ transition: none !important; }
+}
