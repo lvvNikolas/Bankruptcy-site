@@ -1,50 +1,278 @@
-/* ===== Header — глобальные стили без CSS-modules ===== */
+/* =========================================================================
+   Header.css — липкая шапка + фуллскрин мобильное меню
+   Обновление: выразительные ссылки, стильный крестик, аккуратные ховеры
+   ========================================================================= */
 
+:root{
+  --bg:      #0b0c0f;
+  --overlay: #000;
+  --text:    #f5f7fb;
+  --muted:   #a9b0bb;
+  --brand:   #d1a24c;
+  --line:    rgba(255,255,255,.10);
+  --ring:    rgba(209,162,76,.35);
+
+  --fx-dur:  .25s;
+}
+
+/* ---------------- Шапка ---------------- */
 .header{
-  position: sticky; top: 0; z-index: 50;
-  backdrop-filter: blur(8px);
-  background: linear-gradient(180deg, rgba(17,18,23,.85), rgba(17,18,23,.55));
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
 }
 
-.header-row{ display:flex; align-items:center; gap:14px; min-height:56px; }
-.header-logo{ font-weight:800; letter-spacing:.2px; color:var(--text); text-decoration:none; }
+.header > .container{
+  max-width: min(1320px, calc(100% - 32px));
+  margin: 0 auto;
+}
 
+.header-row{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+}
+
+/* Лого */
+.header-logo{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: .2px;
+  line-height: 1;
+}
+.header-logo:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 10px;
+}
+
+/* Телефон справа (desktop only) */
 .header-phone{
-  margin-left:auto; color:var(--brand); font-weight:700; display:none;
-  text-decoration:none;
+  margin-left: auto;
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+  display: none;
+}
+.header-phone:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 10px;
 }
 
-/* desktop nav */
+/* ---------------- Desktop nav ---------------- */
 .header-navDesktop{
-  margin-left:auto; display:none; gap:18px; align-items:center;
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 18px;
 }
-.header-navDesktop a{ color:var(--text); opacity:.9; text-decoration:none; }
-.header-navDesktop a:hover{ opacity:1; }
+
+/* Эффектная ссылка (desktop) */
+.header-navDesktop a{
+  --u-h: 2px; /* толщина подчёркивания */
+  position: relative;
+  color: var(--text);
+  text-decoration: none;
+  opacity: .92;
+  padding: 6px 8px;
+  border-radius: 10px;
+  transition: color var(--fx-dur) ease, opacity var(--fx-dur) ease, transform var(--fx-dur) ease;
+
+  /* «линза»-подчёркивание брендом */
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 0% var(--u-h);
+}
+.header-navDesktop a:hover{
+  opacity: 1;
+  transform: translateY(-1px);
+  background-size: 100% var(--u-h);
+}
+.header-navDesktop a:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
 
 .header-cta{ padding: 8px 12px; }
 
-/* burger */
+/* ---------------- Бургер ---------------- */
 .header-burger{
-  margin-left:auto; width:36px; height:28px; display:grid; place-items:center; gap:4px; cursor:pointer;
+  margin-left: auto;
+  width: 44px;
+  height: 40px;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.header-burger span{ display:block; width:22px; height:2px; background:var(--text); border-radius:2px; }
-.header-toggle{ display:none; }
+.header-burger span{
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform var(--fx-dur) ease, opacity .2s ease, background-color .2s ease;
+}
 
-/* mobile nav */
+/* Скрытый чекбокс-тоггл */
+.header-toggle{ display: none; }
+
+/* Морфинг бургера в «крестик» */
+.header-toggle:checked + .header-burger span:nth-child(1){
+  transform: translateY(6px) rotate(45deg);
+}
+.header-toggle:checked + .header-burger span:nth-child(2){
+  opacity: 0;
+}
+.header-toggle:checked + .header-burger span:nth-child(3){
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ---------------- Mobile overlay (full screen) ---------------- */
 .header-navMobile{
-  position:fixed; inset:56px 0 auto 0; /* под шапкой */
-  background: rgba(17,18,23,.98);
-  display:none; flex-direction:column; gap:14px; padding:16px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 9999;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s linear var(--fx-dur);
 }
-.header-navMobile a{ color:var(--text); text-decoration:none; }
 
-.header-toggle:checked ~ .header-navMobile{ display:flex; }
+/* Открытие меню */
+.header-toggle:checked ~ .header-navMobile{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s;
+}
 
-/* responsive */
+/* Кнопка-крестик: стекло + рамка */
+.header-close{
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  top:   max(16px, env(safe-area-inset-top));
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.02);
+  backdrop-filter: blur(6px);
+  transition: background-color var(--fx-dur) ease, border-color var(--fx-dur) ease, transform var(--fx-dur) ease;
+}
+.header-close:hover{
+  background: rgba(209,162,76,.12);
+  border-color: var(--ring);
+  transform: scale(1.03);
+}
+.header-close:active{ transform: scale(.98); }
+.header-close:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.header-close span{
+  position: absolute;
+  width: 26px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: background-color .15s ease;
+}
+.header-close span:first-child{ transform: rotate(45deg); }
+.header-close span:last-child { transform: rotate(-45deg); }
+.header-close:hover span{ background-color: var(--brand); }
+
+/* Центрирование контента + safe-areas */
+.header-navMobile-inner{
+  min-height: 100dvh;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding-left:  max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-top:   max(24px, calc(env(safe-area-inset-top) + 56px));
+  padding-bottom:max(24px, env(safe-area-inset-bottom));
+}
+
+/* Колонка ссылок */
+.header-navMobile-inner > *{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Эффектные ссылки (mobile) */
+.header-navMobile a{
+  --u-h: 2px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: clamp(20px, 5vw, 28px);
+  line-height: 1.25;
+  display: inline-block;
+  padding: 4px 6px;
+  margin: 10px 0;
+  border-radius: 10px;
+  transition: color var(--fx-dur) ease, transform var(--fx-dur) ease;
+
+  /* подчёркивание-«линза» */
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 0% var(--u-h);
+}
+.header-navMobile a:hover{
+  transform: translateY(-1px);
+  background-size: 100% var(--u-h);
+}
+.header-navMobile a:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* CTA в моб.меню — ваш общий .btn .btn-primary, просто немного сверху отступ */
+.header-cta-mobile{ margin-top: 14px; }
+
+/* Блокируем прокрутку body, когда меню открыто */
+body:has(#menu-toggle:checked){
+  overflow: hidden;
+}
+
+/* ---------------- Responsive ---------------- */
 @media (min-width: 1024px){
-  .header-burger, .header-navMobile{ display:none; }
-  .header-navDesktop{ display:flex; }
-  .header-phone{ display:block; }
+  .header-burger,
+  .header-navMobile{
+    display: none;
+  }
+  .header-navDesktop{
+    display: flex;
+  }
+  .header-phone{
+    display: block;
+  }
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce){
+  .header-burger span,
+  .header-navMobile,
+  .header-navDesktop a{
+    transition: none !important;
+  }
 }
