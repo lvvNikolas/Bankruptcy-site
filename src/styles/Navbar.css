@@ -1,0 +1,277 @@
+/* =========================================================================
+   Navbar.css — липкая шапка + фуллскрин мобильное меню (100dvh, чёрный фон)
+   Выразительные ссылки, плавная анимация, бургер → крестик
+   ========================================================================= */
+
+:root{
+  --bg:      #0b0c0f;
+  --overlay: #000;
+  --text:    #f5f7fb;
+  --muted:   #a9b0bb;
+  --brand:   #d1a24c;
+  --line:    rgba(255,255,255,.10);
+  --ring:    rgba(209,162,76,.35);
+
+  --fx-dur:  .25s;
+}
+
+/* ---------------- Шапка ---------------- */
+.navbar{
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.navbar > .container{
+  max-width: min(1320px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+.navbar-row{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 60px;
+}
+
+/* Лого */
+.navbar-logo{
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 800;
+  letter-spacing: .2px;
+  line-height: 1;
+}
+.navbar-logo:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 10px;
+}
+
+/* Телефон справа (desktop only) */
+.navbar-phone{
+  margin-left: auto;
+  color: var(--brand);
+  font-weight: 700;
+  text-decoration: none;
+  display: none;
+}
+.navbar-phone:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+  border-radius: 10px;
+}
+
+/* ---------------- Desktop nav ---------------- */
+.navbar-desktop{
+  margin-left: auto;
+  display: none;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Эффектная ссылка (desktop) */
+.navbar-desktop a{
+  --u-h: 2px; /* толщина подчёркивания */
+  position: relative;
+  color: var(--text);
+  text-decoration: none;
+  opacity: .92;
+  padding: 6px 8px;
+  border-radius: 10px;
+  transition: color var(--fx-dur) ease, opacity var(--fx-dur) ease, transform var(--fx-dur) ease;
+
+  /* линией подчёркиваем под текстом */
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 0% var(--u-h);
+}
+.navbar-desktop a:hover{
+  opacity: 1;
+  transform: translateY(-1px);
+  background-size: 100% var(--u-h);
+}
+.navbar-desktop a:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.navbar-cta{ padding: 8px 12px; }
+
+/* ---------------- Burger ---------------- */
+.navbar-burger{
+  margin-left: auto;
+  width: 44px;
+  height: 40px;
+  display: grid;
+  place-content: center;
+  gap: 4px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.navbar-burger span{
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: transform var(--fx-dur) ease, opacity .2s ease, background-color .2s ease;
+}
+
+/* Скрытый чекбокс-тоггл */
+.navbar-toggle{ display: none; }
+
+/* Морфинг бургера в «крестик» */
+.navbar-toggle:checked + .navbar-burger span:nth-child(1){
+  transform: translateY(6px) rotate(45deg);
+}
+.navbar-toggle:checked + .navbar-burger span:nth-child(2){
+  opacity: 0;
+}
+.navbar-toggle:checked + .navbar-burger span:nth-child(3){
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* ---------------- Mobile overlay (full screen) ---------------- */
+.navbar-overlay{
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  z-index: 9999;
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-8px);
+  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s linear var(--fx-dur);
+}
+
+/* Открытие меню */
+.navbar-toggle:checked ~ .navbar-overlay{
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s;
+}
+
+/* Кнопка-крестик (стекло + рамка) */
+.navbar-close{
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right));
+  top:   max(16px, env(safe-area-inset-top));
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255,255,255,.02);
+  backdrop-filter: blur(6px);
+  transition: background-color var(--fx-dur) ease, border-color var(--fx-dur) ease, transform var(--fx-dur) ease;
+}
+.navbar-close:hover{
+  background: rgba(209,162,76,.12);
+  border-color: var(--ring);
+  transform: scale(1.03);
+}
+.navbar-close:active{ transform: scale(.98); }
+.navbar-close:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.navbar-close span{
+  position: absolute;
+  width: 26px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+  transition: background-color .15s ease;
+}
+.navbar-close span:first-child{ transform: rotate(45deg); }
+.navbar-close span:last-child { transform: rotate(-45deg); }
+.navbar-close:hover span{ background-color: var(--brand); }
+
+/* Центрирование контента + safe-areas */
+.navbar-overlay-inner{
+  min-height: 100dvh;
+  height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding-left:  max(24px, env(safe-area-inset-left));
+  padding-right: max(24px, env(safe-area-inset-right));
+  padding-top:   max(24px, calc(env(safe-area-inset-top) + 56px));
+  padding-bottom:max(24px, env(safe-area-inset-bottom));
+}
+
+/* Колонка ссылок (mobile) */
+.navbar-overlay-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Эффектные ссылки (mobile) */
+.navbar-overlay a{
+  --u-h: 2px;
+  color: var(--text);
+  text-decoration: none;
+  font-size: clamp(20px, 5vw, 28px);
+  line-height: 1.25;
+  display: inline-block;
+  padding: 4px 6px;
+  margin: 10px 0;
+  border-radius: 10px;
+  transition: color var(--fx-dur) ease, transform var(--fx-dur) ease;
+
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0% 100%;
+  background-size: 0% var(--u-h);
+}
+.navbar-overlay a:hover{
+  transform: translateY(-1px);
+  background-size: 100% var(--u-h);
+}
+.navbar-overlay a:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* CTA в моб.меню — общий .btn .btn-primary, просто отступ сверху */
+.navbar-overlay .btn{ margin-top: 14px; }
+
+/* Блокируем прокрутку body, когда меню открыто */
+body:has(#navbar-toggle:checked){
+  overflow: hidden;
+}
+
+/* ---------------- Responsive ---------------- */
+@media (min-width: 1024px){
+  .navbar-burger,
+  .navbar-overlay{
+    display: none;
+  }
+  .navbar-desktop{
+    display: flex;
+  }
+  .navbar-phone{
+    display: block;
+  }
+}
+
+/* ---------------- Reduced motion ---------------- */
+@media (prefers-reduced-motion: reduce){
+  .navbar-burger span,
+  .navbar-overlay,
+  .navbar-desktop a{
+    transition: none !important;
+  }
+}

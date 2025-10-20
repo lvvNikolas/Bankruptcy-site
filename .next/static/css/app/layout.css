@@ -1,9 +1,9 @@
 /*!*******************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Header.css ***!
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Navbar.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   Header.css — липкая шапка + фуллскрин мобильное меню
-   Обновление: выразительные ссылки, стильный крестик, аккуратные ховеры
+   Navbar.css — липкая шапка + фуллскрин мобильное меню (100dvh, чёрный фон)
+   Выразительные ссылки, плавная анимация, бургер → крестик
    ========================================================================= */
 
 :root{
@@ -19,7 +19,7 @@
 }
 
 /* ---------------- Шапка ---------------- */
-.header{
+.navbar{
   position: -webkit-sticky;
   position: sticky;
   top: 0;
@@ -28,12 +28,12 @@
   border-bottom: 1px solid var(--line);
 }
 
-.header > .container{
+.navbar > .container{
   max-width: min(1320px, calc(100% - 32px));
   margin: 0 auto;
 }
 
-.header-row{
+.navbar-row{
   display: flex;
   align-items: center;
   gap: 16px;
@@ -41,35 +41,35 @@
 }
 
 /* Лого */
-.header-logo{
+.navbar-logo{
   color: var(--text);
   text-decoration: none;
   font-weight: 800;
   letter-spacing: .2px;
   line-height: 1;
 }
-.header-logo:focus-visible{
+.navbar-logo:focus-visible{
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
   border-radius: 10px;
 }
 
 /* Телефон справа (desktop only) */
-.header-phone{
+.navbar-phone{
   margin-left: auto;
   color: var(--brand);
   font-weight: 700;
   text-decoration: none;
   display: none;
 }
-.header-phone:focus-visible{
+.navbar-phone:focus-visible{
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
   border-radius: 10px;
 }
 
 /* ---------------- Desktop nav ---------------- */
-.header-navDesktop{
+.navbar-desktop{
   margin-left: auto;
   display: none;
   align-items: center;
@@ -77,7 +77,7 @@
 }
 
 /* Эффектная ссылка (desktop) */
-.header-navDesktop a{
+.navbar-desktop a{
   --u-h: 2px; /* толщина подчёркивания */
   position: relative;
   color: var(--text);
@@ -87,26 +87,26 @@
   border-radius: 10px;
   transition: color var(--fx-dur) ease, opacity var(--fx-dur) ease, transform var(--fx-dur) ease;
 
-  /* «линза»-подчёркивание брендом */
+  /* линией подчёркиваем под текстом */
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
   background-position: 0% 100%;
   background-size: 0% var(--u-h);
 }
-.header-navDesktop a:hover{
+.navbar-desktop a:hover{
   opacity: 1;
   transform: translateY(-1px);
   background-size: 100% var(--u-h);
 }
-.header-navDesktop a:focus-visible{
+.navbar-desktop a:focus-visible{
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
 }
 
-.header-cta{ padding: 8px 12px; }
+.navbar-cta{ padding: 8px 12px; }
 
-/* ---------------- Бургер ---------------- */
-.header-burger{
+/* ---------------- Burger ---------------- */
+.navbar-burger{
   margin-left: auto;
   width: 44px;
   height: 40px;
@@ -117,7 +117,7 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
-.header-burger span{
+.navbar-burger span{
   display: block;
   width: 24px;
   height: 2px;
@@ -127,21 +127,21 @@
 }
 
 /* Скрытый чекбокс-тоггл */
-.header-toggle{ display: none; }
+.navbar-toggle{ display: none; }
 
 /* Морфинг бургера в «крестик» */
-.header-toggle:checked + .header-burger span:nth-child(1){
+.navbar-toggle:checked + .navbar-burger span:nth-child(1){
   transform: translateY(6px) rotate(45deg);
 }
-.header-toggle:checked + .header-burger span:nth-child(2){
+.navbar-toggle:checked + .navbar-burger span:nth-child(2){
   opacity: 0;
 }
-.header-toggle:checked + .header-burger span:nth-child(3){
+.navbar-toggle:checked + .navbar-burger span:nth-child(3){
   transform: translateY(-6px) rotate(-45deg);
 }
 
 /* ---------------- Mobile overlay (full screen) ---------------- */
-.header-navMobile{
+.navbar-overlay{
   position: fixed;
   inset: 0;
   background: var(--overlay);
@@ -155,7 +155,7 @@
 }
 
 /* Открытие меню */
-.header-toggle:checked ~ .header-navMobile{
+.navbar-toggle:checked ~ .navbar-overlay{
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -163,8 +163,8 @@
   transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s;
 }
 
-/* Кнопка-крестик: стекло + рамка */
-.header-close{
+/* Кнопка-крестик (стекло + рамка) */
+.navbar-close{
   position: absolute;
   right: max(16px, env(safe-area-inset-right));
   top:   max(16px, env(safe-area-inset-top));
@@ -182,18 +182,18 @@
           backdrop-filter: blur(6px);
   transition: background-color var(--fx-dur) ease, border-color var(--fx-dur) ease, transform var(--fx-dur) ease;
 }
-.header-close:hover{
+.navbar-close:hover{
   background: rgba(209,162,76,.12);
   border-color: var(--ring);
   transform: scale(1.03);
 }
-.header-close:active{ transform: scale(.98); }
-.header-close:focus-visible{
+.navbar-close:active{ transform: scale(.98); }
+.navbar-close:focus-visible{
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
 }
 
-.header-close span{
+.navbar-close span{
   position: absolute;
   width: 26px;
   height: 2px;
@@ -201,12 +201,12 @@
   border-radius: 2px;
   transition: background-color .15s ease;
 }
-.header-close span:first-child{ transform: rotate(45deg); }
-.header-close span:last-child { transform: rotate(-45deg); }
-.header-close:hover span{ background-color: var(--brand); }
+.navbar-close span:first-child{ transform: rotate(45deg); }
+.navbar-close span:last-child { transform: rotate(-45deg); }
+.navbar-close:hover span{ background-color: var(--brand); }
 
 /* Центрирование контента + safe-areas */
-.header-navMobile-inner{
+.navbar-overlay-inner{
   min-height: 100dvh;
   height: 100dvh;
   display: grid;
@@ -217,15 +217,15 @@
   padding-bottom:max(24px, env(safe-area-inset-bottom));
 }
 
-/* Колонка ссылок */
-.header-navMobile-inner > *{
+/* Колонка ссылок (mobile) */
+.navbar-overlay-list{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 /* Эффектные ссылки (mobile) */
-.header-navMobile a{
+.navbar-overlay a{
   --u-h: 2px;
   color: var(--text);
   text-decoration: none;
@@ -237,48 +237,47 @@
   border-radius: 10px;
   transition: color var(--fx-dur) ease, transform var(--fx-dur) ease;
 
-  /* подчёркивание-«линза» */
   background-image: linear-gradient(var(--brand), var(--brand));
   background-repeat: no-repeat;
   background-position: 0% 100%;
   background-size: 0% var(--u-h);
 }
-.header-navMobile a:hover{
+.navbar-overlay a:hover{
   transform: translateY(-1px);
   background-size: 100% var(--u-h);
 }
-.header-navMobile a:focus-visible{
+.navbar-overlay a:focus-visible{
   outline: none;
   box-shadow: 0 0 0 3px var(--ring);
 }
 
-/* CTA в моб.меню — ваш общий .btn .btn-primary, просто немного сверху отступ */
-.header-cta-mobile{ margin-top: 14px; }
+/* CTA в моб.меню — общий .btn .btn-primary, просто отступ сверху */
+.navbar-overlay .btn{ margin-top: 14px; }
 
 /* Блокируем прокрутку body, когда меню открыто */
-body:has(#menu-toggle:checked){
+body:has(#navbar-toggle:checked){
   overflow: hidden;
 }
 
 /* ---------------- Responsive ---------------- */
 @media (min-width: 1024px){
-  .header-burger,
-  .header-navMobile{
+  .navbar-burger,
+  .navbar-overlay{
     display: none;
   }
-  .header-navDesktop{
+  .navbar-desktop{
     display: flex;
   }
-  .header-phone{
+  .navbar-phone{
     display: block;
   }
 }
 
 /* ---------------- Reduced motion ---------------- */
 @media (prefers-reduced-motion: reduce){
-  .header-burger span,
-  .header-navMobile,
-  .header-navDesktop a{
+  .navbar-burger span,
+  .navbar-overlay,
+  .navbar-desktop a{
     transition: none !important;
   }
 }

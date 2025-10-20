@@ -4,6 +4,7 @@ import {
   FaCar, FaKey, FaFileInvoiceDollar, FaFileAlt,
   FaBaby, FaSadTear, FaBriefcase, FaHeart
 } from "react-icons/fa";
+import "@styles/Debts.css";
 
 type Props = { withHead?: boolean }; // оставим для совместимости
 

@@ -1,5 +1,5 @@
 // src/app/page.tsx — главная страница (лендинг)
-import LeadForm from "@components/LeadForm/LeadForm";
+import Hero from "@components/sections/Hero/Hero";
 
 import Services from "@components/sections/Services/Services";
 import Process from "@components/sections/Process/Process";
@@ -13,18 +13,7 @@ import DebtsChats from "@components/sections/Debts/DebtsChats";
 export default function Home() {
   return (
     <>
-      {/* Hero-секция */}
-      <section className="section">
-        <div className="container">
-          <h1 className="sectionHead">Списание долгов законно и безопасно</h1>
-          <p className="sectionLead">
-            Сопровождаем судебную и внесудебную процедуру банкротства. Бесплатная первичная консультация.
-          </p>
-          <div className="leadFormWrapper">
-            <LeadForm />
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* Основные секции лендинга */}
       <Services withHead={false} />
