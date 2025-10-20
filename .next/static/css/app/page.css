@@ -1,121 +1,152 @@
-/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/DebtsChats.css ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************/
-/* ===== DebtsChat — секция без теней/градиентов ===== */
+/*!**********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/DebtsChat.css ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================================
+   DebtsChat — чистая верстка диалога
+   • Аватары ВНУТРИ пузырей (flex-элементы)
+   • Ровные отступы и дыхание
+   • Светлая/тёмная темы через data-theme
+   ========================================================================= */
 
-.debtschat-section{
-  background: var(--section-bg, #0f1217);
-  min-height: 100vh;                      /* на полный экран */
-  display: grid;
+:root{
+  --dc-bg: #f5f7f9;
+  --dc-surface: #fff;
+  --dc-text: #101213;
+  --dc-accent: #c8645c;
+  --dc-border: rgba(0,0,0,.06);
+  --dc-shadow: 0 28px 90px rgba(0,0,0,.08);
+
+  --dc-radius: 26px;
+  --dc-padY-lg: clamp(26px, 3.8vw, 44px);
+  --dc-padX-lg: clamp(28px, 4.2vw, 56px);
+  --dc-padY-md: clamp(22px, 3vw, 36px);
+  --dc-padX-md: clamp(26px, 3.8vw, 44px);
+
+  --dc-gap: clamp(28px, 5vh, 64px);
+  --dc-inline-gap: clamp(16px, 2vw, 22px);
+  --dc-avatar-ring: #edf0f3;
+}
+
+[data-theme="dark"] .dc{
+  --dc-bg: #0e1014;
+  --dc-surface: #171a1f;
+  --dc-text: #f3f5f8;
+  --dc-accent: #d5a14d;
+  --dc-border: rgba(255,255,255,.10);
+  --dc-shadow: 0 28px 90px rgba(0,0,0,.50);
+  --dc-avatar-ring: #0e1014;
+}
+
+/* Секция */
+.dc{
+  background: var(--dc-bg);
+  min-height: 100dvh;
+  display: flex;
   align-items: center;
-  padding-block: clamp(48px, 6vh, 96px);
-  margin-block: clamp(56px, 8vh, 96px);
-  border-block: 1px solid rgba(255,255,255,.06);
-  isolation: isolate;
+  padding-block: var(--dc-gap);
 }
-
-/* Контейнер-сцена с чат-баблами */
-.debtschat-stage{
+.dc__container{
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
   display: grid;
-  grid-gap: clamp(18px, 3vh, 28px);
-  gap: clamp(18px, 3vh, 28px);
+  grid-gap: var(--dc-gap);
+  gap: var(--dc-gap);
 }
 
-/* Строка бабла (левая/правая) */
-.debtschat-row{
+/* Базовый пузырь */
+.dc__bubble{
+  background: var(--dc-surface);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius);
+  box-shadow: var(--dc-shadow);
+  color: var(--dc-text);
+}
+
+/* Крупный верхний */
+.dc__bubble--lg{
+  padding: var(--dc-padY-lg) var(--dc-padX-lg);
+}
+.dc__bubble--center{
+  justify-self: center;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Заголовок + аватар справа внутри блока */
+.dc__bubbleHead{
+  display: flex;
+  align-items: center;
+  gap: var(--dc-inline-gap);
+  justify-content: space-between;   /* текст слева, аватар справа */
+}
+.dc__text--lg{
+  margin: 0;
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: .2px;
+  flex: 1 1 auto;                   /* текст занимает всю ширину */
+}
+
+/* Нижняя строка */
+.dc__row{
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: end;
-  grid-gap: 12px;
-  gap: 12px;
-
-  transform: translateY(18px);
-  opacity: 0;
-  transition: opacity .45s ease, transform .45s ease;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: clamp(26px, 3vw, 60px);
+  gap: clamp(26px, 3vw, 60px);
+  align-items: stretch;
 }
-.debtschat-revealed{
-  transform: none;
-  opacity: 1;
+@media (max-width: 900px){
+  .dc__row{ grid-template-columns: 1fr; }
 }
 
-/* Выравнивание влево/вправо */
-.debtschat-left  { grid-template-columns: auto 1fr; justify-content: start; }
-.debtschat-right { grid-template-columns: 1fr auto; justify-content: end; }
-
-/* Сам «бабл» */
-.debtschat-bubble{
-  max-width: min(860px, 88vw);
-  background: var(--surface, #12151b);
-  color: var(--text, #eaeaea);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: 20px;
-  padding: clamp(14px, 2.2vh, 20px) clamp(18px, 2.6vh, 24px);
-  position: relative;
-  line-height: 1.5;
-  font-size: clamp(16px, 2.1vw, 18px);
+/* Средние пузыри (вопрос/ответ) — flex с аватаром внутри */
+.dc__bubble--md{
+  padding: var(--dc-padY-md) var(--dc-padX-md);
+  display: flex;
+  align-items: center;
+  gap: var(--dc-inline-gap);
+  font-size: clamp(18px, 2.6vw, 28px);
+  font-weight: 900;
+  line-height: 1.22;
+}
+.dc__bubble--left{ justify-self: start; }
+.dc__bubble--right{
+  justify-self: end;
+  flex-direction: row-reverse;      /* аватар справа */
 }
 
-/* Хвостики без теней */
-.debtschat-left  .debtschat-bubble{ border-top-left-radius: 10px 14px; }
-.debtschat-left  .debtschat-bubble::before{
-  content:"";
-  position: absolute;
-  left: -10px; bottom: 12px;
-  width: 12px; height: 12px;
-  background: var(--surface, #12151b);
-  border-left: 1px solid rgba(255,255,255,.10);
-  border-bottom: 1px solid rgba(255,255,255,.10);
-  transform: rotate(45deg);
-}
-.debtschat-right .debtschat-bubble{ border-top-right-radius: 10px 14px; }
-.debtschat-right .debtschat-bubble::before{
-  content:"";
-  position: absolute;
-  right: -10px; bottom: 12px;
-  width: 12px; height: 12px;
-  background: var(--surface, #12151b);
-  border-right: 1px solid rgba(255,255,255,.10);
-  border-bottom: 1px solid rgba(255,255,255,.10);
-  transform: rotate(-45deg);
-}
+/* Текст */
+.dc__text{ margin: 0; }
+.dc__accent{ color: var(--dc-accent); }
 
-/* Внутри HTML (поддерживаем <mark>/<strong>) */
-.debtschat-bubble mark   { background: rgba(209,162,76,.18); color: inherit; padding: 0 .15em; border-radius: 4px; }
-.debtschat-bubble strong { font-weight: 800; letter-spacing: .2px; }
-
-/* Аватар / заглушка */
-.debtschat-avatar{
-  width: clamp(44px, 6vw, 56px);
-  height: clamp(44px, 6vw, 56px);
+/* Аватар как обычный inline-элемент */
+.dc__avatar--inline{
+  width: clamp(70px, 6vw, 88px);
+  height: clamp(70px, 6vw, 88px);
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.dc__avatarImg{
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.10);
-  display: grid;
-  place-items: center;
-  color: var(--text, #eaeaea);
-  font-weight: 800;
-}
-.debtschat-avatarStub{ font-size: clamp(18px, 3vw, 22px); }
-
-/* Мобильные подстройки */
-@media (max-width: 560px){
-  .debtschat-bubble{
-    border-radius: 16px;
-  }
-  .debtschat-left  .debtschat-bubble::before,
-  .debtschat-right .debtschat-bubble::before{
-    bottom: 10px;
-  }
+  /* двойной «кольцевой» бордер */
+  box-shadow:
+    0 0 0 6px var(--dc-avatar-ring),
+    0 0 0 3px var(--dc-surface);
 }
 
-/* Уважение к reduce-motion */
-@media (prefers-reduced-motion: reduce){
-  .debtschat-row{
-    transition: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
+/* Ховеры */
+.dc__bubble:hover{ transform: translateY(-2px); transition: transform .2s ease; }
+
+/* Мелкая адаптация */
+@media (max-width: 600px){
+  .dc__bubble--lg{ padding: 22px 24px; }
+  .dc__bubble--md{ padding: 20px 22px; }
 }
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/hero-promo.css ***!

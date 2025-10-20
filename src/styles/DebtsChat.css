@@ -1,0 +1,145 @@
+/* =========================================================================
+   DebtsChat — чистая верстка диалога
+   • Аватары ВНУТРИ пузырей (flex-элементы)
+   • Ровные отступы и дыхание
+   • Светлая/тёмная темы через data-theme
+   ========================================================================= */
+
+:root{
+  --dc-bg: #f5f7f9;
+  --dc-surface: #fff;
+  --dc-text: #101213;
+  --dc-accent: #c8645c;
+  --dc-border: rgba(0,0,0,.06);
+  --dc-shadow: 0 28px 90px rgba(0,0,0,.08);
+
+  --dc-radius: 26px;
+  --dc-padY-lg: clamp(26px, 3.8vw, 44px);
+  --dc-padX-lg: clamp(28px, 4.2vw, 56px);
+  --dc-padY-md: clamp(22px, 3vw, 36px);
+  --dc-padX-md: clamp(26px, 3.8vw, 44px);
+
+  --dc-gap: clamp(28px, 5vh, 64px);
+  --dc-inline-gap: clamp(16px, 2vw, 22px);
+  --dc-avatar-ring: #edf0f3;
+}
+
+[data-theme="dark"] .dc{
+  --dc-bg: #0e1014;
+  --dc-surface: #171a1f;
+  --dc-text: #f3f5f8;
+  --dc-accent: #d5a14d;
+  --dc-border: rgba(255,255,255,.10);
+  --dc-shadow: 0 28px 90px rgba(0,0,0,.50);
+  --dc-avatar-ring: #0e1014;
+}
+
+/* Секция */
+.dc{
+  background: var(--dc-bg);
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  padding-block: var(--dc-gap);
+}
+.dc__container{
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  display: grid;
+  gap: var(--dc-gap);
+}
+
+/* Базовый пузырь */
+.dc__bubble{
+  background: var(--dc-surface);
+  border: 1px solid var(--dc-border);
+  border-radius: var(--dc-radius);
+  box-shadow: var(--dc-shadow);
+  color: var(--dc-text);
+}
+
+/* Крупный верхний */
+.dc__bubble--lg{
+  padding: var(--dc-padY-lg) var(--dc-padX-lg);
+}
+.dc__bubble--center{
+  justify-self: center;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Заголовок + аватар справа внутри блока */
+.dc__bubbleHead{
+  display: flex;
+  align-items: center;
+  gap: var(--dc-inline-gap);
+  justify-content: space-between;   /* текст слева, аватар справа */
+}
+.dc__text--lg{
+  margin: 0;
+  font-size: clamp(22px, 4vw, 38px);
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: .2px;
+  flex: 1 1 auto;                   /* текст занимает всю ширину */
+}
+
+/* Нижняя строка */
+.dc__row{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(26px, 3vw, 60px);
+  align-items: stretch;
+}
+@media (max-width: 900px){
+  .dc__row{ grid-template-columns: 1fr; }
+}
+
+/* Средние пузыри (вопрос/ответ) — flex с аватаром внутри */
+.dc__bubble--md{
+  padding: var(--dc-padY-md) var(--dc-padX-md);
+  display: flex;
+  align-items: center;
+  gap: var(--dc-inline-gap);
+  font-size: clamp(18px, 2.6vw, 28px);
+  font-weight: 900;
+  line-height: 1.22;
+}
+.dc__bubble--left{ justify-self: start; }
+.dc__bubble--right{
+  justify-self: end;
+  flex-direction: row-reverse;      /* аватар справа */
+}
+
+/* Текст */
+.dc__text{ margin: 0; }
+.dc__accent{ color: var(--dc-accent); }
+
+/* Аватар как обычный inline-элемент */
+.dc__avatar--inline{
+  width: clamp(70px, 6vw, 88px);
+  height: clamp(70px, 6vw, 88px);
+  border-radius: 50%;
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.dc__avatarImg{
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  /* двойной «кольцевой» бордер */
+  box-shadow:
+    0 0 0 6px var(--dc-avatar-ring),
+    0 0 0 3px var(--dc-surface);
+}
+
+/* Ховеры */
+.dc__bubble:hover{ transform: translateY(-2px); transition: transform .2s ease; }
+
+/* Мелкая адаптация */
+@media (max-width: 600px){
+  .dc__bubble--lg{ padding: 22px 24px; }
+  .dc__bubble--md{ padding: 20px 22px; }
+}

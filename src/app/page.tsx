@@ -15,6 +15,7 @@ export default function Home() {
     <>
       <Hero />
       <Debts withHead={false} />
+      <DebtsChats />
 
       <Services withHead={false} />
       <Process withHead={false} />
