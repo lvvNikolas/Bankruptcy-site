@@ -9,6 +9,7 @@ import Contacts from "@components/sections/Contacts/Contacts";
 import Quiz from "@components/sections/Quiz/Quiz";
 import Debts from "@components/sections/Debts/Debts";
 import DebtsChats from "@components/sections/Debts/DebtsChats";
+import DebtsCon from "@components/sections/Debts/DebtsCon";
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
       <Hero />
       <Debts withHead={false} />
       <DebtsChats />
+      <DebtsCon />
 
       <Services withHead={false} />
       <Process withHead={false} />
