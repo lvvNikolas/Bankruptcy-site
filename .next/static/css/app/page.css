@@ -117,152 +117,181 @@
     opacity: 1 !important;
   }
 }
-/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
-  \*********************************************************************************************************************************************************************************************************************************************************************/
-/* =========================================================================
-   LeadForm.css — профессиональные стили формы (глобальные классы)
-   Использование:
-     - корневой контейнер формы:     class="leadform"
-     - строка (поле + ошибка):       class="leadform-row"
-     - сообщение об ошибке:          class="leadform-error"
-     - чекбокс согласия:             class="leadform-agree"
-     - экран "спасибо":              class="leadform-thanks"
-   Зависимости:
-     - переменные из globals.css: --surface, --text, --brand, --ring, --radius, --space-*
-   ========================================================================= */
+/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/hero-promo.css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************/
+/* ====== Тёмная промо-карточка в hero, без «Акции», одна рамка у инпута ====== */
 
-/* 1) Обёртка формы: сетка + комфортная ширина */
-.leadform {
+:root{
+  --bg: #0b0c0f;
+  --surface: #111318;
+  --surface-2: #15171d;
+  --line: rgba(255,255,255,.12);
+  --text: #f4f6fb;
+  --muted: #aeb6c2;
+  --brand: #d1a24c;
+  --brand-2: #be8e3e;
+  --accent: #e08573;             /* акцентные штрихи (цена/иконки) */
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+
+.promoWrap{
   display: grid;
-  grid-gap: 12px;
-  gap: 12px;                    /* базовый вертикальный ритм */
-  max-width: 560px;             /* удобно на десктопах */
+  place-items: center;
+  padding: 16px;
+}
+
+.promoCard{
   width: 100%;
-  margin: 0 auto;               /* центрируем, если форма отдельный блок */
-  background: var(--surface);   /* лёгкая карточка (по желанию) */
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: var(--radius);
-  padding: var(--space-6);
+  max-width: 720px;              /* форма стала больше */
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: radial-gradient(900px 380px at 18% -10%, rgba(209,162,76,.08), transparent 60%),
+              linear-gradient(180deg, var(--surface), var(--surface-2));
   box-shadow: var(--shadow);
+  padding: clamp(18px, 4vw, 28px);
 }
 
-/* 2) Строка формы: поле + возможная ошибка под ним */
-.leadform-row {
-  display: grid;
-  grid-gap: 6px;
-  gap: 6px;
-  text-align: left;             /* ошибки и подписи выравниваем слева */
-}
-
-/* 3) Текстовые поля — только внутри .leadform
-      (чтобы не влиять на другие инпуты на сайте) */
-.leadform :where(
-  input[type="text"],
-  input[type="tel"],
-  input[type="number"],
-  input:not([type="checkbox"])
-) {
-  width: 100%;
-  background: var(--surface);
-  border: 1px solid rgba(255,255,255,.10);
+/* Заголовок */
+.promoTitle{
+  margin: 0 0 8px 0;
   color: var(--text);
-  padding: 12px 14px;
-  border-radius: 12px;
-  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
-  -webkit-appearance: none;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: .2px;
+  font-size: clamp(22px, 3.6vw, 34px);
 }
 
-/* Плейсхолдер — мягче */
-.leadform :where(input)::placeholder {
-  color: rgba(242,244,247,.55);
-}
-
-/* Фокус — фирменное кольцо */
-.leadform :where(input:focus) {
-  outline: none;
-  border-color: rgba(209,162,76,.45);
-  box-shadow: var(--ring); /* определяется в globals.css */
-}
-
-/* Валидация: подсветка ошибок через aria-invalid */
-.leadform :where(input[aria-invalid="true"]) {
-  border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.20);
-}
-
-/* 4) Сообщение об ошибке (под полем) */
-.leadform-error {
-  color: #ef4444;
-  font-size: 13px;
-  line-height: 1.3;
-}
-
-/* 5) Чекбокс согласия: сетка для галочки и текста */
-.leadform-agree {
+/* Стоимость */
+.promoPriceRow{
   display: grid;
-  grid-template-columns: 18px 1fr;
-  grid-gap: 10px;
+  grid-template-columns: 1fr auto;
+  grid-gap: clamp(12px, 3vw, 24px);
+  gap: clamp(12px, 3vw, 24px);
+  align-items: end;
+  padding: 10px 0 18px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 18px;
+}
+
+.promoPriceNowValue{
+  color: var(--accent);
+  font-weight: 900;
+  font-size: clamp(34px, 8vw, 56px);
+  line-height: .95;
+}
+
+.promoPriceWas{
+  text-align: right;
+}
+.promoPriceWasLabel{
+  color: var(--muted);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.promoPriceWasValue{
+  color: var(--muted);
+  font-size: clamp(16px, 3.2vw, 22px);
+}
+
+/* Форма */
+.promoForm{
+  margin-top: 14px;
+  display: grid;
+  grid-gap: 14px;
+  gap: 14px;
+}
+
+/* Поле телефона — ОДНА рамка, без «двойной» */
+.promoField{
+  position: relative;
+  display: block;
+}
+.promoField input{
+  width: 100%;
+  height: clamp(56px, 7.8vw, 66px);
+  border-radius: 20px;                     /* объёмная форма */
+  border: 1px solid var(--accent);         /* одна акцентная рамка */
+  background: rgba(255,255,255,.02);
+  color: var(--text);
+  padding: 0 clamp(60px, 8vw, 72px) 0 20px;/* запас под кнопку-иконку справа */
+  outline: none;
+  font-size: clamp(16px, 2.4vw, 18px);
+  transition: border-color .2s ease, background-color .2s ease;
+}
+.promoField input::placeholder{ color: #8891a0; }
+.promoField input:focus{
+  border-color: var(--brand);
+  background: rgba(255,255,255,.04);
+}
+
+/* Кнопка-иконка «телефон» — без второй рамки вокруг поля */
+.promoPhoneBtn{
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(44px, 7.2vw, 56px);
+  height: clamp(44px, 7.2vw, 56px);
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: rgba(255,255,255,.02);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color .2s ease, color .2s ease, background-color .2s ease, transform .06s ease;
+}
+.promoPhoneBtn:hover{
+  background: rgba(224,133,115,.10);
+}
+.promoPhoneBtn:active{ transform: translateY(-50%) scale(.98); }
+
+/* Большая кнопка */
+.promoBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
-  align-items: start;
+  width: 100%;
+  height: clamp(56px, 8vw, 66px);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.08);
+  color: #1a1a1a;
+  font-weight: 800;
+  letter-spacing: .3px;
+  font-size: clamp(15px, 2.4vw, 17px);
+  cursor: pointer;
+  background: linear-gradient(180deg, #e8c376, #d1a24c);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 26px rgba(209,162,76,.25);
+  transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
+}
+.promoBtn:hover{ filter: brightness(1.04); }
+.promoBtn:active{ transform: translateY(1px); }
+.promoBtnIco{
+  display: inline-grid;
+  place-items: center;
+  color: #1a1a1a;
+}
+
+/* Низ карточки */
+.promoNote{
+  margin: 6px 2px 0;
   color: var(--muted);
   font-size: 14px;
-  text-align: left;
+  line-height: 1.5;
 }
+.promoLink{
+  color: #ffb39f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.promoLink:hover{ color: #ffc6b7; }
 
-/* Нативный чекбокс с брендовым акцентом */
-.leadform-agree input[type="checkbox"] {
-  margin-top: 2px;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--brand);  /* поддержка в современных браузерах */
-  cursor: pointer;
-}
-
-/* Ссылка в тексте согласия */
-.leadform-agree a {
-  color: var(--brand);
-  text-decoration: none;
-}
-.leadform-agree a:hover { opacity: .9; }
-
-/* 6) Кнопка отправки — состояния дизейбла
-      (используешь глобальные .btn .btn-primary, здесь лишь доп. поведение) */
-.leadform button[aria-disabled="true"],
-.leadform button:disabled {
-  opacity: .75;
-  cursor: default;
-}
-
-/* 7) Экран "Спасибо" после отправки */
-.leadform-thanks {
-  background: var(--surface);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-  text-align: center;
-  animation: leadform-fadeIn .3s ease;
-}
-@keyframes leadform-fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* 8) Адаптивные мелочи */
-@media (max-width: 480px) {
-  .leadform { gap: 10px; padding: var(--space-5); }
-  .leadform-row { gap: 5px; }
-  .leadform-agree { grid-template-columns: 16px 1fr; font-size: 13px; }
-  .leadform-agree input[type="checkbox"] { width:16px; height:16px; }
-}
-
-/* 9) Предпочтение снижения анимаций */
-@media (prefers-reduced-motion: reduce) {
-  .leadform,
-  .leadform * {
-    transition: none !important;
-    animation: none !important;
-  }
+/* Адаптив */
+@media (max-width: 520px){
+  .promoCard{ border-radius: 18px; }
+  .promoPriceRow{ gap: 12px; }
 }
 /*!*****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/hero.css ***!
@@ -480,6 +509,153 @@
   .hero-text,
   .hero-form,
   .hero-scrollDot{
+    animation: none !important;
+  }
+}
+/*!*********************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================================
+   LeadForm.css — профессиональные стили формы (глобальные классы)
+   Использование:
+     - корневой контейнер формы:     class="leadform"
+     - строка (поле + ошибка):       class="leadform-row"
+     - сообщение об ошибке:          class="leadform-error"
+     - чекбокс согласия:             class="leadform-agree"
+     - экран "спасибо":              class="leadform-thanks"
+   Зависимости:
+     - переменные из globals.css: --surface, --text, --brand, --ring, --radius, --space-*
+   ========================================================================= */
+
+/* 1) Обёртка формы: сетка + комфортная ширина */
+.leadform {
+  display: grid;
+  grid-gap: 12px;
+  gap: 12px;                    /* базовый вертикальный ритм */
+  max-width: 560px;             /* удобно на десктопах */
+  width: 100%;
+  margin: 0 auto;               /* центрируем, если форма отдельный блок */
+  background: var(--surface);   /* лёгкая карточка (по желанию) */
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  box-shadow: var(--shadow);
+}
+
+/* 2) Строка формы: поле + возможная ошибка под ним */
+.leadform-row {
+  display: grid;
+  grid-gap: 6px;
+  gap: 6px;
+  text-align: left;             /* ошибки и подписи выравниваем слева */
+}
+
+/* 3) Текстовые поля — только внутри .leadform
+      (чтобы не влиять на другие инпуты на сайте) */
+.leadform :where(
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"],
+  input:not([type="checkbox"])
+) {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.10);
+  color: var(--text);
+  padding: 12px 14px;
+  border-radius: 12px;
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  -webkit-appearance: none;
+}
+
+/* Плейсхолдер — мягче */
+.leadform :where(input)::placeholder {
+  color: rgba(242,244,247,.55);
+}
+
+/* Фокус — фирменное кольцо */
+.leadform :where(input:focus) {
+  outline: none;
+  border-color: rgba(209,162,76,.45);
+  box-shadow: var(--ring); /* определяется в globals.css */
+}
+
+/* Валидация: подсветка ошибок через aria-invalid */
+.leadform :where(input[aria-invalid="true"]) {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239,68,68,.20);
+}
+
+/* 4) Сообщение об ошибке (под полем) */
+.leadform-error {
+  color: #ef4444;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+/* 5) Чекбокс согласия: сетка для галочки и текста */
+.leadform-agree {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  grid-gap: 10px;
+  gap: 10px;
+  align-items: start;
+  color: var(--muted);
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Нативный чекбокс с брендовым акцентом */
+.leadform-agree input[type="checkbox"] {
+  margin-top: 2px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand);  /* поддержка в современных браузерах */
+  cursor: pointer;
+}
+
+/* Ссылка в тексте согласия */
+.leadform-agree a {
+  color: var(--brand);
+  text-decoration: none;
+}
+.leadform-agree a:hover { opacity: .9; }
+
+/* 6) Кнопка отправки — состояния дизейбла
+      (используешь глобальные .btn .btn-primary, здесь лишь доп. поведение) */
+.leadform button[aria-disabled="true"],
+.leadform button:disabled {
+  opacity: .75;
+  cursor: default;
+}
+
+/* 7) Экран "Спасибо" после отправки */
+.leadform-thanks {
+  background: var(--surface);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  text-align: center;
+  animation: leadform-fadeIn .3s ease;
+}
+@keyframes leadform-fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 8) Адаптивные мелочи */
+@media (max-width: 480px) {
+  .leadform { gap: 10px; padding: var(--space-5); }
+  .leadform-row { gap: 5px; }
+  .leadform-agree { grid-template-columns: 16px 1fr; font-size: 13px; }
+  .leadform-agree input[type="checkbox"] { width:16px; height:16px; }
+}
+
+/* 9) Предпочтение снижения анимаций */
+@media (prefers-reduced-motion: reduce) {
+  .leadform,
+  .leadform * {
+    transition: none !important;
     animation: none !important;
   }
 }

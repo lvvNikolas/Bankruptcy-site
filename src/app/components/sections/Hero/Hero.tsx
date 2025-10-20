@@ -1,6 +1,6 @@
 "use client";
 
-import LeadForm from "@components/LeadForm/LeadForm";
+import HeroPromoForm from "@/app/components/LeadForm/HeroPromoForm";
 import "@styles/hero.css";
 
 export default function Hero() {
@@ -25,7 +25,7 @@ export default function Hero() {
 
         {/* Правая колонка — форма. Фикс. ширина, чтобы не «сжималась» контейнером */}
         <div className="hero-form" id="zayavka" aria-label="Форма заявки">
-          <LeadForm />
+           <HeroPromoForm />
         </div>
       </div>
 
