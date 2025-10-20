@@ -14,17 +14,12 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <Debts withHead={false} />
 
-      {/* Основные секции лендинга */}
       <Services withHead={false} />
       <Process withHead={false} />
       <Quiz withHead={false} />
-
-      {/* Блок “Долги” + чат-секция */}
-      <Debts withHead={false} />
       <DebtsChats />
-
-      {/* Цены, FAQ, Контакты */}
       <Prices withHead={false} />
       <FAQ withHead={false} />
       <Contacts withHead={false} />
