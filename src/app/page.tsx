@@ -10,6 +10,7 @@ import Quiz from "@components/sections/Quiz/Quiz";
 import Debts from "@components/sections/Debts/Debts";
 import DebtsChats from "@components/sections/Debts/DebtsChats";
 import DebtsCon from "@components/sections/Debts/DebtsCon";
+import Results from "./components/sections/Results/Results";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
       <Debts withHead={false} />
       <DebtsChats />
       <DebtsCon />
+      <Results />
 
       <Services withHead={false} />
       <Process withHead={false} />
