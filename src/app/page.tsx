@@ -21,10 +21,9 @@ export default function Home() {
       <DebtsCon />
       <Results />
 
-      <Services withHead={false} />
-      <Process withHead={false} />
-      <Quiz withHead={false} />
-      <DebtsChats />
+      {/* <Services withHead={false} /> */}
+      {/* <Process withHead={false} /> */}
+      <Quiz/>
       <Prices withHead={false} />
       <FAQ withHead={false} />
       <Contacts withHead={false} />
