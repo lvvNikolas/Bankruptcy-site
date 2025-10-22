@@ -1,56 +1,104 @@
-/* ===== Footer — глобальная версия без CSS-modules ===== */
+/* ===== Footer — тёмная аккуратная шапка ===== */
 
-.footer {
-  background: #0b0c10;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  margin-top: 40px;
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.footer-grid {
-  display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr 1fr 1fr;
-  padding: 32px 0;
+.footer{
+  background:#0b0c10;
+  color:var(--text, #eaeef6);
+  border-top:1px solid rgba(255,255,255,.06);
+  margin-top:48px;
+  font-size:15px;
+  line-height:1.55;
 }
 
-.footer-heading {
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text);
+.footer .container{ padding:32px 0 20px; }
+
+/* Верхняя сетка */
+.footer__grid{
+  display:grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap:32px;
+  align-items:start;
 }
 
-.footer-brand {
-  font-weight: 700;
-  margin-bottom: 8px;
-  color: var(--brand, #d3a24c);
-  font-size: 18px;
+/* Колонки */
+.footer__col{ min-width:0; }
+
+/* Бренд */
+.footer__logo{
+  margin:0 0 8px;
+  font-size:28px;
+  font-weight:900;
+  color:var(--brand, #b04a45); /* бордовый фирменный */
+  letter-spacing:.2px;
+}
+.footer__lead{ margin:0 0 16px; color:var(--muted, #a0a8b6); max-width:520px; }
+
+/* Telegram CTA */
+.footer__tgBtn{
+  display:inline-flex; align-items:center; gap:10px;
+  margin-top:8px;
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  color:var(--text);
+  text-decoration:none;
+  background:rgba(255,255,255,.03);
+  transition: border-color .15s ease, transform .06s ease, background-color .15s ease;
+}
+.footer__tgBtn:hover{ border-color:rgba(176,74,69,.55); background:rgba(176,74,69,.08); }
+.footer__tgBtn:active{ transform: translateY(1px); }
+
+/* Заголовки разделов */
+.footer__heading{
+  margin:0 0 10px;
+  font-weight:800;
+  color:var(--text);
 }
 
-.footer-copy {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 12px 0;
-  font-size: 13px;
-  color: var(--muted);
-  text-align: center;
+/* Списки */
+.footer__list{ list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.footer__list a{
+  color:var(--muted, #a0a8b6); text-decoration:none;
+  transition:color .15s ease;
+}
+.footer__list a:hover{ color:var(--brand, #b04a45); }
+
+/* Контакты */
+.footer__contacts{ font-style:normal; }
+.footer__contactItem{ display:grid; grid-template-columns: 28px 1fr; gap:10px; align-items:start; margin:12px 0; }
+.footer__ico{
+  width:28px;height:28px; border-radius:50%;
+  display:grid; place-items:center; color:var(--brand,#b04a45);
+  background:rgba(176,74,69,.12); border:1px solid rgba(176,74,69,.35);
+}
+.footer__ico svg{ width:18px;height:18px; }
+.footer__link{ color:var(--text); text-decoration:none; }
+.footer__link[href]:hover{ color:var(--brand,#b04a45); }
+.footer__meta{ color:var(--muted,#a0a8b6); font-size:13px; margin-top:2px; }
+
+/* Нижняя полоса */
+.footer__bottom{
+  margin-top:28px; padding-top:18px;
+  border-top:1px solid rgba(255,255,255,.06);
+  display:flex; flex-wrap:wrap;
+  gap:12px; align-items:center; justify-content:space-between;
 }
 
-/* Ссылки — общий стиль */
-.footer a {
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.15s ease;
+.footer__legal{
+  display:flex; gap:18px; flex-wrap:wrap;
 }
-.footer a:hover {
-  color: var(--brand, #d3a24c);
+.footer__legal a{
+  color:var(--muted,#a0a8b6); text-decoration:none;
 }
+.footer__legal a:hover{ color:var(--brand,#b04a45); }
+
+.footer__copy{ color:var(--muted,#a0a8b6); font-size:13px; }
 
 /* Адаптив */
-@media (max-width: 900px) {
-  .footer-grid {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
+@media (max-width: 1100px){
+  .footer__grid{ grid-template-columns: 1.2fr 1fr; }
+}
+@media (max-width: 740px){
+  .footer__grid{ grid-template-columns: 1fr; }
+  .footer__brand{ text-align:left; }
+  .footer__bottom{ flex-direction:column; align-items:flex-start; gap:10px; }
 }

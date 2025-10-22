@@ -24,9 +24,9 @@ export default function Home() {
       {/* <Services withHead={false} /> */}
       {/* <Process withHead={false} /> */}
       <Quiz/>
-      <Prices withHead={false} />
-      <FAQ withHead={false} />
-      <Contacts withHead={false} />
+      {/* <Prices withHead={false} /> */}
+      {/* <FAQ withHead={false} /> */}
+      {/* <Contacts withHead={false} /> */}
     </>
   );
 }
