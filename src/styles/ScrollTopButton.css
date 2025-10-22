@@ -1,0 +1,142 @@
+/* =========================================================================
+   ScrollTopButton — круговой прогресс + стрелка (левый нижний угол)
+   ОЖИДАЕТ custom property: --pct (например, "37%") из React inline-style
+   ========================================================================= */
+
+/* Базовые переменные (можно переопределять в globals) */
+:root{
+  --brand:               #d1a24c;       /* цвет прогресса (золото) */
+  --scroll-size:         64px;          /* диаметр кнопки */
+  --scroll-ring:         6px;           /* толщина кольца */
+  --scroll-track:        #eceff3;       /* непройденная часть кольца */
+  --scroll-center:       #ffffff;       /* центр кнопки (всегда светлый) */
+  --scroll-icon:         #0e1525;       /* стрелка и текст процентов */
+  --scroll-shadow:       0 10px 30px rgba(0,0,0,.18);
+}
+
+/* Корневая кнопка */
+.scrolltop{
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left) + 16px);   /* над безопасной зоной */
+  bottom: max(16px, env(safe-area-inset-bottom) + 16px);
+  width: var(--scroll-size);
+  height: var(--scroll-size);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 999;
+
+  /* плавное появление/скрытие */
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, filter .15s ease;
+}
+
+/* Показать */
+.scrolltop--show{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Внешний круг с прогрессом (ring) */
+.scrolltop::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: var(--scroll-shadow);
+  background:
+    conic-gradient(var(--brand) var(--pct, 0%), var(--scroll-track) 0);
+}
+
+/* Внутренний диск */
+.scrolltop::after{
+  content: "";
+  position: absolute;
+  inset: var(--scroll-ring);
+  border-radius: 50%;
+  background: var(--scroll-center);   /* всегда светлый центр */
+}
+
+/* Внутренний контент (стрелка + проценты) — поверх диска */
+.scrolltop__core{
+  position: relative;
+  z-index: 1;                         /* важно: поверх ::after */
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Иконка стрелки */
+.scrolltop__icon{
+  width: 24px;
+  height: 24px;
+  fill: var(--scroll-icon);
+  transition: transform .15s ease;
+}
+
+/* Проценты — маленькая плашка снизу */
+.scrolltop__pct{
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 7px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 999px;
+  color: var(--brand);
+  background: rgba(209,162,76,.12);
+  border: 1px solid rgba(209,162,76,.35);
+}
+
+/* Ховеры/фокусы */
+.scrolltop:hover .scrolltop__icon{ transform: translateY(-1px); }
+.scrolltop:active{ filter: brightness(.98); }
+.scrolltop:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(209,162,76,.35);
+  border-radius: 50%;
+}
+
+/* Тёмная тема */
+@media (prefers-color-scheme: dark){
+  :root{
+    --scroll-track: #2e3442;      /* дорожка чуть темнее */
+    --scroll-icon:  #0e1525;      /* тёмная стрелка на белом центре */
+    /* центр намеренно оставляем белым для контраста */
+  }
+  .scrolltop__pct{
+    background: rgba(209,162,76,.16);
+    border-color: rgba(209,162,76,.45);
+  }
+}
+
+/* Адаптив: на узких экранах чуть меньше */
+@media (max-width: 420px){
+  :root{
+    --scroll-size: 56px;
+    --scroll-ring: 6px;
+  }
+  .scrolltop__icon{ width: 22px; height: 22px; }
+  .scrolltop__pct{ bottom: 5px; font-size: 11px; padding: 2px 6px; }
+}
+
+/* При печати не нужен */
+@media print{
+  .scrolltop{ display: none !important; }
+}
+
+/* Меньше анимаций, если пользователь так хочет */
+@media (prefers-reduced-motion: reduce){
+  .scrolltop{
+    transition: none !important;
+    transform: none !important;
+  }
+  .scrolltop__icon{ transition: none !important; }
+}

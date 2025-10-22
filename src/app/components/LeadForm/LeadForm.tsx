@@ -39,6 +39,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
   });
 
   const onSubmit = async (data: FormData) => {
+    // антибот
     if (honeypotValue.current) {
       reset();
       setDone(true);
@@ -47,7 +48,8 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
     }
 
     try {
-      await new Promise((r) => setTimeout(r, 600)); // имитация запроса
+      // имитация запроса
+      await new Promise((r) => setTimeout(r, 600));
       reset();
       setDone(true);
       onSuccess?.();
@@ -59,17 +61,17 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
 
   if (done) {
     return (
-      <div className="leadform-thanks">
-        <h3>Заявка отправлена ✅</h3>
-        <p>
-          Спасибо! Мы свяжемся с вами в ближайшее время по указанному номеру.
+      <div className="leadform leadform--thanks">
+        <h3 className="leadform-thanksTitle">Заявка отправлена ✅</h3>
+        <p className="leadform-thanksText">
+          Спасибо! Мы свяжемся с вами по указанному номеру.
           Обычно отвечаем в течение <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
         </p>
-        <p className="text-muted" style={{ marginTop: 8 }}>
+        <p className="leadform-thanksHint">
           Хотите быстрее? Позвоните:&nbsp;
           <a href="tel:+79999999999">+7&nbsp;999&nbsp;999-99-99</a>
         </p>
-        <button className="btn btn-primary" onClick={() => setDone(false)} style={{ marginTop: 16 }}>
+        <button className="btn btn-primary" onClick={() => setDone(false)} style={{ marginTop: 12 }}>
           Новая заявка
         </button>
       </div>
@@ -91,8 +93,10 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
 
       {/* Имя */}
       <div className="leadform-row">
+        <label className="leadform-label" htmlFor="lf-name">Имя</label>
         <input
-          className="input"
+          id="lf-name"
+          className="leadform-input"
           placeholder="Ваше имя"
           autoComplete="name"
           {...register("name")}
@@ -103,8 +107,10 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
 
       {/* Телефон */}
       <div className="leadform-row">
+        <label className="leadform-label" htmlFor="lf-phone">Телефон</label>
         <input
-          className="input"
+          id="lf-phone"
+          className="leadform-input"
           placeholder="+7XXXXXXXXXX"
           inputMode="tel"
           autoComplete="tel"
@@ -116,9 +122,11 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
 
       {/* Сумма долга */}
       <div className="leadform-row">
+        <label className="leadform-label" htmlFor="lf-debt">Сумма долга (≈)</label>
         <input
-          className="input"
-          placeholder="Сумма долга (≈)"
+          id="lf-debt"
+          className="leadform-input"
+          placeholder="например, 450 000"
           inputMode="numeric"
           autoComplete="off"
           {...register("debt")}
@@ -131,13 +139,18 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
         <span>
           Согласен(а) с{" "}
           <a href="/politika-konfidencialnosti" target="_blank" rel="noreferrer">
-            политикой
+            политикой конфиденциальности
           </a>
         </span>
       </label>
       {errors.agree && <span className="leadform-error">{errors.agree.message}</span>}
 
-      <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+      <button
+        className="btn btn-primary leadform-submit"
+        type="submit"
+        disabled={isSubmitting}
+        aria-disabled={isSubmitting}
+      >
         {isSubmitting ? "Отправляем..." : "Получить консультацию"}
       </button>
     </form>

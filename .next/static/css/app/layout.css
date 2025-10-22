@@ -285,145 +285,187 @@ body:has(#navbar-toggle:checked){
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   LeadForm.css — профессиональные стили формы (глобальные классы)
-   Использование:
-     - корневой контейнер формы:     class="leadform"
-     - строка (поле + ошибка):       class="leadform-row"
-     - сообщение об ошибке:          class="leadform-error"
-     - чекбокс согласия:             class="leadform-agree"
-     - экран "спасибо":              class="leadform-thanks"
-   Зависимости:
-     - переменные из globals.css: --surface, --text, --brand, --ring, --radius, --space-*
+   LeadForm.css — светлая тема по умолчанию
+   - Белая карточка, аккуратные светлые поля
+   - Бордовый бренд в фокусах и кнопках
+   - Ровные отступы, адаптив
    ========================================================================= */
 
-/* 1) Обёртка формы: сетка + комфортная ширина */
-.leadform {
-  display: grid;
-  grid-gap: 12px;
-  gap: 12px;                    /* базовый вертикальный ритм */
-  max-width: 560px;             /* удобно на десктопах */
-  width: 100%;
-  margin: 0 auto;               /* центрируем, если форма отдельный блок */
-  background: var(--surface);   /* лёгкая карточка (по желанию) */
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-  box-shadow: var(--shadow);
+:root{
+  /* Цвета по умолчанию (светлая тема) */
+  --lf-bg:        #ffffff;
+  --lf-text:      #0e1525;
+  --lf-muted:     #667085;
+  --lf-line:      #e6e8ec;
+  --lf-line-soft: #f1f3f5;
+  --lf-shadow:    0 20px 60px rgba(16,24,40,.08);
+  --lf-radius:    16px;
+
+  /* Бренд — бордовый */
+  --lf-brand:     #8b1e3f;         /* основной */
+  --lf-brand-10:  rgba(139,30,63,.10);
+  --lf-brand-20:  rgba(139,30,63,.20);
 }
 
-/* 2) Строка формы: поле + возможная ошибка под ним */
-.leadform-row {
+/* Поддержка тёмной темы через .theme-dark на body (если есть) */
+.theme-dark .leadform{
+  --lf-bg:        var(--surface, #14161b);
+  --lf-text:      var(--text,   #f5f7fb);
+  --lf-muted:     #9aa3b2;
+  --lf-line:      rgba(255,255,255,.12);
+  --lf-line-soft: rgba(255,255,255,.06);
+  --lf-shadow:    0 20px 60px rgba(0,0,0,.35);
+}
+
+/* 1) Обёртка формы */
+.leadform{
+  display: grid;
+  grid-gap: 14px;
+  gap: 14px;
+  width: 100%;
+  max-width: 640px;                 /* немного шире, чем было */
+  margin: 0 auto;
+
+  background: var(--lf-bg);
+  color: var(--lf-text);
+  border: 1px solid var(--lf-line);
+  border-radius: var(--lf-radius);
+  box-shadow: var(--lf-shadow);
+  padding: 22px;
+}
+
+/* Вариант для экрана «Спасибо» */
+.leadform--thanks{
+  text-align: center;
+}
+
+/* Заголовки и тексты «спасибо» */
+.leadform-thanksTitle{
+  margin: 0 0 8px;
+  font-weight: 800;
+  font-size: clamp(18px, 2.2vw, 22px);
+}
+.leadform-thanksText{
+  margin: 0;
+  color: var(--lf-text);
+  line-height: 1.55;
+}
+.leadform-thanksHint{
+  margin: 8px 0 0;
+  color: var(--lf-muted);
+}
+.leadform-thanksHint a{
+  color: var(--lf-brand);
+  text-decoration: none;
+}
+
+/* 2) Строка формы: подпись + поле + ошибка */
+.leadform-row{
   display: grid;
   grid-gap: 6px;
   gap: 6px;
-  text-align: left;             /* ошибки и подписи выравниваем слева */
+  text-align: left;
 }
 
-/* 3) Текстовые поля — только внутри .leadform
-      (чтобы не влиять на другие инпуты на сайте) */
-.leadform :where(
-  input[type="text"],
-  input[type="tel"],
-  input[type="number"],
-  input:not([type="checkbox"])
-) {
+/* Лейбл */
+.leadform-label{
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--lf-muted);
+}
+
+/* 3) Поля ввода (только внутри .leadform) */
+.leadform-input,
+.leadform :where(input[type="text"], input[type="tel"], input[type="number"]) {
   width: 100%;
-  background: var(--surface);
-  border: 1px solid rgba(255,255,255,.10);
-  color: var(--text);
+  background: #fff;
+  border: 1px solid var(--lf-line);
+  color: var(--lf-text);
   padding: 12px 14px;
   border-radius: 12px;
   transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
   -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
 }
 
-/* Плейсхолдер — мягче */
-.leadform :where(input)::placeholder {
-  color: rgba(242,244,247,.55);
+.leadform-input::placeholder{
+  color: #98a2b3;
 }
 
-/* Фокус — фирменное кольцо */
-.leadform :where(input:focus) {
+/* Фокус — бордовое «кольцо» */
+.leadform-input:focus,
+.leadform :where(input[type="text"]:focus, input[type="tel"]:focus, input[type="number"]:focus){
   outline: none;
-  border-color: rgba(209,162,76,.45);
-  box-shadow: var(--ring); /* определяется в globals.css */
+  border-color: var(--lf-brand);
+  box-shadow: 0 0 0 3px var(--lf-brand-10);
 }
 
-/* Валидация: подсветка ошибок через aria-invalid */
-.leadform :where(input[aria-invalid="true"]) {
+/* Ошибка поля через aria-invalid */
+.leadform :where(input[aria-invalid="true"]){
   border-color: #ef4444;
-  box-shadow: 0 0 0 3px rgba(239,68,68,.20);
+  box-shadow: 0 0 0 3px rgba(239,68,68,.18);
 }
 
-/* 4) Сообщение об ошибке (под полем) */
-.leadform-error {
-  color: #ef4444;
+/* 4) Сообщение об ошибке */
+.leadform-error{
+  color: #b42318;
   font-size: 13px;
   line-height: 1.3;
 }
 
-/* 5) Чекбокс согласия: сетка для галочки и текста */
-.leadform-agree {
+/* 5) Чекбокс согласия */
+.leadform-agree{
   display: grid;
   grid-template-columns: 18px 1fr;
   grid-gap: 10px;
   gap: 10px;
   align-items: start;
-  color: var(--muted);
+  color: var(--lf-muted);
   font-size: 14px;
-  text-align: left;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
-/* Нативный чекбокс с брендовым акцентом */
-.leadform-agree input[type="checkbox"] {
+.leadform-agree input[type="checkbox"]{
   margin-top: 2px;
-  width: 18px;
-  height: 18px;
-  accent-color: var(--brand);  /* поддержка в современных браузерах */
+  width: 18px; height: 18px;
+  accent-color: var(--lf-brand);
   cursor: pointer;
 }
 
-/* Ссылка в тексте согласия */
-.leadform-agree a {
-  color: var(--brand);
+.leadform-agree a{
+  color: var(--lf-brand);
   text-decoration: none;
 }
-.leadform-agree a:hover { opacity: .9; }
+.leadform-agree a:hover{ opacity: .9; }
 
-/* 6) Кнопка отправки — состояния дизейбла
-      (используешь глобальные .btn .btn-primary, здесь лишь доп. поведение) */
-.leadform button[aria-disabled="true"],
-.leadform button:disabled {
-  opacity: .75;
-  cursor: default;
+/* 6) Кнопка отправки — используем общие .btn .btn-primary,
+      но добавим выравнивание/ширину при необходимости */
+.leadform-submit{
+  margin-top: 6px;
+  width: 100%;
 }
 
-/* 7) Экран "Спасибо" после отправки */
-.leadform-thanks {
-  background: var(--surface);
-  border: 1px solid rgba(255,255,255,.10);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-  text-align: center;
-  animation: leadform-fadeIn .3s ease;
-}
-@keyframes leadform-fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* 8) Адаптивные мелочи */
-@media (max-width: 480px) {
-  .leadform { gap: 10px; padding: var(--space-5); }
-  .leadform-row { gap: 5px; }
-  .leadform-agree { grid-template-columns: 16px 1fr; font-size: 13px; }
-  .leadform-agree input[type="checkbox"] { width:16px; height:16px; }
+/* 7) Адаптив */
+@media (max-width: 480px){
+  .leadform{
+    padding: 18px;
+    gap: 12px;
+  }
+  .leadform-agree{
+    grid-template-columns: 16px 1fr;
+    font-size: 13px;
+  }
+  .leadform-agree input[type="checkbox"]{
+    width: 16px; height: 16px;
+  }
 }
 
-/* 9) Предпочтение снижения анимаций */
-@media (prefers-reduced-motion: reduce) {
-  .leadform,
-  .leadform * {
+/* 8) Снижение анимаций */
+@media (prefers-reduced-motion: reduce){
+  .leadform, .leadform *{
     transition: none !important;
     animation: none !important;
   }
@@ -554,6 +596,151 @@ body:has(#navbar-toggle:checked){
   .floating-cta-modal{
     animation: none !important; transition: none !important;
   }
+}
+/*!****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/ScrollTopButton.css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================================
+   ScrollTopButton — круговой прогресс + стрелка (левый нижний угол)
+   ОЖИДАЕТ custom property: --pct (например, "37%") из React inline-style
+   ========================================================================= */
+
+/* Базовые переменные (можно переопределять в globals) */
+:root{
+  --brand:               #d1a24c;       /* цвет прогресса (золото) */
+  --scroll-size:         64px;          /* диаметр кнопки */
+  --scroll-ring:         6px;           /* толщина кольца */
+  --scroll-track:        #eceff3;       /* непройденная часть кольца */
+  --scroll-center:       #ffffff;       /* центр кнопки (всегда светлый) */
+  --scroll-icon:         #0e1525;       /* стрелка и текст процентов */
+  --scroll-shadow:       0 10px 30px rgba(0,0,0,.18);
+}
+
+/* Корневая кнопка */
+.scrolltop{
+  position: fixed;
+  left: max(16px, env(safe-area-inset-left) + 16px);   /* над безопасной зоной */
+  bottom: max(16px, env(safe-area-inset-bottom) + 16px);
+  width: var(--scroll-size);
+  height: var(--scroll-size);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 999;
+
+  /* плавное появление/скрытие */
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease, filter .15s ease;
+}
+
+/* Показать */
+.scrolltop--show{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Внешний круг с прогрессом (ring) */
+.scrolltop::before{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  box-shadow: var(--scroll-shadow);
+  background:
+    conic-gradient(var(--brand) var(--pct, 0%), var(--scroll-track) 0);
+}
+
+/* Внутренний диск */
+.scrolltop::after{
+  content: "";
+  position: absolute;
+  inset: var(--scroll-ring);
+  border-radius: 50%;
+  background: var(--scroll-center);   /* всегда светлый центр */
+}
+
+/* Внутренний контент (стрелка + проценты) — поверх диска */
+.scrolltop__core{
+  position: relative;
+  z-index: 1;                         /* важно: поверх ::after */
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Иконка стрелки */
+.scrolltop__icon{
+  width: 24px;
+  height: 24px;
+  fill: var(--scroll-icon);
+  transition: transform .15s ease;
+}
+
+/* Проценты — маленькая плашка снизу */
+.scrolltop__pct{
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 7px;
+  font-size: 12px;
+  line-height: 1;
+  border-radius: 999px;
+  color: var(--brand);
+  background: rgba(209,162,76,.12);
+  border: 1px solid rgba(209,162,76,.35);
+}
+
+/* Ховеры/фокусы */
+.scrolltop:hover .scrolltop__icon{ transform: translateY(-1px); }
+.scrolltop:active{ filter: brightness(.98); }
+.scrolltop:focus-visible{
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(209,162,76,.35);
+  border-radius: 50%;
+}
+
+/* Тёмная тема */
+@media (prefers-color-scheme: dark){
+  :root{
+    --scroll-track: #2e3442;      /* дорожка чуть темнее */
+    --scroll-icon:  #0e1525;      /* тёмная стрелка на белом центре */
+    /* центр намеренно оставляем белым для контраста */
+  }
+  .scrolltop__pct{
+    background: rgba(209,162,76,.16);
+    border-color: rgba(209,162,76,.45);
+  }
+}
+
+/* Адаптив: на узких экранах чуть меньше */
+@media (max-width: 420px){
+  :root{
+    --scroll-size: 56px;
+    --scroll-ring: 6px;
+  }
+  .scrolltop__icon{ width: 22px; height: 22px; }
+  .scrolltop__pct{ bottom: 5px; font-size: 11px; padding: 2px 6px; }
+}
+
+/* При печати не нужен */
+@media print{
+  .scrolltop{ display: none !important; }
+}
+
+/* Меньше анимаций, если пользователь так хочет */
+@media (prefers-reduced-motion: reduce){
+  .scrolltop{
+    transition: none !important;
+    transform: none !important;
+  }
+  .scrolltop__icon{ transition: none !important; }
 }
 /*!********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/globals.css ***!

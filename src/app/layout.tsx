@@ -6,6 +6,7 @@ import "@styles/globals.css";
 import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
+import ScrollTopButton from "@components/widgets/ScrollTopButton/ScrollTopButton";
 
 export const metadata: Metadata = {
   title: "Банкротство физических лиц — помощь по 127-ФЗ",
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main>{children}</main>
         <Footer />
         <FloatingCTA />
+        <ScrollTopButton />
       </body>
     </html>
   );
