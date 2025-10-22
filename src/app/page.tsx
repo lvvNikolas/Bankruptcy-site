@@ -11,6 +11,7 @@ import Debts from "@components/sections/Debts/Debts";
 import DebtsChats from "@components/sections/Debts/DebtsChats";
 import DebtsCon from "@components/sections/Debts/DebtsCon";
 import Results from "./components/sections/Results/Results";
+import CasesSection from "./components/sections/Cases/CasesSection";
 
 export default function Home() {
   return (
@@ -24,6 +25,7 @@ export default function Home() {
       {/* <Services withHead={false} /> */}
       {/* <Process withHead={false} /> */}
       <Quiz/>
+      <CasesSection />
       {/* <Prices withHead={false} /> */}
       {/* <FAQ withHead={false} /> */}
       {/* <Contacts withHead={false} /> */}
