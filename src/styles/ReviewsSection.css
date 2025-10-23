@@ -1,0 +1,189 @@
+/* =========================================================================
+   Reviews (100vh, light, аккуратная карточка)
+   ========================================================================= */
+
+:root{
+  --rv-bg: #ffffff;
+  --rv-text: #0e1525;
+  --rv-muted: #6c7280;
+  --rv-accent: #b54b45;
+
+  --rv-border: #eceff3;
+  --rv-shadow: 0 20px 60px rgba(16,24,40,.10);
+
+  --rv-gold-1: #f5d67a;
+  --rv-gold-2: #ecc459;
+  --rv-gold-border: #d4a931;
+
+  --rv-radius: 20px;
+}
+
+/* 100vh секция (safe viewport) */
+.reviews.vh{
+  min-height: 100svh;
+  background: var(--rv-bg);
+  display: grid;
+  /* центрируем контент вертикально */
+  place-items: center;
+  padding: clamp(18px, 3vw, 28px) 0;
+}
+
+.reviews .container{
+  width: min(1080px, 92vw);
+  margin-inline: auto;
+}
+
+/* Вертикальная композиция: заголовок / сцена / точки / кнопка */
+.reviews__wrap{
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  align-items: center;
+  gap: clamp(14px, 2.6vw, 22px);
+  width: 100%;
+}
+
+/* Заголовок */
+.reviews__title{
+  margin: 0;
+  text-align: center;
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--rv-text);
+  font-size: clamp(28px, 4.2vw, 52px);
+}
+.reviews__accent{ color: var(--rv-accent); }
+
+/* Сцена/треки */
+.reviews__stage{
+  position: relative;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.reviews__rail{
+  width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+.reviews__rail::-webkit-scrollbar{ display:none; }
+
+.reviews__slide{
+  scroll-snap-align: start;
+  padding: clamp(8px, 2vw, 14px);
+  display: grid;
+  place-items: center;
+}
+
+/* Аккуратная карточка */
+.reviews__card{
+  width: min(980px, 96%);
+  background: #fff;
+  border: 1px solid var(--rv-border);
+  border-radius: var(--rv-radius);
+  box-shadow: var(--rv-shadow);
+  padding: clamp(22px, 3.4vw, 36px);
+  display: grid;
+  gap: clamp(10px, 2vw, 16px);
+}
+
+/* Шапка */
+.reviews__head{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  row-gap: 6px;
+}
+.reviews__name{
+  font-weight: 800;
+  color: var(--rv-text);
+  font-size: clamp(18px, 2.2vw, 20px);
+}
+.reviews__meta{
+  grid-column: 2;
+  justify-self: end;
+  color: var(--rv-muted);
+  font-size: 14px;
+}
+.reviews__stars{
+  grid-column: 2;
+  justify-self: end;
+  display: grid;
+  grid-auto-flow: column;
+  gap: 4px;
+}
+.reviews__stars svg{
+  width: 18px; height: 18px; fill: #d8dbe4;
+}
+.reviews__stars svg.on{ fill: #e5b841; }
+
+/* Текст */
+.reviews__text{
+  color: var(--rv-text);
+  font-size: clamp(18px, 2.1vw, 22px);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Стрелки — у краёв карточки */
+.reviews__nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 46px; height: 46px; border-radius: 50%;
+  display: grid; place-items: center;
+  color: #4a3514;
+  border: 1px solid var(--rv-gold-border);
+  background: linear-gradient(180deg, var(--rv-gold-1), var(--rv-gold-2));
+  box-shadow: 0 14px 32px rgba(229,184,65,.22);
+  transition: filter .15s ease, transform .08s ease;
+  z-index: 2;
+}
+.reviews__nav:hover{ filter: brightness(1.06); }
+.reviews__nav:active{ transform: translateY(-50%) scale(.98); }
+.reviews__nav--prev{ left: clamp(6px, 1.4vw, 12px); }
+.reviews__nav--next{ right: clamp(6px, 1.4vw, 12px); }
+
+/* Точки */
+.reviews__dots{
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+  justify-content: center;
+}
+.reviews__dot{
+  width: 10px; height: 10px; border-radius: 999px;
+  border: 0; background: #d9dce4; cursor: pointer;
+  transition: width .2s ease, background-color .2s ease;
+}
+.reviews__dot.active{ width: 26px; background: var(--rv-accent); }
+
+/* CTA */
+.reviews__cta{
+  justify-self: center;
+  padding: 14px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--rv-gold-border);
+  background: linear-gradient(180deg, var(--rv-gold-1), var(--rv-gold-2));
+  color: #3d2f16;
+  font-weight: 900;
+  box-shadow: 0 14px 36px rgba(229,184,65,.22);
+  transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
+}
+.reviews__cta:hover{
+  filter: brightness(1.04);
+  box-shadow: 0 18px 46px rgba(229,184,65,.28);
+}
+.reviews__cta:active{ transform: translateY(1px); }
+
+/* Мобайл */
+@media (max-width: 560px){
+  .reviews__nav{ display: none; } /* свайпа достаточно */
+  .reviews__meta{ grid-column: 1; justify-self: start; }
+  .reviews__stars{ grid-column: 1; justify-self: start; }
+}
