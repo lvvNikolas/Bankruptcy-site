@@ -1,8 +1,8 @@
+// src/app/components/sections/Footer/Footer.tsx
 "use client";
 
 import Link from "next/link";
-import type { Route } from "next";
-import "@styles/Footer.css";
+import "@styles/Footer.css"; // ← подключаем стили
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -11,91 +11,122 @@ export default function Footer() {
     <footer className="footer" role="contentinfo">
       <div className="container">
         <div className="footer__grid">
-          {/* Бренд + описание + CTA */}
-          <section className="footer__col footer__brand" aria-label="О компании">
-            <h3 className="footer__logo">Банкротство.РФ</h3>
+          {/* Левый столбец */}
+          <div className="footer__col">
+            <div className="footer__logo" aria-label="ДОНУЛЯ — списание долгов">
+              ДОНУЛЯ
+            </div>
             <p className="footer__lead">
               Помогаем законно списать долги по 127-ФЗ. Работаем по всей России.
             </p>
 
             <a
               className="footer__tgBtn"
-              href="https://t.me/your_username"
+              href="https://t.me/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Написать в Telegram"
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
                 <path
+                  d="M22 3 2 11l6.6 2.5L20 6 10.8 14.7l.2 5.3 3.3-3.3 4.9 3.6L22 3Z"
                   fill="currentColor"
-                  d="M9.16 14.7l-.37 3.88c.53 0 .76-.23 1.04-.5l2.5-2.38 5.2 3.82c.95.52 1.62.25 1.87-.88l3.4-15.92v0c.3-1.43-.52-1.99-1.43-1.65L1.34 9.28C-.06 9.83-.04 10.62 1.09 10.96l4.98 1.56L18.95 4.6c.56-.34 1.07-.15.65.19"
                 />
               </svg>
-              Написать в Telegram
+              <span>Написать в Telegram</span>
             </a>
-          </section>
 
-          {/* Навигация */}
+            <div className="footer__rating">
+              <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+                <path d="M12 .6 15 9l9 .8-7 5.6 2.3 8.8L12 18l-7.3 6.2L7 15.4 0 9.8 9 9l3-8.4Z" fill="#F8D33A" />
+              </svg>
+              <div>
+                <div className="footer__ratingTitle">Отзывы Яндекс</div>
+                <div className="footer__ratingValue">4.9</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Навигация 1 */}
           <nav className="footer__col" aria-label="Навигация">
-            <h4 className="footer__heading">Навигация</h4>
+            <div className="footer__heading">Навигация</div>
             <ul className="footer__list">
-              <li><Link href={"/" as Route}>Главная</Link></li>
-              <li><Link href={"/tarify" as Route}>Тарифы</Link></li>
-              <li><Link href={"/cases" as Route}>Выигранные дела</Link></li>
-              <li><Link href={"/faq" as Route}>Вопросы и ответы</Link></li>
-              <li><Link href={"/career" as Route}>Карьера</Link></li>
+              <li><Link href={{ pathname: "/" }}>Главная</Link></li>
+              <li><Link href={{ pathname: "/tarify" }}>Тарифы</Link></li>
+              <li><Link href={{ pathname: "/cases" }}>Выигранные дела</Link></li>
+              <li><Link href={{ pathname: "/faq" }}>Вопросы и ответы</Link></li>
+              <li><Link href={{ pathname: "/career" }}>Карьера</Link></li>
             </ul>
           </nav>
 
-          {/* Разделы */}
+          {/* Навигация 2 */}
           <nav className="footer__col" aria-label="Разделы">
-            <h4 className="footer__heading">Разделы</h4>
+            <div className="footer__heading">Разделы</div>
             <ul className="footer__list">
-              <li><Link href={"/oplata" as Route}>Оплата</Link></li>
-              <li><Link href={"/kontakty" as Route}>Контакты</Link></li>
-              <li><Link href={"/blog" as Route}>Блог</Link></li>
-              <li><Link href={"/sitemap" as Route}>Карта сайта</Link></li>
+              <li><Link href={{ pathname: "/oplata" }}>Оплата</Link></li>
+              <li><Link href={{ pathname: "/contacts" }}>Контакты</Link></li>
+              <li><Link href={{ pathname: "/blog" }}>Блог</Link></li>
+              <li><Link href={{ pathname: "/sitemap" }}>Карта сайта</Link></li>
             </ul>
           </nav>
 
           {/* Контакты */}
           <address className="footer__col footer__contacts" aria-label="Контакты">
-            <h4 className="footer__heading">Контакты</h4>
-
             <div className="footer__contactItem">
-              <span className="footer__ico" aria-hidden>
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M6.6 10.8c1.3 2.6 3.4 4.7 6 6l2-2c.2-.2.5-.3.8-.2 1 .3 2 .5 3 .6.4 0 .7.3.7.7v3.3c0 .4-.3.7-.7.7C9.5 20 4 14.5 4 7.7c0-.4.3-.7.7-.7H8c.4 0 .7.3.7.7.1 1 .3 2 .6 3 .1.3 0 .6-.2.8l-2 2z"/></svg>
+              <span className="footer__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.2 1 .4 2 .6 3.1.6.6 0 1 .4 1 .9v3.5c0 .6-.4 1-1 1C9.8 21 3 14.2 3 5.3c0-.6.4-1 1-1H7.5c.6 0 1 .4 1 .9 0 1.1.2 2.1.6 3.1.1.4.1.9-.2 1.2l-2.3 2.3Z"
+                    fill="currentColor"
+                  />
+                </svg>
               </span>
-              <a href="tel:+79324990000" className="footer__link">+7 (932) 499-00-00</a>
-              <div className="footer__meta">Ежедневно с 9:00 до 21:00</div>
+              <div>
+                <div className="footer__contactTitle">
+                  Звоните, поможем
+                  <span className="footer__badgeOnline">● На связи</span>
+                </div>
+                <a className="footer__link" href="tel:+79324990000">+7 (932) 499-00-00</a>
+                <div className="footer__meta">Ежедневно с 9:00 до 21:00</div>
+              </div>
             </div>
 
             <div className="footer__contactItem">
-              <span className="footer__ico" aria-hidden>
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5L4 8V6l8 5 8-5v2z"/></svg>
+              <span className="footer__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 6h16a2 2 0 0 1 2 2v.3l-10 6-10-6V8a2 2 0 0 1 2-2Zm-2 5.4 9.3 5.6a2 2 0 0 0 2 0L22 11.4V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6.6Z" fill="currentColor" />
+                </svg>
               </span>
-              <a href="mailto:info@donulya.ru" className="footer__link">info@donulya.ru</a>
+              <div>
+                <div className="footer__contactTitle">Пишите, ответим</div>
+                <a className="footer__link" href="mailto:info@donulya.ru">info@donulya.ru</a>
+              </div>
             </div>
 
             <div className="footer__contactItem">
-              <span className="footer__ico" aria-hidden>
-                <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5c-1.4 0-2.5-1.1-2.5-2.5S10.6 6.5 12 6.5s2.5 1.1 2.5 2.5S13.4 11.5 12 11.5z"/></svg>
+              <span className="footer__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" fill="currentColor" />
+                </svg>
               </span>
-              <div className="footer__link">Нижняя Радищевская улица, 5с3</div>
+              <div>
+                <div className="footer__contactTitle">Приезжайте, обсудим</div>
+                <div className="footer__address">Нижняя Радищевая улица, 5с3</div>
+              </div>
             </div>
           </address>
         </div>
 
+        {/* Нижняя полоса */}
         <div className="footer__bottom">
           <nav className="footer__legal" aria-label="Юридическая информация">
-            <Link href={"/politika-konfidencialnosti" as Route}>Политика конфиденциальности</Link>
-            <Link href={"/pdn" as Route}>Политика обработки персональных данных</Link>
-            <Link href={"/requisites" as Route}>Реквизиты</Link>
-            <Link href={"/oferta" as Route}>Оферта</Link>
+            <Link href={{ pathname: "/privacy" }}>Политика конфиденциальности</Link>
+            <Link href={{ pathname: "/pdn" }}>Политика обработки персональных данных</Link>
+            <Link href={{ pathname: "/rekvizity" }}>Реквизиты</Link>
+            <Link href={{ pathname: "/oferta" }}>Оферта</Link>
           </nav>
 
           <div className="footer__copy">
-            © «ДОНУЛЯ», {year}. Все права защищены.
+            © «ДОНУЛЯ», 2021–{year}. Все права защищены.
           </div>
         </div>
       </div>
