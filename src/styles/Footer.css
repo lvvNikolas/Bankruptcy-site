@@ -1,260 +1,245 @@
 /* =========================================================================
    Footer — тёмный, аккуратный, адаптивный
-   - 4 колонки → 2 колонки → 1 колонка
-   - на мобильных всё выровнено по центру
    ========================================================================= */
 
-:root{
-  --f-bg: #0b0c10;
-  --f-text: #eaeef6;
-  --f-muted: #a0a8b6;
-  --f-border: rgba(255,255,255,.06);
-  --f-card: rgba(255,255,255,.03);
-
-  --f-brand: #b04a45;            /* фирменный бордовый */
-  --f-brand-12: rgba(176,74,69,.12);
-  --f-brand-35: rgba(176,74,69,.35);
-
-  --f-radius: 14px;
-  --f-space-1: 8px;
-  --f-space-2: 12px;
-  --f-space-3: 16px;
-  --f-space-4: 20px;
-  --f-space-5: 24px;
-  --f-space-6: 32px;
-}
-
-/* ===== Корень ===== */
 .footer{
-  background: var(--f-bg);
-  color: var(--f-text);
-  border-top: 1px solid var(--f-border);
+  --bg: #0b0c10;
+  --text: #e7ecf6;
+  --muted: #a6afbd;
+  --brand: #b54b45;                 /* бордовый акцент */
+  --gold1: #f5d67a;
+  --gold2: #ecc459;
+  --goldBorder: #d4a931;
+  --line: rgba(255,255,255,.06);
+
+  background: var(--bg);
+  color: var(--text);
+  border-top: 1px solid var(--line);
   margin-top: 48px;
   font-size: 15px;
   line-height: 1.55;
 }
+
 .footer .container{
-  width: min(1200px, 94vw);
+  width: min(1200px, 92vw);
   margin-inline: auto;
-  padding: var(--f-space-6) 0 var(--f-space-4);
+  padding: 32px 0 20px;
 }
 
-/* ===== Верхняя сетка ===== */
+/* ====== Верх: сетка 4 колонки (на планшет 2, на мобилке 1) ====== */
 .footer__grid{
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr; /* бренд + 2 списковые + контакты */
-  gap: var(--f-space-6);
+  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+  gap: 32px;
   align-items: start;
 }
+
+/* ====== Левый блок ====== */
 .footer__col{ min-width: 0; }
 
-/* ===== Бренд и лид ===== */
 .footer__logo{
-  margin: 0 0 var(--f-space-1);
+  margin: 0 0 8px;
   font-size: 28px;
   font-weight: 900;
-  color: var(--f-brand);
   letter-spacing: .2px;
+  color: var(--brand);
 }
+
 .footer__lead{
-  margin: 0 0 var(--f-space-3);
-  color: var(--f-muted);
+  margin: 0 0 16px;
+  color: var(--muted);
   max-width: 520px;
 }
 
-/* ===== Рейтинг/Яндекс (если есть) ===== */
-.footer__rating{
-  display: grid;
-  grid-auto-flow: column;
-  align-items: center;
-  gap: 10px;
-  color: var(--f-text);
-}
-
-/* ===== Telegram-кнопка ===== */
+/* Telegram CTA */
 .footer__tgBtn{
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: var(--f-space-1);
+  margin-top: 8px;
   padding: 12px 14px;
-  border: 1px solid var(--f-border);
-  border-radius: var(--f-radius);
-  color: var(--f-text);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  color: var(--text);
   text-decoration: none;
-  background: var(--f-card);
+  background: rgba(255,255,255,.03);
   transition: border-color .15s ease, transform .06s ease, background-color .15s ease;
 }
 .footer__tgBtn:hover{
   border-color: rgba(176,74,69,.55);
-  background: var(--f-brand-12);
+  background: rgba(176,74,69,.08);
 }
 .footer__tgBtn:active{ transform: translateY(1px); }
 
-/* ===== Заголовки колонок ===== */
+/* Рейтинг */
+.footer__rating{
+  display: flex; align-items: center; gap: 10px;
+  margin-top: 18px;
+}
+.footer__ratingTitle{ color: var(--muted); font-size: 14px; }
+.footer__ratingValue{ font-weight: 800; color: var(--text); }
+
+/* ====== Навигация ====== */
 .footer__heading{
   margin: 0 0 10px;
   font-weight: 800;
-  color: var(--f-text);
+  color: var(--text);
 }
 
-/* ===== Списки навигации ===== */
 .footer__list{
   list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 8px;
+  padding: 0; margin: 0;
+  display: grid; gap: 8px;
 }
 .footer__list a{
-  color: var(--f-muted);
+  color: var(--muted);
   text-decoration: none;
   transition: color .15s ease;
 }
-.footer__list a:hover{ color: var(--f-brand); }
+.footer__list a:hover{ color: var(--brand); }
 
-/* ===== Контакты ===== */
+/* ====== Контакты ====== */
 .footer__contacts{ font-style: normal; }
+
 .footer__contactItem{
   display: grid;
-  grid-template-columns: 28px 1fr;
-  gap: 10px;
+  grid-template-columns: 40px 1fr;
+  gap: 12px;
   align-items: start;
-  margin: 12px 0;
+  margin: 14px 0;
 }
-.footer__ico{
-  width: 28px; height: 28px; border-radius: 50%;
-  display: grid; place-items: center;
-  color: var(--f-brand);
-  background: var(--f-brand-12);
-  border: 1px solid var(--f-brand-35);
-}
-.footer__ico svg{ width: 18px; height: 18px; }
 
-.footer__contactTitle{
-  font-weight: 700;
-  color: var(--f-text);
+.footer__ico{
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  color: #5a3d14;
+  background: linear-gradient(180deg, var(--gold1), var(--gold2));
+  border: 1px solid var(--goldBorder);
+  box-shadow: 0 12px 28px rgba(229,184,65,.25);
 }
-.footer__badge{
-  display: inline-grid;
-  grid-auto-flow: column;
+.footer__ico svg{ width: 20px; height: 20px; }
+
+/* Титул и ссылки */
+.footer__contactTitle{
+  font-weight: 800; color: var(--text);
+}
+.footer__address{ color: var(--text); }
+
+.footer__link{
+  color: var(--text);
+  text-decoration: none;
+}
+.footer__link:hover{ color: var(--brand); }
+.footer__meta{ color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+/* ====== ЕДИНАЯ ЛИНИЯ телефона (Заголовок — Бейдж — Номер) ====== */
+.footer__phoneRow{
+  display: flex;
   align-items: center;
+  flex-wrap: wrap;               /* чтобы на узких не ломалось некрасиво */
+  gap: 10px 12px;
+  margin-bottom: 4px;
+}
+
+.footer__titleText{
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.footer__badgeOnline{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   gap: 6px;
-  padding: 3px 8px;
+  font-size: 13px;
+  padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(26,163,72,.14);
-  color: #c8f7d0;
+  background: #2e7d32;
+  color: #eaffea;
+  white-space: nowrap;
+}
+.footer__badgeOnline::before{
+  content: "●";
+  display: inline-block;
   font-size: 12px;
 }
-.footer__link{
-  color: var(--f-text);
-  text-decoration: none;
-}
-.footer__link[href]:hover{ color: var(--f-brand); }
-.footer__meta{
-  color: var(--f-muted);
-  font-size: 13px;
-  margin-top: 2px;
-}
-.footer__address{ color: var(--f-text); }
 
-/* ===== Нижняя полоса (правовые ссылки) ===== */
+.footer__phone{
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* ====== Нижняя полоса ====== */
 .footer__bottom{
-  margin-top: var(--f-space-5);
-  padding-top: var(--f-space-3);
-  border-top: 1px solid var(--f-border);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
+  margin-top: 28px; padding-top: 18px;
+  border-top: 1px solid var(--line);
+  display: flex; flex-wrap: wrap;
+  gap: 12px; align-items: center; justify-content: space-between;
 }
 .footer__legal{
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
+  display: flex; gap: 18px; flex-wrap: wrap;
 }
 .footer__legal a{
-  color: var(--f-muted);
+  color: var(--muted);
   text-decoration: none;
-  transition: color .15s ease;
 }
-.footer__legal a:hover{ color: var(--f-brand); }
-.footer__copy{
-  color: var(--f-muted);
-  font-size: 13px;
-}
+.footer__legal a:hover{ color: var(--brand); }
+.footer__copy{ color: var(--muted); font-size: 13px; }
 
 /* =========================================================================
    Адаптив
    ========================================================================= */
 
-/* 2 колонки (планшеты) */
+/* планшет: 2 колонки */
 @media (max-width: 1100px){
-  .footer__grid{
-    grid-template-columns: 1.2fr 1fr;
-  }
+  .footer__grid{ grid-template-columns: 1.2fr 1fr; }
 }
 
-/* мелкий планшет */
-@media (max-width: 920px){
-  .footer .container{
-    width: min(1000px, 94vw);
-  }
-  .footer__grid{
-    grid-template-columns: 1fr 1fr;
-    gap: var(--f-space-5);
-  }
-}
-
-/* 1 колонка и центрирование (мобильные) */
-@media (max-width: 620px){
+/* телефон: одна колонка, выравнивание по центру */
+@media (max-width: 740px){
   .footer__grid{
     grid-template-columns: 1fr;
-    row-gap: clamp(18px, 4vw, 22px);
-    text-align: center;
+    gap: 26px;
   }
 
-  /* Всё по центру */
+  .footer .container{ padding: 28px 0 18px; }
+
   .footer__col,
-  .footer__contacts,
-  .footer__list{
-    justify-items: center;
+  .footer__rating,
+  .footer__list,
+  .footer__bottom,
+  .footer__legal{
     text-align: center;
+    justify-content: center;
   }
-  .footer__heading{ text-align: center; }
 
-  .footer__tgBtn{ margin-inline: auto; }
-  .footer__rating{ justify-content: center; }
-
+  /* Контактные карточки — иконка сверху, текст под ней */
   .footer__contactItem{
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    margin: 16px 0;
+    gap: 10px;
+    margin: 18px 0;
   }
-  .footer__ico{ margin-bottom: 8px; }
-  .footer__address,
-  .footer__link,
-  .footer__meta{ text-align: center; }
+  .footer__ico{ margin-bottom: 2px; }
+
+  .footer__phoneRow{
+    justify-content: center;      /* на мобилке всё по центру */
+    gap: 8px 10px;
+  }
 
   .footer__bottom{
     flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 12px;
-    margin-top: clamp(24px, 5vw, 30px);
+    gap: 10px;
   }
-  .footer__legal{
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .footer__copy{ text-align: center; }
 }
 
-/* Reduce motion */
-@media (prefers-reduced-motion: reduce){
-  .footer__tgBtn,
-  .footer__legal a{ transition: none !important; }
+/* Микроправки для очень узких экранов */
+@media (max-width: 380px){
+  .footer__phoneRow{ gap: 6px 8px; }
+  .footer__badgeOnline{ padding: 3px 8px; font-size: 12px; }
+  .footer__ico{ width: 38px; height: 38px; }
 }

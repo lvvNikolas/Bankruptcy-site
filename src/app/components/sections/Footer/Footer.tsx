@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import "@styles/Footer.css"; // ← подключаем стили
+import "@styles/Footer.css";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="footer" role="contentinfo">
       <div className="container">
         <div className="footer__grid">
-          {/* Левый столбец */}
+          {/* Левый столбец: бренд + описание + TG + рейтинг */}
           <div className="footer__col">
             <div className="footer__logo" aria-label="ДОНУЛЯ — списание долгов">
               ДОНУЛЯ
@@ -35,7 +35,7 @@ export default function Footer() {
               <span>Написать в Telegram</span>
             </a>
 
-            <div className="footer__rating">
+            <div className="footer__rating" aria-label="Рейтинг по отзывам Яндекс">
               <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
                 <path d="M12 .6 15 9l9 .8-7 5.6 2.3 8.8L12 18l-7.3 6.2L7 15.4 0 9.8 9 9l3-8.4Z" fill="#F8D33A" />
               </svg>
@@ -71,6 +71,7 @@ export default function Footer() {
 
           {/* Контакты */}
           <address className="footer__col footer__contacts" aria-label="Контакты">
+            {/* Телефон — ЕДИНАЯ ЛИНИЯ: заголовок + бейдж + номер */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -80,16 +81,20 @@ export default function Footer() {
                   />
                 </svg>
               </span>
+
               <div>
-                <div className="footer__contactTitle">
-                  Звоните, поможем
-                  <span className="footer__badgeOnline">● На связи</span>
+                <div className="footer__phoneRow">
+                  <span className="footer__titleText">Звоните, поможем</span>
+                  <span className="footer__badgeOnline">На связи</span>
+                  <a className="footer__link footer__phone" href="tel:+79324990000">
+                    +7 (932) 499-00-00
+                  </a>
                 </div>
-                <a className="footer__link" href="tel:+79324990000">+7 (932) 499-00-00</a>
                 <div className="footer__meta">Ежедневно с 9:00 до 21:00</div>
               </div>
             </div>
 
+            {/* Email */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -102,6 +107,7 @@ export default function Footer() {
               </div>
             </div>
 
+            {/* Адрес */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
