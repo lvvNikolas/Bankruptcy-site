@@ -1,118 +1,123 @@
-import type { Metadata } from "next";
+import type { Metadata, Route } from "next";
 import Link from "next/link";
 import "@styles/CareerPage.css";
 
-// SEO — серверный компонент, без "use client"
 export const metadata: Metadata = {
-  title: "Вакансии — Карьера",
+  title: "Карьера — открытые вакансии",
   description:
-    "Актуальные вакансии: юристы, помощники арбитражного управляющего и другие роли. Присоединяйтесь к сильной команде.",
-  openGraph: {
-    title: "Вакансии — Карьера",
-    description:
-      "Актуальные вакансии: юристы, помощники арбитражного управляющего и другие роли.",
-    type: "website",
-  },
+    "Открытые вакансии компании: юристы, арбитражные управляющие, помощники. Присоединяйтесь к профессиональной команде.",
 };
 
-// ⚠️ Проверь путь, если у тебя другая структура
-import Footer from "@/app/components/sections/Footer/Footer";
-
 type Vacancy = {
+  id: string;
+  href: Route;
   title: string;
-  excerpt: string;
-  date: string; // ISO или читабельная дата
-  href: string;
+  intro: string;
+  date: string;
 };
 
 const VACANCIES: Vacancy[] = [
   {
-    title: "Команде нужен арбитражный управляющий",
-    excerpt:
-      "В портфеле команды более 100 успешных дел по банкротству физлиц. Задачи: вести дела, контролировать работу помощников, проверять процессуальные документы.",
-    date: "2023-01-29",
-    href: "/career/au-manager",
+    id: "v1",
+    href: "/career",
+    title: "Арбитражный управляющий",
+    intro:
+      "Ищем в команду опытного арбитражного управляющего с портфолио успешных дел. Задача — контроль помощников и ведение процедур банкротства физлиц.",
+    date: "29.01.2023",
   },
   {
-    title: "Команде нужен помощник арбитражного управляющего",
-    excerpt:
-      "Опыт работы от 3 лет. Задачи: консультирование клиентов, процессуальные документы, представительство интересов в арбитражах.",
-    date: "2023-01-26",
-    href: "/career/au-assistant",
+    id: "v2",
+    href: "/career",
+    title: "Помощник арбитражного управляющего",
+    intro:
+      "Требуется помощник с опытом от 3 лет. Консультирование клиентов, подготовка документов и сопровождение судебных заседаний.",
+    date: "26.01.2023",
   },
   {
-    title: "Команде нужен грамотный юрист",
-    excerpt:
-      "Представительство интересов в судах, составление договоров и соглашений, систематизация договорной базы компании.",
-    date: "2023-01-09",
-    href: "/career/lawyer",
+    id: "v3",
+    href: "/career",
+    title: "Юрист по банкротству физических лиц",
+    intro:
+      "Ищем грамотного юриста, готового представлять интересы клиентов в судах, готовить договоры и контролировать юридические процессы компании.",
+    date: "09.01.2023",
   },
 ];
 
-function formatDate(d: string) {
-  try {
-    const date = new Date(d);
-    return date.toLocaleDateString("ru-RU");
-  } catch {
-    return d;
-  }
-}
-
 export default function CareerPage() {
   return (
-    <>
+    <main>
       {/* HERO */}
       <header className="career-hero" aria-labelledby="career-title">
         <div className="container">
           <nav className="career-crumbs" aria-label="Хлебные крошки">
             <ol>
-              <li><Link href="/">Главная</Link></li>
-              <li aria-current="page">Вакансии</li>
+              <li>
+                <Link href="/">Главная</Link>
+              </li>
+              <li aria-current="page">Карьера</li>
             </ol>
           </nav>
 
-          <h1 id="career-title" className="career-hero__title">
+          <h1 id="career-title" className="career-title">
             Вакансии
           </h1>
-          <p className="career-hero__lead">
-            Сильная команда и понятные задачи. Если хотите развиваться в
-            банкротстве и защищать интересы клиентов — мы будем рады знакомству.
+          <p className="career-lead">
+            Мы растём и расширяем команду. Присоединяйтесь к юристам и
+            арбитражным управляющим, которые ежедневно помогают клиентам
+            законно списывать долги и защищать имущество.
           </p>
         </div>
       </header>
 
-      {/* LIST */}
-      <main className="career">
+      {/* VACANCIES */}
+      <section className="career-section">
         <div className="container">
-          <ul className="career-grid" aria-label="Список вакансий">
+          <ul className="career-grid">
             {VACANCIES.map((v) => (
-              <li key={v.href} className="vacancy">
-                <div className="vacancy__content">
-                  <h2 className="vacancy__title">{v.title}</h2>
-                  <p className="vacancy__excerpt">{v.excerpt}</p>
-                  <div className="vacancy__meta">
-                    <span className="vacancy__date">
-                      Опубликовано: {formatDate(v.date)}
-                    </span>
-                  </div>
+              <li key={v.id} className="vacancy-card">
+                <div className="vacancy-info">
+                  <h2 className="vacancy-title">{v.title}</h2>
+                  <p className="vacancy-intro">{v.intro}</p>
+                  <p className="vacancy-date">
+                    Опубликовано: <time dateTime="2023-01-29">{v.date}</time>
+                  </p>
                 </div>
 
-                <div className="vacancy__actions">
-                  <Link href={v.href} className="btn btn-outline vacancy__btn" aria-label={`Подробнее: ${v.title}`}>
-                    Подробнее
-                    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24">
-                      <path d="M5 12h12m-5-5 5 5-5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </Link>
-                </div>
+                <Link
+                  href={v.href}
+                  className="vacancy-btn"
+                  prefetch={false}
+                  aria-label={`Подробнее о вакансии: ${v.title}`}
+                >
+                  Подробнее
+                  <svg
+                    aria-hidden="true"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    className="vacancy-icon"
+                  >
+                    <path
+                      d="M5 12h12m-5-5 5 5-5 5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </Link>
               </li>
             ))}
           </ul>
-        </div>
-      </main>
 
-      {/* ЕДИНСТВЕННЫЙ футер */}
-      <Footer />
-    </>
+          <div className="career-note">
+            Не нашли подходящую вакансию? Напишите нам на&nbsp;
+            <a href="mailto:hr@orlovskyandco.ru">hr@orlovskyandco.ru</a> — мы
+            свяжемся, когда появится подходящая позиция.
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
