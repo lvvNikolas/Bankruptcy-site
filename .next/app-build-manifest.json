@@ -23,6 +23,17 @@
       "static/chunks/main-app.js",
       "static/css/app/faq/page.css",
       "static/chunks/app/faq/page.js"
+    ],
+    "/career/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/career/page.css",
+      "static/chunks/app/career/page.js"
+    ],
+    "/_not-found/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/_not-found/page.js"
     ]
   }
 }
