@@ -1,0 +1,164 @@
+/* =========================================================================
+   FAQ Page — светлый аккуратный макет
+   ========================================================================= */
+
+/* Контейнер у тебя общий есть; дублирую на случай отсутствия */
+.container {
+  width: min(1200px, 92vw);
+  margin-inline: auto;
+}
+
+/* === HERO === */
+
+.faq-hero {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  padding: clamp(40px, 5vw, 72px) 0;
+}
+
+/* Хлебные крошки */
+.faq-crumbs ol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  color: #9aa3b2;
+  font-size: 14px;
+}
+.faq-crumbs li + li::before {
+  content: "›";
+  color: #cbd5e1;
+  margin: 0 6px;
+}
+.faq-crumbs a {
+  color: #6b7280;
+  text-decoration: none;
+}
+.faq-crumbs a:hover {
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Заголовок */
+.faq-title {
+  margin: 0 0 10px;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.1;
+  font-weight: 900;
+  color: #0e1525;
+}
+.faq-lead {
+  margin: 0;
+  color: #374151;
+  font-size: clamp(16px, 1.8vw, 18px);
+  max-width: 90ch;
+}
+
+/* === FAQ GRID === */
+.faq-list-wrap {
+  padding: clamp(28px, 5vw, 56px) 0;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.faq-col {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+}
+
+/* Карточка */
+.faq-card {
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  min-height: 100px;        /* одинаковая высота шапок */
+  display: flex;
+  flex-direction: column;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  overflow: hidden;
+}
+
+/* Скрываем маркер summary */
+.faq-card summary::-webkit-details-marker { display: none; }
+.faq-card summary { list-style: none; }
+
+/* Шапка карточки */
+.faq-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  cursor: pointer;
+  padding: 24px 28px;
+  user-select: none;
+  min-height: 80px;
+}
+.faq-q {
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.35;
+  font-size: clamp(16px, 2vw, 18px);
+}
+
+/* Плюс/минус */
+.faq-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+.faq-icon::before,
+.faq-icon::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  background: #0f172a;
+  border-radius: 2px;
+  transition: transform .18s ease, opacity .18s ease;
+}
+.faq-icon::before { width: 18px; height: 2px; }
+.faq-icon::after  { width: 2px;  height: 18px; }
+.faq-card[open] .faq-icon::after {
+  transform: scaleY(0);
+  opacity: 0;
+}
+
+/* Текст ответа */
+.faq-body {
+  padding: 0 28px 22px 28px;
+}
+.faq-a {
+  color: #374151;
+  line-height: 1.65;
+}
+
+/* Ховер/фокус */
+.faq-card:hover {
+  border-color: rgba(209, 162, 76, .35);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, .06);
+}
+.faq-head:focus { outline: none; }
+.faq-head:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(209, 162, 76, .35);
+  border-radius: 10px;
+}
+
+/* Отступ перед квизом */
+.faq-quiz { padding: clamp(20px, 4vw, 32px) 0; }
+
+/* Адаптив — одна колонка */
+@media (max-width: 960px) {
+  .faq-grid { grid-template-columns: 1fr; }
+}
