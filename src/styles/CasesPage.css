@@ -1,0 +1,112 @@
+/* @styles/CasesPage.css
+   Светлый hero для страницы "Выигранные дела".
+   Аккуратный без фото, левое выравнивание.
+*/
+
+/* Базовый контейнер */
+.container {
+  width: min(1200px, 92vw);
+  margin-inline: auto;
+}
+
+/* === HERO === */
+.cases-hero {
+  position: relative;
+  background: #ffffff; /* чистый белый фон */
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  padding: clamp(36px, 5vw, 72px) 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Мягкая подсветка фона без затемнений */
+.cases-hero::after {
+  content: "";
+  position: absolute;
+  right: -140px;
+  top: -120px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff6da, rgba(255, 246, 218, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Хлебные крошки */
+.cases-crumbs ol {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  color: #9ca3af;
+  font-size: 15px;
+}
+.cases-crumbs li + li::before {
+  content: "›";
+  color: #d1d5db;
+  font-weight: 400;
+}
+.cases-crumbs a {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.cases-crumbs a:hover {
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Заголовок */
+.cases-hero__title {
+  margin: 0 0 14px;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.1;
+  font-weight: 900;
+  color: #0e1525;
+  letter-spacing: 0.2px;
+  position: relative;
+}
+
+/* Лаконичный маркер под заголовком */
+.cases-hero__title::after {
+  content: "";
+  display: block;
+  width: 76px;
+  height: 6px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d1a24c, #f4d483);
+}
+
+/* Подзаголовок */
+.cases-hero__lead {
+  margin: 0;
+  color: #374151;
+  font-size: clamp(16px, 1.8vw, 18px);
+  max-width: 62ch;
+  line-height: 1.6;
+}
+
+/* Отступы секций ниже героя */
+.cases-section {
+  padding: clamp(28px, 4.5vw, 48px) 0;
+}
+.quiz-section {
+  padding: clamp(20px, 3.6vw, 40px) 0 clamp(40px, 5vw, 60px);
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+/* Адаптив */
+@media (max-width: 960px) {
+  .cases-hero {
+    padding: clamp(28px, 6vw, 52px) 0;
+  }
+  .cases-hero__title::after {
+    width: 64px;
+    height: 5px;
+  }
+}
