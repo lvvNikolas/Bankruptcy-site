@@ -1,277 +1,157 @@
-/* =========================================================================
-   Navbar.css — липкая шапка + фуллскрин мобильное меню (100dvh, чёрный фон)
-   Выразительные ссылки, плавная анимация, бургер → крестик
-   ========================================================================= */
-
-:root{
-  --bg:      #0b0c0f;
-  --overlay: #000;
-  --text:    #f5f7fb;
-  --muted:   #a9b0bb;
-  --brand:   #d1a24c;
-  --line:    rgba(255,255,255,.10);
-  --ring:    rgba(209,162,76,.35);
-
-  --fx-dur:  .25s;
+:root {
+  --nav-bg: #ffffff;
+  --nav-text: #0f172a;
+  --nav-muted: #64748b;
+  --nav-accent: #0f172a; /* цвет ссылок */
+  --nav-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+  --nav-line: rgba(15, 23, 42, 0.08);
 }
 
-/* ---------------- Шапка ---------------- */
-.navbar{
+.nav {
   position: sticky;
   top: 0;
+  inset-inline: 0;
   z-index: 1000;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-line);
+  box-shadow: var(--nav-shadow);
 }
 
-.navbar > .container{
-  max-width: min(1320px, calc(100% - 32px));
+.nav__inner {
+  max-width: min(1280px, calc(100% - 32px));
   margin: 0 auto;
-}
+  min-height: 64px;
 
-.navbar-row{
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* логотип | меню | бургер */
   align-items: center;
   gap: 16px;
-  min-height: 60px;
 }
 
-/* Лого */
-.navbar-logo{
-  color: var(--text);
+/* ЛОГО */
+.nav__logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #0f1115;
+  display: inline-grid;
+  place-items: center;
+}
+.nav__logo > span {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #101317;
+}
+
+/* ДЕСКТОП-МЕНЮ по центру */
+.nav__desk {
+  justify-self: center;
+}
+.nav__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(18px, 3.8vw, 44px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nav__link {
+  color: var(--nav-accent);
   text-decoration: none;
   font-weight: 800;
-  letter-spacing: .2px;
-  line-height: 1;
-}
-.navbar-logo:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-  border-radius: 10px;
-}
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 
-/* Телефон справа (desktop only) */
-.navbar-phone{
-  margin-left: auto;
-  color: var(--brand);
-  font-weight: 700;
-  text-decoration: none;
-  display: none;
-}
-.navbar-phone:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-  border-radius: 10px;
-}
-
-/* ---------------- Desktop nav ---------------- */
-.navbar-desktop{
-  margin-left: auto;
-  display: none;
-  align-items: center;
-  gap: 18px;
-}
-
-/* Эффектная ссылка (desktop) */
-.navbar-desktop a{
-  --u-h: 2px; /* толщина подчёркивания */
-  position: relative;
-  color: var(--text);
-  text-decoration: none;
-  opacity: .92;
-  padding: 6px 8px;
-  border-radius: 10px;
-  transition: color var(--fx-dur) ease, opacity var(--fx-dur) ease, transform var(--fx-dur) ease;
-
-  /* линией подчёркиваем под текстом */
+  /* “чистое” лёгкое подчёркивание без ломания верстки */
   background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
+  background-size: 0% 2px;
   background-position: 0% 100%;
-  background-size: 0% var(--u-h);
+  background-repeat: no-repeat;
+  transition: background-size 0.18s ease;
 }
-.navbar-desktop a:hover{
-  opacity: 1;
-  transform: translateY(-1px);
-  background-size: 100% var(--u-h);
-}
-.navbar-desktop a:focus-visible{
+.nav__link:hover,
+.nav__link:focus-visible {
+  background-size: 100% 2px;
   outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
 }
 
-.navbar-cta{ padding: 8px 12px; }
-
-/* ---------------- Burger ---------------- */
-.navbar-burger{
-  margin-left: auto;
+/* БУРГЕР справа (скрыт на десктопе) */
+.nav__burger {
   width: 44px;
   height: 40px;
-  display: grid;
+  display: none;
   place-content: center;
-  gap: 4px;
-  cursor: pointer;
+  gap: 5px;
   -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
-.navbar-burger span{
+.nav__burger span {
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--text);
+  background: var(--nav-text);
   border-radius: 2px;
-  transition: transform var(--fx-dur) ease, opacity .2s ease, background-color .2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
-
-/* Скрытый чекбокс-тоггл */
-.navbar-toggle{ display: none; }
-
-/* Морфинг бургера в «крестик» */
-.navbar-toggle:checked + .navbar-burger span:nth-child(1){
-  transform: translateY(6px) rotate(45deg);
+.nav__burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
 }
-.navbar-toggle:checked + .navbar-burger span:nth-child(2){
+.nav__burger.is-open span:nth-child(2) {
   opacity: 0;
 }
-.navbar-toggle:checked + .navbar-burger span:nth-child(3){
-  transform: translateY(-6px) rotate(-45deg);
+.nav__burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ---------------- Mobile overlay (full screen) ---------------- */
-.navbar-overlay{
+/* Мобильный дропдаун */
+.nav__drop {
   position: fixed;
   inset: 0;
-  background: var(--overlay);
-  z-index: 9999;
-
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(-8px);
-  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s linear var(--fx-dur);
-}
-
-/* Открытие меню */
-.navbar-toggle:checked ~ .navbar-overlay{
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: none;
-  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s;
-}
-
-/* Кнопка-крестик (стекло + рамка) */
-.navbar-close{
-  position: absolute;
-  right: max(16px, env(safe-area-inset-right));
-  top:   max(16px, env(safe-area-inset-top));
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-
+  background: #0b0c0f;
+  color: #f5f7fb;
   display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(255,255,255,.02);
-  backdrop-filter: blur(6px);
-  transition: background-color var(--fx-dur) ease, border-color var(--fx-dur) ease, transform var(--fx-dur) ease;
+  align-items: start;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  overflow-y: auto;
 }
-.navbar-close:hover{
-  background: rgba(209,162,76,.12);
-  border-color: var(--ring);
-  transform: scale(1.03);
-}
-.navbar-close:active{ transform: scale(.98); }
-.navbar-close:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-}
-
-.navbar-close span{
-  position: absolute;
-  width: 26px;
-  height: 2px;
-  background: #fff;
-  border-radius: 2px;
-  transition: background-color .15s ease;
-}
-.navbar-close span:first-child{ transform: rotate(45deg); }
-.navbar-close span:last-child { transform: rotate(-45deg); }
-.navbar-close:hover span{ background-color: var(--brand); }
-
-/* Центрирование контента + safe-areas */
-.navbar-overlay-inner{
-  min-height: 100dvh;
-  height: 100dvh;
+.nav__mList {
+  width: min(720px, 100%);
+  margin: 74px auto 24px;
+  padding: 0;
+  list-style: none;
   display: grid;
-  place-items: center;
-  padding-left:  max(24px, env(safe-area-inset-left));
-  padding-right: max(24px, env(safe-area-inset-right));
-  padding-top:   max(24px, calc(env(safe-area-inset-top) + 56px));
-  padding-bottom:max(24px, env(safe-area-inset-bottom));
 }
-
-/* Колонка ссылок (mobile) */
-.navbar-overlay-list{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.nav__mItem + .nav__mItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-/* Эффектные ссылки (mobile) */
-.navbar-overlay a{
-  --u-h: 2px;
-  color: var(--text);
+.nav__mLink {
+  display: block;
+  padding: 18px 6px;
+  font-size: clamp(20px, 5.6vw, 28px);
+  font-weight: 800;
+  color: #f5f7fb;
   text-decoration: none;
-  font-size: clamp(20px, 5vw, 28px);
-  line-height: 1.25;
-  display: inline-block;
-  padding: 4px 6px;
-  margin: 10px 0;
-  border-radius: 10px;
-  transition: color var(--fx-dur) ease, transform var(--fx-dur) ease;
-
-  background-image: linear-gradient(var(--brand), var(--brand));
-  background-repeat: no-repeat;
-  background-position: 0% 100%;
-  background-size: 0% var(--u-h);
-}
-.navbar-overlay a:hover{
-  transform: translateY(-1px);
-  background-size: 100% var(--u-h);
-}
-.navbar-overlay a:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
+  letter-spacing: 0.2px;
 }
 
-/* CTA в моб.меню — общий .btn .btn-primary, просто отступ сверху */
-.navbar-overlay .btn{ margin-top: 14px; }
-
-/* Блокируем прокрутку body, когда меню открыто */
-body:has(#navbar-toggle:checked){
-  overflow: hidden;
-}
-
-/* ---------------- Responsive ---------------- */
-@media (min-width: 1024px){
-  .navbar-burger,
-  .navbar-overlay{
-    display: none;
+/* Респонсив */
+@media (max-width: 1024px) {
+  .nav__burger {
+    display: grid;
+    justify-self: end; /* бургер прижат к правому краю */
   }
-  .navbar-desktop{
-    display: flex;
-  }
-  .navbar-phone{
-    display: block;
+  .nav__desk {
+    display: none; /* прячем меню — используется дропдаун */
   }
 }
 
-/* ---------------- Reduced motion ---------------- */
-@media (prefers-reduced-motion: reduce){
-  .navbar-burger span,
-  .navbar-overlay,
-  .navbar-desktop a{
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .nav__link,
+  .nav__burger span {
     transition: none !important;
   }
 }

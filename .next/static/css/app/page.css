@@ -2,45 +2,46 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   LeadForm.css — светлая тема по умолчанию
-   - Белая карточка, аккуратные светлые поля
-   - Бордовый бренд в фокусах и кнопках
-   - Ровные отступы, адаптив
+   LeadForm.css — светлая, «воздушная» форма
+   - двухколоночная сетка на десктопе
+   - иконки внутри полей
+   - четкое состояние фокуса/ошибок
    ========================================================================= */
 
 :root{
-  /* Цвета по умолчанию (светлая тема) */
   --lf-bg:        #ffffff;
   --lf-text:      #0e1525;
   --lf-muted:     #667085;
-  --lf-line:      #e6e8ec;
-  --lf-line-soft: #f1f3f5;
-  --lf-shadow:    0 20px 60px rgba(16,24,40,.08);
-  --lf-radius:    16px;
+  --lf-line:      #e7e9ef;
+  --lf-line-soft: #f3f5f8;
+  --lf-shadow:    0 18px 48px rgba(16,24,40,.08);
+  --lf-radius:    18px;
 
-  /* Бренд — бордовый */
-  --lf-brand:     #8b1e3f;         /* основной */
-  --lf-brand-10:  rgba(139,30,63,.10);
-  --lf-brand-20:  rgba(139,30,63,.20);
+  /* Бренд (бордовый) + золото для акцентов кнопок */
+  --lf-brand:     #b54b45;
+  --lf-brand-10:  rgba(181,75,69,.14);
+
+  --lf-gold-1:    #f6d77b;
+  --lf-gold-2:    #e7c35c;
 }
 
-/* Поддержка тёмной темы через .theme-dark на body (если есть) */
+/* Тёмная тема при желании (если будет .theme-dark на body) */
 .theme-dark .leadform{
-  --lf-bg:        var(--surface, #14161b);
-  --lf-text:      var(--text,   #f5f7fb);
+  --lf-bg:        #151821;
+  --lf-text:      #f5f7fb;
   --lf-muted:     #9aa3b2;
   --lf-line:      rgba(255,255,255,.12);
   --lf-line-soft: rgba(255,255,255,.06);
-  --lf-shadow:    0 20px 60px rgba(0,0,0,.35);
+  --lf-shadow:    0 22px 60px rgba(0,0,0,.45);
 }
 
-/* 1) Обёртка формы */
+/* Обёртка формы */
 .leadform{
   display: grid;
-  grid-gap: 14px;
-  gap: 14px;
+  grid-gap: 16px;
+  gap: 16px;
   width: 100%;
-  max-width: 640px;                 /* немного шире, чем было */
+  max-width: 640px;
   margin: 0 auto;
 
   background: var(--lf-bg);
@@ -51,47 +52,46 @@
   padding: 22px;
 }
 
-/* Вариант для экрана «Спасибо» */
-.leadform--thanks{
-  text-align: center;
-}
-
-/* Заголовки и тексты «спасибо» */
-.leadform-thanksTitle{
-  margin: 0 0 8px;
-  font-weight: 800;
-  font-size: clamp(18px, 2.2vw, 22px);
-}
-.leadform-thanksText{
-  margin: 0;
-  color: var(--lf-text);
-  line-height: 1.55;
-}
-.leadform-thanksHint{
-  margin: 8px 0 0;
-  color: var(--lf-muted);
-}
-.leadform-thanksHint a{
-  color: var(--lf-brand);
-  text-decoration: none;
-}
-
-/* 2) Строка формы: подпись + поле + ошибка */
-.leadform-row{
+/* Сетка полей: 2 колонки на десктопе */
+.leadform-grid{
   display: grid;
-  grid-gap: 6px;
-  gap: 6px;
-  text-align: left;
+  grid-gap: 14px 16px;
+  gap: 14px 16px;
+  grid-template-columns: 1fr 1fr;
+}
+.leadform-row--wide{
+  grid-column: 1 / -1;
 }
 
-/* Лейбл */
+/* Подпись */
 .leadform-label{
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--lf-muted);
+  letter-spacing: .02em;
 }
 
-/* 3) Поля ввода (только внутри .leadform) */
+/* Поле с иконкой */
+.lf-field{
+  --padL: 42px;
+  position: relative;
+}
+.lf-field .leadform-input{
+  padding-left: var(--padL);
+}
+
+.lf-ico{
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  color: var(--lf-muted);
+  display: inline-grid; place-items: center;
+}
+.lf-ico svg{ width: 18px; height: 18px; }
+
+/* Инпуты */
 .leadform-input,
 .leadform :where(input[type="text"], input[type="tel"], input[type="number"]) {
   width: 100%;
@@ -107,7 +107,7 @@
 }
 
 .leadform-input::placeholder{
-  color: #98a2b3;
+  color: #9aa3b2;
 }
 
 /* Фокус — бордовое «кольцо» */
@@ -118,20 +118,18 @@
   box-shadow: 0 0 0 3px var(--lf-brand-10);
 }
 
-/* Ошибка поля через aria-invalid */
-.leadform :where(input[aria-invalid="true"]){
-  border-color: #ef4444;
+/* Ошибки */
+.has-error .leadform-input{
+  border-color: #ef4444 !important;
   box-shadow: 0 0 0 3px rgba(239,68,68,.18);
 }
-
-/* 4) Сообщение об ошибке */
 .leadform-error{
   color: #b42318;
   font-size: 13px;
   line-height: 1.3;
 }
 
-/* 5) Чекбокс согласия */
+/* Чекбокс согласия */
 .leadform-agree{
   display: grid;
   grid-template-columns: 18px 1fr;
@@ -144,43 +142,80 @@
      -moz-user-select: none;
           user-select: none;
 }
-
 .leadform-agree input[type="checkbox"]{
   margin-top: 2px;
   width: 18px; height: 18px;
   accent-color: var(--lf-brand);
   cursor: pointer;
 }
-
 .leadform-agree a{
   color: var(--lf-brand);
   text-decoration: none;
 }
 .leadform-agree a:hover{ opacity: .9; }
 
-/* 6) Кнопка отправки — используем общие .btn .btn-primary,
-      но добавим выравнивание/ширину при необходимости */
-.leadform-submit{
-  margin-top: 6px;
+/* Кнопка */
+.lf-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  height: 52px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 900;
+  letter-spacing: .02em;
+  padding: 0 18px;
+
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
+}
+.lf-btnIco svg{ width: 18px; height: 18px; }
+
+.lf-btn--primary{
   width: 100%;
+  color: #3f3210;
+  background: linear-gradient(180deg, var(--lf-gold-1), var(--lf-gold-2));
+  box-shadow: 0 12px 34px rgba(229,184,65,.25), inset 0 -6px 10px rgba(0,0,0,.05);
+}
+.lf-btn--primary:hover{ filter: brightness(1.03); transform: translateY(-1px); }
+.lf-btn--primary:active{ transform: translateY(0); }
+.lf-btn[aria-busy="true"]{ pointer-events: none; opacity: .85; }
+
+/* Спиннер */
+.lf-spinner{
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(0,0,0,.2);
+  border-top-color: rgba(0,0,0,.55);
+  animation: lfspin .8s linear infinite;
+}
+@keyframes lfspin{ to{ transform: rotate(360deg); } }
+
+/* Спасибо-экран */
+.leadform--thanks{
+  text-align: center;
+  padding: 26px;
+}
+.leadform-check{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.06);
+  color: #20916c;
+  margin: 0 auto 8px;
+  display: grid; place-items: center;
 }
 
-/* 7) Адаптив */
-@media (max-width: 480px){
-  .leadform{
-    padding: 18px;
-    gap: 12px;
-  }
+/* Адаптив */
+@media (max-width: 560px){
+  .leadform{ padding: 18px; }
+  .leadform-grid{ grid-template-columns: 1fr; }
   .leadform-agree{
     grid-template-columns: 16px 1fr;
     font-size: 13px;
   }
-  .leadform-agree input[type="checkbox"]{
-    width: 16px; height: 16px;
-  }
+  .leadform-agree input{ width: 16px; height: 16px; }
 }
-
-/* 8) Снижение анимаций */
 @media (prefers-reduced-motion: reduce){
   .leadform, .leadform *{
     transition: none !important;
@@ -1239,430 +1274,259 @@
     width: 76px;
   }
 }
-/*!***********************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/hero-promo.css ***!
-  \***********************************************************************************************************************************************************************************************************************************************************************/
-/* ====== Тёмная промо-карточка в hero, без «Акции», одна рамка у инпута ====== */
-
-:root{
-  --bg: #0b0c0f;
-  --surface: #111318;
-  --surface-2: #15171d;
-  --line: rgba(255,255,255,.12);
-  --text: #f4f6fb;
-  --muted: #aeb6c2;
-  --brand: #d1a24c;
-  --brand-2: #be8e3e;
-  --accent: #e08573;             /* акцентные штрихи (цена/иконки) */
-  --shadow: 0 18px 60px rgba(0,0,0,.45);
-}
-
-.promoWrap{
-  display: grid;
-  place-items: center;
-  padding: 16px;
-}
-
-.promoCard{
-  width: 100%;
-  max-width: 720px;              /* форма стала больше */
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: radial-gradient(900px 380px at 18% -10%, rgba(209,162,76,.08), transparent 60%),
-              linear-gradient(180deg, var(--surface), var(--surface-2));
-  box-shadow: var(--shadow);
-  padding: clamp(18px, 4vw, 28px);
-}
-
-/* Заголовок */
-.promoTitle{
-  margin: 0 0 8px 0;
-  color: var(--text);
-  font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: .2px;
-  font-size: clamp(22px, 3.6vw, 34px);
-}
-
-/* Стоимость */
-.promoPriceRow{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-gap: clamp(12px, 3vw, 24px);
-  gap: clamp(12px, 3vw, 24px);
-  align-items: end;
-  padding: 10px 0 18px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 18px;
-}
-
-.promoPriceNowValue{
-  color: var(--accent);
-  font-weight: 900;
-  font-size: clamp(34px, 8vw, 56px);
-  line-height: .95;
-}
-
-.promoPriceWas{
-  text-align: right;
-}
-.promoPriceWasLabel{
-  color: var(--muted);
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-.promoPriceWasValue{
-  color: var(--muted);
-  font-size: clamp(16px, 3.2vw, 22px);
-}
-
-/* Форма */
-.promoForm{
-  margin-top: 14px;
-  display: grid;
-  grid-gap: 14px;
-  gap: 14px;
-}
-
-/* Поле телефона — ОДНА рамка, без «двойной» */
-.promoField{
-  position: relative;
-  display: block;
-}
-.promoField input{
-  width: 100%;
-  height: clamp(56px, 7.8vw, 66px);
-  border-radius: 20px;                     /* объёмная форма */
-  border: 1px solid var(--accent);         /* одна акцентная рамка */
-  background: rgba(255,255,255,.02);
-  color: var(--text);
-  padding: 0 clamp(60px, 8vw, 72px) 0 20px;/* запас под кнопку-иконку справа */
-  outline: none;
-  font-size: clamp(16px, 2.4vw, 18px);
-  transition: border-color .2s ease, background-color .2s ease;
-}
-.promoField input::placeholder{ color: #8891a0; }
-.promoField input:focus{
-  border-color: var(--brand);
-  background: rgba(255,255,255,.04);
-}
-
-/* Кнопка-иконка «телефон» — без второй рамки вокруг поля */
-.promoPhoneBtn{
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(44px, 7.2vw, 56px);
-  height: clamp(44px, 7.2vw, 56px);
-  border-radius: 50%;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  background: rgba(255,255,255,.02);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  transition: border-color .2s ease, color .2s ease, background-color .2s ease, transform .06s ease;
-}
-.promoPhoneBtn:hover{
-  background: rgba(224,133,115,.10);
-}
-.promoPhoneBtn:active{ transform: translateY(-50%) scale(.98); }
-
-/* Большая кнопка */
-.promoBtn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  height: clamp(56px, 8vw, 66px);
-  border-radius: 18px;
-  border: 1px solid rgba(255,255,255,.08);
-  color: #1a1a1a;
-  font-weight: 800;
-  letter-spacing: .3px;
-  font-size: clamp(15px, 2.4vw, 17px);
-  cursor: pointer;
-  background: linear-gradient(180deg, #e8c376, #d1a24c);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 8px 26px rgba(209,162,76,.25);
-  transition: transform .06s ease, filter .15s ease, box-shadow .15s ease;
-}
-.promoBtn:hover{ filter: brightness(1.04); }
-.promoBtn:active{ transform: translateY(1px); }
-.promoBtnIco{
-  display: inline-grid;
-  place-items: center;
-  color: #1a1a1a;
-}
-
-/* Низ карточки */
-.promoNote{
-  margin: 6px 2px 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.5;
-}
-.promoLink{
-  color: #ffb39f;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.promoLink:hover{ color: #ffc6b7; }
-
-/* Адаптив */
-@media (max-width: 520px){
-  .promoCard{ border-radius: 18px; }
-  .promoPriceRow{ gap: 12px; }
-}
 /*!*****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/hero.css ***!
   \*****************************************************************************************************************************************************************************************************************************************************************/
+/* =========================================================================
+   HERO (100vh, светлый фон). Форма справа; на мобильных — снизу.
+   ========================================================================= */
+
 :root{
-  /* тёмная тема по умолчанию */
-  --bg:         #0b0c0f;
-  --surface:    #13151a;
-  --surface-2:  #0f1115;
-  --text:       #f4f6fb;
-  --muted:      #a9b0bb;
-  --accent:     #e08273;   /* цвет ленточки и акцентов */
-  --brand:      #d1a24c;   /* брендовое золото для кнопок */
-  --line:       rgba(255,255,255,.12);
-  --ring:       rgba(209,162,76,.35);
-  --shadow:     0 18px 50px rgba(0,0,0,.45);
+  --hero-text:   #0f172a;
+  --hero-muted:  #64748b;
+  --hero-accent: #b54b45;        /* бордовый акцент */
 
-  --input-bg:   rgba(255,255,255,.02);
-  --input-bd:   rgba(255,255,255,.18);
-  --input-ph:   #8d95a3;
+  --gold-1:      #f6d879;        /* золото кнопки */
+  --gold-2:      #e6c05b;
 
-  --btn-from:   #e1b769;
-  --btn-to:     #b98d39;
+  --line:        rgba(0,0,0,.10);
+  --shadow:      0 24px 64px rgba(0,0,0,.08);
+
+  --radius-lg:   22px;
+  --radius-md:   14px;
 }
 
-.promoWrap{
-  padding: 16px;
-  background:
-    radial-gradient(700px 260px at 90% -10%, rgba(209,162,76,.10), transparent 60%),
-    var(--bg);
-  display: grid;
-  place-items: center;
-}
-
-.promoCard{
+/* === Секция: строго 100vh / 100svh === */
+.hero{
   position: relative;
-  width: min(720px, 100%);
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.03),
-    var(--shadow);
-  padding: clamp(18px, 3.2vw, 28px);
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  color: var(--hero-text);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* Угловая лента «Акция» */
-.promoRibbon--corner{
-  position: absolute;
-  inset: 0 0 auto auto; /* top:0; right:0 */
-  width: 0; height: 0;
+.hero .container{
+  width: min(1200px, 92vw);
+  margin-inline: auto;
 }
-.promoRibbon--corner::before{
-  content: "";
-  position: absolute;
-  top: -1px; right: -1px;
-  border-top: 92px solid var(--accent);  /* высота треугольника */
-  border-left: 92px solid transparent;   /* ширина треугольника */
-  border-top-right-radius: 12px;
+
+/* === Сетка: 2 колонки → 1 колонка на мобильном === */
+.hero__grid{
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;  /* текст чуть шире */
+  grid-gap: clamp(28px, 4vw, 56px);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
-.promoRibbon--corner > span{
+
+/* На ширине ≤ 960px — одна колонка, форма уходит вниз по потоку */
+@media (max-width: 960px){
+  .hero__grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Декор === */
+.hero__decor{
   position: absolute;
-  top: 12px;
-  right: 8px;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: .02em;
-  transform: rotate(45deg);
-  transform-origin: top right;
-  font-size: 13px;
+  inset: 0;
   pointer-events: none;
+  z-index: 0;
+}
+.hero__blob{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .55;
+}
+.hero__blob--gold{
+  top: -140px; right: -140px;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, #f6d87980 0%, transparent 70%);
+  animation: hero-float-1 12s ease-in-out infinite alternate;
+}
+.hero__blob--red{
+  bottom: -160px; left: -160px;
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, #b54b4555 0%, transparent 70%);
+  animation: hero-float-2 13s ease-in-out infinite alternate;
+}
+.hero__gridLines{
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,.03) 1px, transparent 1px);
+  background-size: 88px 88px;
+  opacity: .25;
+  -webkit-mask-image: radial-gradient(circle at center, black 42%, transparent 78%);
+          mask-image: radial-gradient(circle at center, black 42%, transparent 78%);
 }
 
-/* Заголовок и цены */
-.promoTitle{
+@keyframes hero-float-1{ from{transform:translate(0,0)} to{transform:translate(-20px,18px) scale(1.04)} }
+@keyframes hero-float-2{ from{transform:translate(0,0)} to{transform:translate(24px,-22px) scale(1.05)} }
+
+/* === Левая колонка (текст) === */
+.hero__title{
   margin: 0 0 12px;
-  color: var(--text);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: .2px;
-  font-size: clamp(22px, 3.3vw, 34px);
+  font-size: clamp(32px, 4.8vw, 56px);
 }
-
-.promoPriceRow{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  grid-gap: 16px;
-  gap: 16px;
-  padding-bottom: 16px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-}
-
-.promoPriceNowValue{
-  display: inline-block;
-  color: var(--accent);
-  font-weight: 900;
-  font-size: clamp(36px, 7vw, 56px);
-  line-height: 1;
-}
-
-.promoPriceOld{
-  text-align: right;
-}
-.promoPriceOldLabel{
-  display: block;
-  color: var(--muted);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.promoPriceOldValue{
-  color: var(--muted);
-  text-decoration: line-through;
-  text-decoration-thickness: 3px;
-  -webkit-text-decoration-color: rgba(255,255,255,.28);
-          text-decoration-color: rgba(255,255,255,.28);
-  font-weight: 800;
-  font-size: clamp(16px, 2.2vw, 22px);
-}
-
-/* Форма */
-.promoForm{
-  display: grid;
-  grid-gap: 16px;
-  gap: 16px;
-}
-
-/* Поле с ОДНОЙ рамкой (на контейнере) */
-.promoField{
+.hero__accent{
+  color: var(--hero-accent);
   position: relative;
-  border: 2px solid var(--input-bd);  /* единственная рамка */
-  border-radius: 36px;
-  background: var(--input-bg);
+}
+.hero__accent::after{
+  content: "";
+  position: absolute; left: 0; bottom: -6px;
+  width: 100%; height: 10px;
+  background: linear-gradient(90deg, rgba(181,75,69,.18), transparent);
+  border-radius: 999px;
 }
 
-/* input — без рамки и фона, чтобы не получать «двойную» рамку */
-.promoField input{
-  width: 100%;
-  height: 64px;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 18px;
-  border-radius: 36px; /* для красивого focus-ринга */
-  padding: 0 74px 0 22px;
+.hero__lead{
+  margin: 0 0 18px;
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: var(--hero-muted);
+  max-width: 640px;
 }
-.promoField input::placeholder{ color: var(--input-ph); }
-.promoField input:focus{ box-shadow: 0 0 0 4px var(--ring); }
 
-/* Иконка-кнопка справа (без бордера и фона) */
-.promoFieldIco{
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 56px;
-  height: 56px;
-  border: 0;
-  background: transparent;
-  color: var(--accent);
+.hero__bullets{
+  list-style: none; padding: 0; margin: 0 0 24px;
+  display: grid; grid-gap: 10px; gap: 10px;
+  font-weight: 700; color: var(--hero-text);
+}
+.hero__bullets li{ display: grid; grid-template-columns: 26px 1fr; align-items: center; grid-gap: 10px; gap: 10px; }
+.hero__bullets i{
+  width: 26px; height: 26px; border-radius: 50%;
   display: grid; place-items: center;
-  cursor: pointer;
-  border-radius: 50%;
+  color: var(--hero-accent);
+  background: rgba(181,75,69,.12);
+  border: 1px solid rgba(181,75,69,.35);
+  font-style: normal;
 }
 
-/* Чекбокс */
-.promoAgree{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 14px;
+/* Кнопки */
+.hero__actions{
+  display: flex; gap: 14px; flex-wrap: wrap;
 }
-.promoAgree input{
-  width: 18px; height: 18px;
+.hero__btn{
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none; border: 0; text-decoration: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 22px; border-radius: var(--radius-md);
+  font-weight: 900; letter-spacing: .02em;
+  color: #3e3219;
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2));
+  box-shadow: 0 12px 34px rgba(229,184,65,.25), inset 0 -6px 10px rgba(0,0,0,.06);
+  transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
 }
+.hero__btn:hover{ filter: brightness(1.04); transform: translateY(-1px); }
+.hero__btn:active{ transform: translateY(0); }
 
-/* CTA-кнопка */
-.promoBtn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.hero__btn--ghost{
+  color: var(--hero-accent);
+  background: transparent;
+  border: 2px solid rgba(181,75,69,.35);
+  box-shadow: none;
+}
+.hero__btn--ghost:hover{ background: rgba(181,75,69,.08); }
 
+/* === Правая колонка (карточка с формой) === */
+.hero__right{
   width: 100%;
-  height: 64px;
-  border-radius: 18px;
-  border: 0;
-  cursor: pointer;
-
-  color: #1c1406;
-  font-weight: 800;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-
-  background: linear-gradient(180deg, var(--btn-from), var(--btn-to));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 10px 30px rgba(0,0,0,.35);
-  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
-}
-.promoBtn:hover{ filter: brightness(1.02); }
-.promoBtn:active{ transform: translateY(1px); }
-.promoBtn:focus-visible{ outline: none; box-shadow: 0 0 0 4px var(--ring); }
-.promoBtnIco{ display: inline-grid; place-items: center; color: #1c1406; }
-
-/* подпись под формой */
-.promoFoot{
-  color: var(--muted);
-  font-size: 14px;
-  margin: 6px 0 0;
-}
-.promoLink{
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  max-width: 520px;      /* форма не «распухнет» */
+  justify-self: end;
 }
 
-/* Модификатор светлой темы (если понадобится) */
-.promoWrap--light{
-  --bg:        #f5f6f9;
-  --surface:   #ffffff;
-  --surface-2: #ffffff;
-  --text:      #0b0c0f;
-  --muted:     #5f6672;
-  --line:      rgba(10,12,15,.12);
-
-  --input-bg:  rgba(10,12,15,.02);
-  --input-bd:  rgba(10,12,15,.18);
-  --input-ph:  #8c93a0;
-
-  background:
-    radial-gradient(700px 260px at 90% -10%, rgba(209,162,76,.18), transparent 60%),
-    var(--bg);
+@media (max-width: 960px){
+  .hero__right{
+    justify-self: center;   /* центрируем на мобилке */
+    max-width: 520px;
+  }
 }
 
-/* адаптив */
-@media (max-width: 560px){
-  .promoField input{ height: 58px; padding-right: 62px; font-size: 17px; }
-  .promoFieldIco{ width: 52px; height: 52px; right: 6px; }
+.hero__card{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 26px);
+}
+.hero__cardHead{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.hero__chip{
+  display: inline-block;
+  font-size: 12px; font-weight: 800; letter-spacing: .04em;
+  color: var(--hero-accent);
+  background: rgba(181,75,69,.10);
+  border: 1px solid rgba(181,75,69,.35);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.hero__foot{
+  margin: 10px 0 0; color: var(--hero-muted); font-size: 13px;
+}
+.hero__foot a{ color: var(--hero-accent); text-decoration: underline; text-underline-offset: 2px; }
+
+/* === Прокрутка вниз === */
+.hero__scroll{
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+  display: inline-flex; gap: 10px; align-items: center;
+  color: var(--hero-muted); text-decoration: none; font-size: 14px;
+  z-index: 2;
+}
+.hero__dot{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--hero-accent);
+  animation: hero-dot .9s ease-in-out infinite alternate;
+}
+@keyframes hero-dot{ from{transform:translateY(0);opacity:.55} to{transform:translateY(4px);opacity:1} }
+
+/* === Жёсткие override'ы: делаем любую «промо»-форму внутри карточки белой === */
+.hero__card :where(.promoWrap){ background: transparent !important; padding: 0 !important; }
+.hero__card :where(.promoCard){
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.hero__card :where(.promoRibbon--corner){ display: none !important; }
+
+.hero__card :where(.promoTitle, .promoPriceNowValue, .promoPriceOldLabel, .promoPriceOldValue){
+  color: var(--hero-text) !important;
+}
+.hero__card :where(.promoField){
+  border: 2px solid #e5e7eb !important;
+  border-radius: 36px !important;
+  background: #fff !important;
+}
+.hero__card :where(.promoField input){
+  background: #fff !important; color: var(--hero-text) !important;
+}
+.hero__card :where(.promoField input::placeholder){ color: #98a2b3 !important; }
+.hero__card :where(.promoFieldIco){ color: var(--hero-accent) !important; }
+.hero__card :where(.promoBtn){
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2)) !important;
+  color: #3a2a14 !important; border: 0 !important;
+  box-shadow: 0 10px 30px rgba(229,184,65,.25) !important;
 }
 
-/* screen reader only */
-.sr-only{
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
+/* === Мелкая адаптация === */
+@media (max-width: 600px){
+  .hero__title{ font-size: clamp(28px, 7vw, 36px); }
+  .hero__actions{ justify-content: center; }
 }
 /*!*****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Quiz.css ***!

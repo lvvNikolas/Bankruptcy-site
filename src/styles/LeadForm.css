@@ -1,42 +1,43 @@
 /* =========================================================================
-   LeadForm.css — светлая тема по умолчанию
-   - Белая карточка, аккуратные светлые поля
-   - Бордовый бренд в фокусах и кнопках
-   - Ровные отступы, адаптив
+   LeadForm.css — светлая, «воздушная» форма
+   - двухколоночная сетка на десктопе
+   - иконки внутри полей
+   - четкое состояние фокуса/ошибок
    ========================================================================= */
 
 :root{
-  /* Цвета по умолчанию (светлая тема) */
   --lf-bg:        #ffffff;
   --lf-text:      #0e1525;
   --lf-muted:     #667085;
-  --lf-line:      #e6e8ec;
-  --lf-line-soft: #f1f3f5;
-  --lf-shadow:    0 20px 60px rgba(16,24,40,.08);
-  --lf-radius:    16px;
+  --lf-line:      #e7e9ef;
+  --lf-line-soft: #f3f5f8;
+  --lf-shadow:    0 18px 48px rgba(16,24,40,.08);
+  --lf-radius:    18px;
 
-  /* Бренд — бордовый */
-  --lf-brand:     #8b1e3f;         /* основной */
-  --lf-brand-10:  rgba(139,30,63,.10);
-  --lf-brand-20:  rgba(139,30,63,.20);
+  /* Бренд (бордовый) + золото для акцентов кнопок */
+  --lf-brand:     #b54b45;
+  --lf-brand-10:  rgba(181,75,69,.14);
+
+  --lf-gold-1:    #f6d77b;
+  --lf-gold-2:    #e7c35c;
 }
 
-/* Поддержка тёмной темы через .theme-dark на body (если есть) */
+/* Тёмная тема при желании (если будет .theme-dark на body) */
 .theme-dark .leadform{
-  --lf-bg:        var(--surface, #14161b);
-  --lf-text:      var(--text,   #f5f7fb);
+  --lf-bg:        #151821;
+  --lf-text:      #f5f7fb;
   --lf-muted:     #9aa3b2;
   --lf-line:      rgba(255,255,255,.12);
   --lf-line-soft: rgba(255,255,255,.06);
-  --lf-shadow:    0 20px 60px rgba(0,0,0,.35);
+  --lf-shadow:    0 22px 60px rgba(0,0,0,.45);
 }
 
-/* 1) Обёртка формы */
+/* Обёртка формы */
 .leadform{
   display: grid;
-  gap: 14px;
+  gap: 16px;
   width: 100%;
-  max-width: 640px;                 /* немного шире, чем было */
+  max-width: 640px;
   margin: 0 auto;
 
   background: var(--lf-bg);
@@ -47,46 +48,45 @@
   padding: 22px;
 }
 
-/* Вариант для экрана «Спасибо» */
-.leadform--thanks{
-  text-align: center;
-}
-
-/* Заголовки и тексты «спасибо» */
-.leadform-thanksTitle{
-  margin: 0 0 8px;
-  font-weight: 800;
-  font-size: clamp(18px, 2.2vw, 22px);
-}
-.leadform-thanksText{
-  margin: 0;
-  color: var(--lf-text);
-  line-height: 1.55;
-}
-.leadform-thanksHint{
-  margin: 8px 0 0;
-  color: var(--lf-muted);
-}
-.leadform-thanksHint a{
-  color: var(--lf-brand);
-  text-decoration: none;
-}
-
-/* 2) Строка формы: подпись + поле + ошибка */
-.leadform-row{
+/* Сетка полей: 2 колонки на десктопе */
+.leadform-grid{
   display: grid;
-  gap: 6px;
-  text-align: left;
+  gap: 14px 16px;
+  grid-template-columns: 1fr 1fr;
+}
+.leadform-row--wide{
+  grid-column: 1 / -1;
 }
 
-/* Лейбл */
+/* Подпись */
 .leadform-label{
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--lf-muted);
+  letter-spacing: .02em;
 }
 
-/* 3) Поля ввода (только внутри .leadform) */
+/* Поле с иконкой */
+.lf-field{
+  --padL: 42px;
+  position: relative;
+}
+.lf-field .leadform-input{
+  padding-left: var(--padL);
+}
+
+.lf-ico{
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  color: var(--lf-muted);
+  display: inline-grid; place-items: center;
+}
+.lf-ico svg{ width: 18px; height: 18px; }
+
+/* Инпуты */
 .leadform-input,
 .leadform :where(input[type="text"], input[type="tel"], input[type="number"]) {
   width: 100%;
@@ -101,7 +101,7 @@
 }
 
 .leadform-input::placeholder{
-  color: #98a2b3;
+  color: #9aa3b2;
 }
 
 /* Фокус — бордовое «кольцо» */
@@ -112,20 +112,18 @@
   box-shadow: 0 0 0 3px var(--lf-brand-10);
 }
 
-/* Ошибка поля через aria-invalid */
-.leadform :where(input[aria-invalid="true"]){
-  border-color: #ef4444;
+/* Ошибки */
+.has-error .leadform-input{
+  border-color: #ef4444 !important;
   box-shadow: 0 0 0 3px rgba(239,68,68,.18);
 }
-
-/* 4) Сообщение об ошибке */
 .leadform-error{
   color: #b42318;
   font-size: 13px;
   line-height: 1.3;
 }
 
-/* 5) Чекбокс согласия */
+/* Чекбокс согласия */
 .leadform-agree{
   display: grid;
   grid-template-columns: 18px 1fr;
@@ -135,43 +133,80 @@
   font-size: 14px;
   user-select: none;
 }
-
 .leadform-agree input[type="checkbox"]{
   margin-top: 2px;
   width: 18px; height: 18px;
   accent-color: var(--lf-brand);
   cursor: pointer;
 }
-
 .leadform-agree a{
   color: var(--lf-brand);
   text-decoration: none;
 }
 .leadform-agree a:hover{ opacity: .9; }
 
-/* 6) Кнопка отправки — используем общие .btn .btn-primary,
-      но добавим выравнивание/ширину при необходимости */
-.leadform-submit{
-  margin-top: 6px;
+/* Кнопка */
+.lf-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  height: 52px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 900;
+  letter-spacing: .02em;
+  padding: 0 18px;
+
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
+}
+.lf-btnIco svg{ width: 18px; height: 18px; }
+
+.lf-btn--primary{
   width: 100%;
+  color: #3f3210;
+  background: linear-gradient(180deg, var(--lf-gold-1), var(--lf-gold-2));
+  box-shadow: 0 12px 34px rgba(229,184,65,.25), inset 0 -6px 10px rgba(0,0,0,.05);
+}
+.lf-btn--primary:hover{ filter: brightness(1.03); transform: translateY(-1px); }
+.lf-btn--primary:active{ transform: translateY(0); }
+.lf-btn[aria-busy="true"]{ pointer-events: none; opacity: .85; }
+
+/* Спиннер */
+.lf-spinner{
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(0,0,0,.2);
+  border-top-color: rgba(0,0,0,.55);
+  animation: lfspin .8s linear infinite;
+}
+@keyframes lfspin{ to{ transform: rotate(360deg); } }
+
+/* Спасибо-экран */
+.leadform--thanks{
+  text-align: center;
+  padding: 26px;
+}
+.leadform-check{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.06);
+  color: #20916c;
+  margin: 0 auto 8px;
+  display: grid; place-items: center;
 }
 
-/* 7) Адаптив */
-@media (max-width: 480px){
-  .leadform{
-    padding: 18px;
-    gap: 12px;
-  }
+/* Адаптив */
+@media (max-width: 560px){
+  .leadform{ padding: 18px; }
+  .leadform-grid{ grid-template-columns: 1fr; }
   .leadform-agree{
     grid-template-columns: 16px 1fr;
     font-size: 13px;
   }
-  .leadform-agree input[type="checkbox"]{
-    width: 16px; height: 16px;
-  }
+  .leadform-agree input{ width: 16px; height: 16px; }
 }
-
-/* 8) Снижение анимаций */
 @media (prefers-reduced-motion: reduce){
   .leadform, .leadform *{
     transition: none !important;

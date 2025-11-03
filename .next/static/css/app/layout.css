@@ -251,283 +251,162 @@
 /*!*******************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Navbar.css ***!
   \*******************************************************************************************************************************************************************************************************************************************************************/
-/* =========================================================================
-   Navbar.css — липкая шапка + фуллскрин мобильное меню (100dvh, чёрный фон)
-   Выразительные ссылки, плавная анимация, бургер → крестик
-   ========================================================================= */
-
-:root{
-  --bg:      #0b0c0f;
-  --overlay: #000;
-  --text:    #f5f7fb;
-  --muted:   #a9b0bb;
-  --brand:   #d1a24c;
-  --line:    rgba(255,255,255,.10);
-  --ring:    rgba(209,162,76,.35);
-
-  --fx-dur:  .25s;
+:root {
+  --nav-bg: #ffffff;
+  --nav-text: #0f172a;
+  --nav-muted: #64748b;
+  --nav-accent: #0f172a; /* цвет ссылок */
+  --nav-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
+  --nav-line: rgba(15, 23, 42, 0.08);
 }
 
-/* ---------------- Шапка ---------------- */
-.navbar{
+.nav {
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+  inset-inline: 0;
   z-index: 1000;
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-line);
+  box-shadow: var(--nav-shadow);
 }
 
-.navbar > .container{
-  max-width: min(1320px, calc(100% - 32px));
+.nav__inner {
+  max-width: min(1280px, calc(100% - 32px));
   margin: 0 auto;
+  min-height: 64px;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* логотип | меню | бургер */
+  align-items: center;
+  grid-gap: 16px;
+  gap: 16px;
 }
 
-.navbar-row{
+/* ЛОГО */
+.nav__logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: #0f1115;
+  display: inline-grid;
+  place-items: center;
+}
+.nav__logo > span {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: #101317;
+}
+
+/* ДЕСКТОП-МЕНЮ по центру */
+.nav__desk {
+  justify-self: center;
+}
+.nav__list {
   display: flex;
   align-items: center;
-  gap: 16px;
-  min-height: 60px;
+  gap: clamp(18px, 3.8vw, 44px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-
-/* Лого */
-.navbar-logo{
-  color: var(--text);
+.nav__link {
+  color: var(--nav-accent);
   text-decoration: none;
   font-weight: 800;
-  letter-spacing: .2px;
-  line-height: 1;
-}
-.navbar-logo:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-  border-radius: 10px;
-}
+  letter-spacing: 0.2px;
+  white-space: nowrap;
 
-/* Телефон справа (desktop only) */
-.navbar-phone{
-  margin-left: auto;
-  color: var(--brand);
-  font-weight: 700;
-  text-decoration: none;
-  display: none;
-}
-.navbar-phone:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-  border-radius: 10px;
-}
-
-/* ---------------- Desktop nav ---------------- */
-.navbar-desktop{
-  margin-left: auto;
-  display: none;
-  align-items: center;
-  gap: 18px;
-}
-
-/* Эффектная ссылка (desktop) */
-.navbar-desktop a{
-  --u-h: 2px; /* толщина подчёркивания */
-  position: relative;
-  color: var(--text);
-  text-decoration: none;
-  opacity: .92;
-  padding: 6px 8px;
-  border-radius: 10px;
-  transition: color var(--fx-dur) ease, opacity var(--fx-dur) ease, transform var(--fx-dur) ease;
-
-  /* линией подчёркиваем под текстом */
+  /* “чистое” лёгкое подчёркивание без ломания верстки */
   background-image: linear-gradient(currentColor, currentColor);
-  background-repeat: no-repeat;
+  background-size: 0% 2px;
   background-position: 0% 100%;
-  background-size: 0% var(--u-h);
+  background-repeat: no-repeat;
+  transition: background-size 0.18s ease;
 }
-.navbar-desktop a:hover{
-  opacity: 1;
-  transform: translateY(-1px);
-  background-size: 100% var(--u-h);
-}
-.navbar-desktop a:focus-visible{
+.nav__link:hover,
+.nav__link:focus-visible {
+  background-size: 100% 2px;
   outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
 }
 
-.navbar-cta{ padding: 8px 12px; }
-
-/* ---------------- Burger ---------------- */
-.navbar-burger{
-  margin-left: auto;
+/* БУРГЕР справа (скрыт на десктопе) */
+.nav__burger {
   width: 44px;
   height: 40px;
-  display: grid;
+  display: none;
   place-content: center;
-  grid-gap: 4px;
-  gap: 4px;
-  cursor: pointer;
+  gap: 5px;
   -webkit-tap-highlight-color: transparent;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
 }
-.navbar-burger span{
+.nav__burger span {
   display: block;
   width: 24px;
   height: 2px;
-  background: var(--text);
+  background: var(--nav-text);
   border-radius: 2px;
-  transition: transform var(--fx-dur) ease, opacity .2s ease, background-color .2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
-
-/* Скрытый чекбокс-тоггл */
-.navbar-toggle{ display: none; }
-
-/* Морфинг бургера в «крестик» */
-.navbar-toggle:checked + .navbar-burger span:nth-child(1){
-  transform: translateY(6px) rotate(45deg);
+.nav__burger.is-open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
 }
-.navbar-toggle:checked + .navbar-burger span:nth-child(2){
+.nav__burger.is-open span:nth-child(2) {
   opacity: 0;
 }
-.navbar-toggle:checked + .navbar-burger span:nth-child(3){
-  transform: translateY(-6px) rotate(-45deg);
+.nav__burger.is-open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ---------------- Mobile overlay (full screen) ---------------- */
-.navbar-overlay{
+/* Мобильный дропдаун */
+.nav__drop {
   position: fixed;
   inset: 0;
-  background: var(--overlay);
-  z-index: 9999;
-
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transform: translateY(-8px);
-  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s linear var(--fx-dur);
-}
-
-/* Открытие меню */
-.navbar-toggle:checked ~ .navbar-overlay{
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-  transform: none;
-  transition: opacity var(--fx-dur) ease, transform var(--fx-dur) ease, visibility 0s;
-}
-
-/* Кнопка-крестик (стекло + рамка) */
-.navbar-close{
-  position: absolute;
-  right: max(16px, env(safe-area-inset-right));
-  top:   max(16px, env(safe-area-inset-top));
-  width: 44px;
-  height: 44px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-
+  background: #0b0c0f;
+  color: #f5f7fb;
   display: grid;
-  place-items: center;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: rgba(255,255,255,.02);
-  -webkit-backdrop-filter: blur(6px);
-          backdrop-filter: blur(6px);
-  transition: background-color var(--fx-dur) ease, border-color var(--fx-dur) ease, transform var(--fx-dur) ease;
+  align-items: start;
+  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  overflow-y: auto;
 }
-.navbar-close:hover{
-  background: rgba(209,162,76,.12);
-  border-color: var(--ring);
-  transform: scale(1.03);
-}
-.navbar-close:active{ transform: scale(.98); }
-.navbar-close:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
-}
-
-.navbar-close span{
-  position: absolute;
-  width: 26px;
-  height: 2px;
-  background: #fff;
-  border-radius: 2px;
-  transition: background-color .15s ease;
-}
-.navbar-close span:first-child{ transform: rotate(45deg); }
-.navbar-close span:last-child { transform: rotate(-45deg); }
-.navbar-close:hover span{ background-color: var(--brand); }
-
-/* Центрирование контента + safe-areas */
-.navbar-overlay-inner{
-  min-height: 100dvh;
-  height: 100dvh;
+.nav__mList {
+  width: min(720px, 100%);
+  margin: 74px auto 24px;
+  padding: 0;
+  list-style: none;
   display: grid;
-  place-items: center;
-  padding-left:  max(24px, env(safe-area-inset-left));
-  padding-right: max(24px, env(safe-area-inset-right));
-  padding-top:   max(24px, calc(env(safe-area-inset-top) + 56px));
-  padding-bottom:max(24px, env(safe-area-inset-bottom));
 }
-
-/* Колонка ссылок (mobile) */
-.navbar-overlay-list{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.nav__mItem + .nav__mItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-/* Эффектные ссылки (mobile) */
-.navbar-overlay a{
-  --u-h: 2px;
-  color: var(--text);
+.nav__mLink {
+  display: block;
+  padding: 18px 6px;
+  font-size: clamp(20px, 5.6vw, 28px);
+  font-weight: 800;
+  color: #f5f7fb;
   text-decoration: none;
-  font-size: clamp(20px, 5vw, 28px);
-  line-height: 1.25;
-  display: inline-block;
-  padding: 4px 6px;
-  margin: 10px 0;
-  border-radius: 10px;
-  transition: color var(--fx-dur) ease, transform var(--fx-dur) ease;
-
-  background-image: linear-gradient(var(--brand), var(--brand));
-  background-repeat: no-repeat;
-  background-position: 0% 100%;
-  background-size: 0% var(--u-h);
-}
-.navbar-overlay a:hover{
-  transform: translateY(-1px);
-  background-size: 100% var(--u-h);
-}
-.navbar-overlay a:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px var(--ring);
+  letter-spacing: 0.2px;
 }
 
-/* CTA в моб.меню — общий .btn .btn-primary, просто отступ сверху */
-.navbar-overlay .btn{ margin-top: 14px; }
-
-/* Блокируем прокрутку body, когда меню открыто */
-body:has(#navbar-toggle:checked){
-  overflow: hidden;
-}
-
-/* ---------------- Responsive ---------------- */
-@media (min-width: 1024px){
-  .navbar-burger,
-  .navbar-overlay{
-    display: none;
+/* Респонсив */
+@media (max-width: 1024px) {
+  .nav__burger {
+    display: grid;
+    justify-self: end; /* бургер прижат к правому краю */
   }
-  .navbar-desktop{
-    display: flex;
-  }
-  .navbar-phone{
-    display: block;
+  .nav__desk {
+    display: none; /* прячем меню — используется дропдаун */
   }
 }
 
-/* ---------------- Reduced motion ---------------- */
-@media (prefers-reduced-motion: reduce){
-  .navbar-burger span,
-  .navbar-overlay,
-  .navbar-desktop a{
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .nav__link,
+  .nav__burger span {
     transition: none !important;
   }
 }
@@ -535,45 +414,46 @@ body:has(#navbar-toggle:checked){
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/LeadForm.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   LeadForm.css — светлая тема по умолчанию
-   - Белая карточка, аккуратные светлые поля
-   - Бордовый бренд в фокусах и кнопках
-   - Ровные отступы, адаптив
+   LeadForm.css — светлая, «воздушная» форма
+   - двухколоночная сетка на десктопе
+   - иконки внутри полей
+   - четкое состояние фокуса/ошибок
    ========================================================================= */
 
 :root{
-  /* Цвета по умолчанию (светлая тема) */
   --lf-bg:        #ffffff;
   --lf-text:      #0e1525;
   --lf-muted:     #667085;
-  --lf-line:      #e6e8ec;
-  --lf-line-soft: #f1f3f5;
-  --lf-shadow:    0 20px 60px rgba(16,24,40,.08);
-  --lf-radius:    16px;
+  --lf-line:      #e7e9ef;
+  --lf-line-soft: #f3f5f8;
+  --lf-shadow:    0 18px 48px rgba(16,24,40,.08);
+  --lf-radius:    18px;
 
-  /* Бренд — бордовый */
-  --lf-brand:     #8b1e3f;         /* основной */
-  --lf-brand-10:  rgba(139,30,63,.10);
-  --lf-brand-20:  rgba(139,30,63,.20);
+  /* Бренд (бордовый) + золото для акцентов кнопок */
+  --lf-brand:     #b54b45;
+  --lf-brand-10:  rgba(181,75,69,.14);
+
+  --lf-gold-1:    #f6d77b;
+  --lf-gold-2:    #e7c35c;
 }
 
-/* Поддержка тёмной темы через .theme-dark на body (если есть) */
+/* Тёмная тема при желании (если будет .theme-dark на body) */
 .theme-dark .leadform{
-  --lf-bg:        var(--surface, #14161b);
-  --lf-text:      var(--text,   #f5f7fb);
+  --lf-bg:        #151821;
+  --lf-text:      #f5f7fb;
   --lf-muted:     #9aa3b2;
   --lf-line:      rgba(255,255,255,.12);
   --lf-line-soft: rgba(255,255,255,.06);
-  --lf-shadow:    0 20px 60px rgba(0,0,0,.35);
+  --lf-shadow:    0 22px 60px rgba(0,0,0,.45);
 }
 
-/* 1) Обёртка формы */
+/* Обёртка формы */
 .leadform{
   display: grid;
-  grid-gap: 14px;
-  gap: 14px;
+  grid-gap: 16px;
+  gap: 16px;
   width: 100%;
-  max-width: 640px;                 /* немного шире, чем было */
+  max-width: 640px;
   margin: 0 auto;
 
   background: var(--lf-bg);
@@ -584,47 +464,46 @@ body:has(#navbar-toggle:checked){
   padding: 22px;
 }
 
-/* Вариант для экрана «Спасибо» */
-.leadform--thanks{
-  text-align: center;
-}
-
-/* Заголовки и тексты «спасибо» */
-.leadform-thanksTitle{
-  margin: 0 0 8px;
-  font-weight: 800;
-  font-size: clamp(18px, 2.2vw, 22px);
-}
-.leadform-thanksText{
-  margin: 0;
-  color: var(--lf-text);
-  line-height: 1.55;
-}
-.leadform-thanksHint{
-  margin: 8px 0 0;
-  color: var(--lf-muted);
-}
-.leadform-thanksHint a{
-  color: var(--lf-brand);
-  text-decoration: none;
-}
-
-/* 2) Строка формы: подпись + поле + ошибка */
-.leadform-row{
+/* Сетка полей: 2 колонки на десктопе */
+.leadform-grid{
   display: grid;
-  grid-gap: 6px;
-  gap: 6px;
-  text-align: left;
+  grid-gap: 14px 16px;
+  gap: 14px 16px;
+  grid-template-columns: 1fr 1fr;
+}
+.leadform-row--wide{
+  grid-column: 1 / -1;
 }
 
-/* Лейбл */
+/* Подпись */
 .leadform-label{
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 800;
   color: var(--lf-muted);
+  letter-spacing: .02em;
 }
 
-/* 3) Поля ввода (только внутри .leadform) */
+/* Поле с иконкой */
+.lf-field{
+  --padL: 42px;
+  position: relative;
+}
+.lf-field .leadform-input{
+  padding-left: var(--padL);
+}
+
+.lf-ico{
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  color: var(--lf-muted);
+  display: inline-grid; place-items: center;
+}
+.lf-ico svg{ width: 18px; height: 18px; }
+
+/* Инпуты */
 .leadform-input,
 .leadform :where(input[type="text"], input[type="tel"], input[type="number"]) {
   width: 100%;
@@ -640,7 +519,7 @@ body:has(#navbar-toggle:checked){
 }
 
 .leadform-input::placeholder{
-  color: #98a2b3;
+  color: #9aa3b2;
 }
 
 /* Фокус — бордовое «кольцо» */
@@ -651,20 +530,18 @@ body:has(#navbar-toggle:checked){
   box-shadow: 0 0 0 3px var(--lf-brand-10);
 }
 
-/* Ошибка поля через aria-invalid */
-.leadform :where(input[aria-invalid="true"]){
-  border-color: #ef4444;
+/* Ошибки */
+.has-error .leadform-input{
+  border-color: #ef4444 !important;
   box-shadow: 0 0 0 3px rgba(239,68,68,.18);
 }
-
-/* 4) Сообщение об ошибке */
 .leadform-error{
   color: #b42318;
   font-size: 13px;
   line-height: 1.3;
 }
 
-/* 5) Чекбокс согласия */
+/* Чекбокс согласия */
 .leadform-agree{
   display: grid;
   grid-template-columns: 18px 1fr;
@@ -677,43 +554,80 @@ body:has(#navbar-toggle:checked){
      -moz-user-select: none;
           user-select: none;
 }
-
 .leadform-agree input[type="checkbox"]{
   margin-top: 2px;
   width: 18px; height: 18px;
   accent-color: var(--lf-brand);
   cursor: pointer;
 }
-
 .leadform-agree a{
   color: var(--lf-brand);
   text-decoration: none;
 }
 .leadform-agree a:hover{ opacity: .9; }
 
-/* 6) Кнопка отправки — используем общие .btn .btn-primary,
-      но добавим выравнивание/ширину при необходимости */
-.leadform-submit{
-  margin-top: 6px;
+/* Кнопка */
+.lf-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  height: 52px;
+  border-radius: 14px;
+  border: 0;
+  cursor: pointer;
+  font-weight: 900;
+  letter-spacing: .02em;
+  padding: 0 18px;
+
+  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
+}
+.lf-btnIco svg{ width: 18px; height: 18px; }
+
+.lf-btn--primary{
   width: 100%;
+  color: #3f3210;
+  background: linear-gradient(180deg, var(--lf-gold-1), var(--lf-gold-2));
+  box-shadow: 0 12px 34px rgba(229,184,65,.25), inset 0 -6px 10px rgba(0,0,0,.05);
+}
+.lf-btn--primary:hover{ filter: brightness(1.03); transform: translateY(-1px); }
+.lf-btn--primary:active{ transform: translateY(0); }
+.lf-btn[aria-busy="true"]{ pointer-events: none; opacity: .85; }
+
+/* Спиннер */
+.lf-spinner{
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(0,0,0,.2);
+  border-top-color: rgba(0,0,0,.55);
+  animation: lfspin .8s linear infinite;
+}
+@keyframes lfspin{ to{ transform: rotate(360deg); } }
+
+/* Спасибо-экран */
+.leadform--thanks{
+  text-align: center;
+  padding: 26px;
+}
+.leadform-check{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.06);
+  color: #20916c;
+  margin: 0 auto 8px;
+  display: grid; place-items: center;
 }
 
-/* 7) Адаптив */
-@media (max-width: 480px){
-  .leadform{
-    padding: 18px;
-    gap: 12px;
-  }
+/* Адаптив */
+@media (max-width: 560px){
+  .leadform{ padding: 18px; }
+  .leadform-grid{ grid-template-columns: 1fr; }
   .leadform-agree{
     grid-template-columns: 16px 1fr;
     font-size: 13px;
   }
-  .leadform-agree input[type="checkbox"]{
-    width: 16px; height: 16px;
-  }
+  .leadform-agree input{ width: 16px; height: 16px; }
 }
-
-/* 8) Снижение анимаций */
 @media (prefers-reduced-motion: reduce){
   .leadform, .leadform *{
     transition: none !important;

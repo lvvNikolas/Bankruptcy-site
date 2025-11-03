@@ -1,243 +1,247 @@
+/* =========================================================================
+   HERO (100vh, светлый фон). Форма справа; на мобильных — снизу.
+   ========================================================================= */
+
 :root{
-  /* тёмная тема по умолчанию */
-  --bg:         #0b0c0f;
-  --surface:    #13151a;
-  --surface-2:  #0f1115;
-  --text:       #f4f6fb;
-  --muted:      #a9b0bb;
-  --accent:     #e08273;   /* цвет ленточки и акцентов */
-  --brand:      #d1a24c;   /* брендовое золото для кнопок */
-  --line:       rgba(255,255,255,.12);
-  --ring:       rgba(209,162,76,.35);
-  --shadow:     0 18px 50px rgba(0,0,0,.45);
+  --hero-text:   #0f172a;
+  --hero-muted:  #64748b;
+  --hero-accent: #b54b45;        /* бордовый акцент */
 
-  --input-bg:   rgba(255,255,255,.02);
-  --input-bd:   rgba(255,255,255,.18);
-  --input-ph:   #8d95a3;
+  --gold-1:      #f6d879;        /* золото кнопки */
+  --gold-2:      #e6c05b;
 
-  --btn-from:   #e1b769;
-  --btn-to:     #b98d39;
+  --line:        rgba(0,0,0,.10);
+  --shadow:      0 24px 64px rgba(0,0,0,.08);
+
+  --radius-lg:   22px;
+  --radius-md:   14px;
 }
 
-.promoWrap{
-  padding: 16px;
-  background:
-    radial-gradient(700px 260px at 90% -10%, rgba(209,162,76,.10), transparent 60%),
-    var(--bg);
-  display: grid;
-  place-items: center;
-}
-
-.promoCard{
+/* === Секция: строго 100vh / 100svh === */
+.hero{
   position: relative;
-  width: min(720px, 100%);
-  background: linear-gradient(180deg, var(--surface), var(--surface-2));
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.03),
-    var(--shadow);
-  padding: clamp(18px, 3.2vw, 28px);
+  min-height: 100svh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  color: var(--hero-text);
+  overflow: hidden;
+  isolation: isolate;
 }
 
-/* Угловая лента «Акция» */
-.promoRibbon--corner{
-  position: absolute;
-  inset: 0 0 auto auto; /* top:0; right:0 */
-  width: 0; height: 0;
+.hero .container{
+  width: min(1200px, 92vw);
+  margin-inline: auto;
 }
-.promoRibbon--corner::before{
-  content: "";
-  position: absolute;
-  top: -1px; right: -1px;
-  border-top: 92px solid var(--accent);  /* высота треугольника */
-  border-left: 92px solid transparent;   /* ширина треугольника */
-  border-top-right-radius: 12px;
+
+/* === Сетка: 2 колонки → 1 колонка на мобильном === */
+.hero__grid{
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;  /* текст чуть шире */
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+  position: relative;
+  z-index: 2;
 }
-.promoRibbon--corner > span{
+
+/* На ширине ≤ 960px — одна колонка, форма уходит вниз по потоку */
+@media (max-width: 960px){
+  .hero__grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === Декор === */
+.hero__decor{
   position: absolute;
-  top: 12px;
-  right: 8px;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: .02em;
-  transform: rotate(45deg);
-  transform-origin: top right;
-  font-size: 13px;
+  inset: 0;
   pointer-events: none;
+  z-index: 0;
+}
+.hero__blob{
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: .55;
+}
+.hero__blob--gold{
+  top: -140px; right: -140px;
+  width: 480px; height: 480px;
+  background: radial-gradient(circle, #f6d87980 0%, transparent 70%);
+  animation: hero-float-1 12s ease-in-out infinite alternate;
+}
+.hero__blob--red{
+  bottom: -160px; left: -160px;
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, #b54b4555 0%, transparent 70%);
+  animation: hero-float-2 13s ease-in-out infinite alternate;
+}
+.hero__gridLines{
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,.03) 1px, transparent 1px);
+  background-size: 88px 88px;
+  opacity: .25;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 78%);
 }
 
-/* Заголовок и цены */
-.promoTitle{
+@keyframes hero-float-1{ from{transform:translate(0,0)} to{transform:translate(-20px,18px) scale(1.04)} }
+@keyframes hero-float-2{ from{transform:translate(0,0)} to{transform:translate(24px,-22px) scale(1.05)} }
+
+/* === Левая колонка (текст) === */
+.hero__title{
   margin: 0 0 12px;
-  color: var(--text);
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: .2px;
-  font-size: clamp(22px, 3.3vw, 34px);
+  font-size: clamp(32px, 4.8vw, 56px);
 }
-
-.promoPriceRow{
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 16px;
-  padding-bottom: 16px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-}
-
-.promoPriceNowValue{
-  display: inline-block;
-  color: var(--accent);
-  font-weight: 900;
-  font-size: clamp(36px, 7vw, 56px);
-  line-height: 1;
-}
-
-.promoPriceOld{
-  text-align: right;
-}
-.promoPriceOldLabel{
-  display: block;
-  color: var(--muted);
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.promoPriceOldValue{
-  color: var(--muted);
-  text-decoration: line-through;
-  text-decoration-thickness: 3px;
-  text-decoration-color: rgba(255,255,255,.28);
-  font-weight: 800;
-  font-size: clamp(16px, 2.2vw, 22px);
-}
-
-/* Форма */
-.promoForm{
-  display: grid;
-  gap: 16px;
-}
-
-/* Поле с ОДНОЙ рамкой (на контейнере) */
-.promoField{
+.hero__accent{
+  color: var(--hero-accent);
   position: relative;
-  border: 2px solid var(--input-bd);  /* единственная рамка */
-  border-radius: 36px;
-  background: var(--input-bg);
+}
+.hero__accent::after{
+  content: "";
+  position: absolute; left: 0; bottom: -6px;
+  width: 100%; height: 10px;
+  background: linear-gradient(90deg, rgba(181,75,69,.18), transparent);
+  border-radius: 999px;
 }
 
-/* input — без рамки и фона, чтобы не получать «двойную» рамку */
-.promoField input{
-  width: 100%;
-  height: 64px;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: var(--text);
-  font-size: 18px;
-  border-radius: 36px; /* для красивого focus-ринга */
-  padding: 0 74px 0 22px;
+.hero__lead{
+  margin: 0 0 18px;
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: var(--hero-muted);
+  max-width: 640px;
 }
-.promoField input::placeholder{ color: var(--input-ph); }
-.promoField input:focus{ box-shadow: 0 0 0 4px var(--ring); }
 
-/* Иконка-кнопка справа (без бордера и фона) */
-.promoFieldIco{
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 56px;
-  height: 56px;
-  border: 0;
-  background: transparent;
-  color: var(--accent);
+.hero__bullets{
+  list-style: none; padding: 0; margin: 0 0 24px;
+  display: grid; gap: 10px;
+  font-weight: 700; color: var(--hero-text);
+}
+.hero__bullets li{ display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: 10px; }
+.hero__bullets i{
+  width: 26px; height: 26px; border-radius: 50%;
   display: grid; place-items: center;
-  cursor: pointer;
-  border-radius: 50%;
+  color: var(--hero-accent);
+  background: rgba(181,75,69,.12);
+  border: 1px solid rgba(181,75,69,.35);
+  font-style: normal;
 }
 
-/* Чекбокс */
-.promoAgree{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--muted);
-  font-size: 14px;
+/* Кнопки */
+.hero__actions{
+  display: flex; gap: 14px; flex-wrap: wrap;
 }
-.promoAgree input{
-  width: 18px; height: 18px;
+.hero__btn{
+  appearance: none; border: 0; text-decoration: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 14px 22px; border-radius: var(--radius-md);
+  font-weight: 900; letter-spacing: .02em;
+  color: #3e3219;
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2));
+  box-shadow: 0 12px 34px rgba(229,184,65,.25), inset 0 -6px 10px rgba(0,0,0,.06);
+  transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
 }
+.hero__btn:hover{ filter: brightness(1.04); transform: translateY(-1px); }
+.hero__btn:active{ transform: translateY(0); }
 
-/* CTA-кнопка */
-.promoBtn{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.hero__btn--ghost{
+  color: var(--hero-accent);
+  background: transparent;
+  border: 2px solid rgba(181,75,69,.35);
+  box-shadow: none;
+}
+.hero__btn--ghost:hover{ background: rgba(181,75,69,.08); }
 
+/* === Правая колонка (карточка с формой) === */
+.hero__right{
   width: 100%;
-  height: 64px;
-  border-radius: 18px;
-  border: 0;
-  cursor: pointer;
-
-  color: #1c1406;
-  font-weight: 800;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-
-  background: linear-gradient(180deg, var(--btn-from), var(--btn-to));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 10px 30px rgba(0,0,0,.35);
-  transition: transform .08s ease, filter .12s ease, box-shadow .12s ease;
-}
-.promoBtn:hover{ filter: brightness(1.02); }
-.promoBtn:active{ transform: translateY(1px); }
-.promoBtn:focus-visible{ outline: none; box-shadow: 0 0 0 4px var(--ring); }
-.promoBtnIco{ display: inline-grid; place-items: center; color: #1c1406; }
-
-/* подпись под формой */
-.promoFoot{
-  color: var(--muted);
-  font-size: 14px;
-  margin: 6px 0 0;
-}
-.promoLink{
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+  max-width: 520px;      /* форма не «распухнет» */
+  justify-self: end;
 }
 
-/* Модификатор светлой темы (если понадобится) */
-.promoWrap--light{
-  --bg:        #f5f6f9;
-  --surface:   #ffffff;
-  --surface-2: #ffffff;
-  --text:      #0b0c0f;
-  --muted:     #5f6672;
-  --line:      rgba(10,12,15,.12);
-
-  --input-bg:  rgba(10,12,15,.02);
-  --input-bd:  rgba(10,12,15,.18);
-  --input-ph:  #8c93a0;
-
-  background:
-    radial-gradient(700px 260px at 90% -10%, rgba(209,162,76,.18), transparent 60%),
-    var(--bg);
+@media (max-width: 960px){
+  .hero__right{
+    justify-self: center;   /* центрируем на мобилке */
+    max-width: 520px;
+  }
 }
 
-/* адаптив */
-@media (max-width: 560px){
-  .promoField input{ height: 58px; padding-right: 62px; font-size: 17px; }
-  .promoFieldIco{ width: 52px; height: 52px; right: 6px; }
+.hero__card{
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: clamp(18px, 3vw, 26px);
+}
+.hero__cardHead{
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.hero__chip{
+  display: inline-block;
+  font-size: 12px; font-weight: 800; letter-spacing: .04em;
+  color: var(--hero-accent);
+  background: rgba(181,75,69,.10);
+  border: 1px solid rgba(181,75,69,.35);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.hero__foot{
+  margin: 10px 0 0; color: var(--hero-muted); font-size: 13px;
+}
+.hero__foot a{ color: var(--hero-accent); text-decoration: underline; text-underline-offset: 2px; }
+
+/* === Прокрутка вниз === */
+.hero__scroll{
+  position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%);
+  display: inline-flex; gap: 10px; align-items: center;
+  color: var(--hero-muted); text-decoration: none; font-size: 14px;
+  z-index: 2;
+}
+.hero__dot{
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--hero-accent);
+  animation: hero-dot .9s ease-in-out infinite alternate;
+}
+@keyframes hero-dot{ from{transform:translateY(0);opacity:.55} to{transform:translateY(4px);opacity:1} }
+
+/* === Жёсткие override'ы: делаем любую «промо»-форму внутри карточки белой === */
+.hero__card :where(.promoWrap){ background: transparent !important; padding: 0 !important; }
+.hero__card :where(.promoCard){
+  background: #fff !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.hero__card :where(.promoRibbon--corner){ display: none !important; }
+
+.hero__card :where(.promoTitle, .promoPriceNowValue, .promoPriceOldLabel, .promoPriceOldValue){
+  color: var(--hero-text) !important;
+}
+.hero__card :where(.promoField){
+  border: 2px solid #e5e7eb !important;
+  border-radius: 36px !important;
+  background: #fff !important;
+}
+.hero__card :where(.promoField input){
+  background: #fff !important; color: var(--hero-text) !important;
+}
+.hero__card :where(.promoField input::placeholder){ color: #98a2b3 !important; }
+.hero__card :where(.promoFieldIco){ color: var(--hero-accent) !important; }
+.hero__card :where(.promoBtn){
+  background: linear-gradient(180deg, var(--gold-1), var(--gold-2)) !important;
+  color: #3a2a14 !important; border: 0 !important;
+  box-shadow: 0 10px 30px rgba(229,184,65,.25) !important;
 }
 
-/* screen reader only */
-.sr-only{
-  position: absolute !important;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
-  overflow: hidden; clip: rect(0,0,0,0);
-  white-space: nowrap; border: 0;
+/* === Мелкая адаптация === */
+@media (max-width: 600px){
+  .hero__title{ font-size: clamp(28px, 7vw, 36px); }
+  .hero__actions{ justify-content: center; }
 }

@@ -1,134 +1,88 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { MouseEvent as ReactMouseEvent } from "react";
+import type { Route } from "next";
 import "@styles/Navbar.css";
 
+/** Ссылки меню — типизированы через Route, чтобы Next/TS не ругались */
+const LINKS: ReadonlyArray<{ href: Route; label: string }> = [
+  { href: "/" as Route, label: "Главная" },
+  { href: "/uslugi" as Route, label: "Услуги" },
+  { href: "/cases" as Route, label: "Выигранные дела" },
+  { href: "/faq" as Route, label: "Вопросы и ответы" },
+  { href: "/career" as Route, label: "Карьера" },
+  { href: "/contacts" as Route, label: "Контакты" },
+];
+
 export default function Navbar() {
-  const pathname = usePathname();
-  const onHome = pathname === "/";
+  const [open, setOpen] = useState(false);
 
-  /** Плавный скролл только на главной */
-  const smoothGo =
-    (hash: string) =>
-    (e: ReactMouseEvent<HTMLAnchorElement>) => {
-      if (!onHome) return; // на внутренних страницах якоря не перехватываем
-      e.preventDefault();
-      const el = document.querySelector<HTMLElement>(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-        // закрываем моб.меню, если открыто
-        const toggle = document.getElementById("navbar-toggle") as HTMLInputElement | null;
-        if (toggle) toggle.checked = false;
-      }
-    };
-
-  /** Корректный объект для Link на /#hash (чтобы не ругался линтер) */
-  const toUrlObject = (hash: string) =>
-    ({ pathname: "/", hash: hash.slice(1) } as const);
-
-  /** Ссылки меню */
-  const links = [
-    { hash: "#debts", label: "Долги" },
-    { hash: "#uslugi", label: "Услуги" },
-    { hash: "#process", label: "Процесс" },
-    { hash: "#quiz", label: "Опрос" },
-    { hash: "#ceny", label: "Цены" },
-    { hash: "#faq", label: "FAQ" },
-    { hash: "#kontakty", label: "Контакты" },
-  ];
-
-  /** Общий рендер ссылок (desktop/mobile) */
-  const NavLinks = ({ mobile = false }: { mobile?: boolean }) => (
-    <>
-      {links.map(({ hash, label }) =>
-        onHome ? (
-          <a key={hash} href={hash} onClick={smoothGo(hash)}>
-            {label}
-          </a>
-        ) : (
-          <Link key={hash} href={toUrlObject(hash)}>
-            {label}
-          </Link>
-        )
-      )}
-
-      {onHome ? (
-        <a
-          href="#zayavka"
-          onClick={smoothGo("#zayavka")}
-          className={`btn btn-primary ${mobile ? "" : "navbar-cta"}`}
-        >
-          Заявка
-        </a>
-      ) : (
-        <Link
-          href={toUrlObject("#zayavka")}
-          className={`btn btn-primary ${mobile ? "" : "navbar-cta"}`}
-        >
-          Заявка
-        </Link>
-      )}
-    </>
-  );
+  // Закрываем дропдаун при ресайзе, чтобы не залипал
+  useEffect(() => {
+    const onResize = () => setOpen(false);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   return (
-    <header className="navbar" role="banner">
-      <div className="container">
-        <div className="navbar-row">
-          <Link href="/" className="navbar-logo" aria-label="На главную">
-            Банкротство.РФ
-          </Link>
+    <header className="nav">
+      <div className="nav__inner">
+        {/* ЛОГО слева */}
+        <Link
+          href={"/" as Route}
+          className="nav__logo"
+          aria-label="На главную"
+          prefetch={false}
+        >
+          <span />
+        </Link>
 
-          {/* Desktop */}
-          <nav className="navbar-desktop" aria-label="Основное меню">
-            <NavLinks />
-          </nav>
+        {/* ЦЕНТР: десктоп-меню */}
+        <nav className="nav__desk" aria-label="Основное меню">
+          <ul className="nav__list" role="list">
+            {LINKS.map((l) => (
+              <li key={l.href} className="nav__item">
+                <Link href={l.href} className="nav__link" prefetch={false}>
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-          {/* Burger toggle */}
-          <input id="navbar-toggle" type="checkbox" className="navbar-toggle" />
-          <label htmlFor="navbar-toggle" className="navbar-burger" aria-label="Меню">
-            <span />
-            <span />
-            <span />
-          </label>
-
-          {/* Mobile overlay */}
-          <nav
-            className="navbar-overlay"
-            aria-label="Мобильное меню"
-            onClick={() => {
-              const t = document.getElementById("navbar-toggle") as HTMLInputElement | null;
-              if (t) t.checked = false;
-            }}
-          >
-            <button
-              className="navbar-close"
-              aria-label="Закрыть меню"
-              onClick={(e) => {
-                e.stopPropagation();
-                const t = document.getElementById("navbar-toggle") as HTMLInputElement | null;
-                if (t) t.checked = false;
-              }}
-            >
-              <span />
-              <span />
-            </button>
-
-            <div className="navbar-overlay-inner" onClick={(e) => e.stopPropagation()}>
-              <div className="navbar-overlay-list">
-                <NavLinks mobile />
-              </div>
-            </div>
-          </nav>
-
-          {/* Телефон справа (desktop) */}
-          <a className="navbar-phone" href="tel:+79999999999">
-            +7&nbsp;999&nbsp;999-99-99
-          </a>
-        </div>
+        {/* СПРАВА: бургер (виден только на мобильных) */}
+        <button
+          type="button"
+          className={`nav__burger ${open ? "is-open" : ""}`}
+          aria-label={open ? "Закрыть меню" : "Открыть меню"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span />
+          <span />
+          <span />
+        </button>
       </div>
+
+      {/* Мобильный дропдаун */}
+      {open && (
+        <div className="nav__drop" role="dialog" aria-modal="true">
+          <ul className="nav__mList" role="list">
+            {LINKS.map((l) => (
+              <li key={`m-${l.href}`} className="nav__mItem">
+                <Link
+                  href={l.href}
+                  className="nav__mLink"
+                  prefetch={false}
+                  onClick={() => setOpen(false)}
+                >
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </header>
   );
 }
