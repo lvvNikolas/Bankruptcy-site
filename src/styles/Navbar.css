@@ -2,11 +2,12 @@
   --nav-bg: #ffffff;
   --nav-text: #0f172a;
   --nav-muted: #64748b;
-  --nav-accent: #0f172a; /* цвет ссылок */
+  --nav-accent: #0f172a;
   --nav-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
   --nav-line: rgba(15, 23, 42, 0.08);
 }
 
+/* Шапка */
 .nav {
   position: sticky;
   top: 0;
@@ -44,7 +45,7 @@
   background: #101317;
 }
 
-/* ДЕСКТОП-МЕНЮ по центру */
+/* Десктоп-меню */
 .nav__desk {
   justify-self: center;
 }
@@ -56,6 +57,9 @@
   padding: 0;
   list-style: none;
 }
+.nav__item {
+  margin: 0;
+}
 .nav__link {
   color: var(--nav-accent);
   text-decoration: none;
@@ -63,7 +67,6 @@
   letter-spacing: 0.2px;
   white-space: nowrap;
 
-  /* “чистое” лёгкое подчёркивание без ломания верстки */
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 2px;
   background-position: 0% 100%;
@@ -76,7 +79,7 @@
   outline: none;
 }
 
-/* БУРГЕР справа (скрыт на десктопе) */
+/* Бургер справа (мобилка) */
 .nav__burger {
   width: 44px;
   height: 40px;
@@ -106,49 +109,99 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Мобильный дропдаун */
+/* ===== Мобильный оверлей ===== */
+
 .nav__drop {
   position: fixed;
   inset: 0;
-  background: #0b0c0f;
-  color: #f5f7fb;
+  z-index: 999; /* перекрывает контент, но не мешает шапке, т.к. она выше */
+  background: #ffffff;
+  color: var(--nav-text);
   display: grid;
-  align-items: start;
-  padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+  grid-template-rows: auto 1fr; /* верхняя строка под крестик, ниже список */
+  align-items: center;
+  justify-items: center;
+  padding: max(16px, env(safe-area-inset-top)) 16px
+    max(16px, env(safe-area-inset-bottom));
   overflow-y: auto;
 }
+
+/* Кнопка-крестик внутри оверлея */
+.nav__close {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--nav-line);
+  background: #ffffff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.nav__close span {
+  position: relative;
+  width: 22px;
+  height: 22px;
+}
+.nav__close span::before,
+.nav__close span::after {
+  content: "";
+  position: absolute;
+  inset: 50%;
+  width: 22px;
+  height: 2px;
+  background: var(--nav-text);
+  border-radius: 2px;
+}
+.nav__close span::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.nav__close span::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Список ссылок в оверлее */
 .nav__mList {
-  width: min(720px, 100%);
-  margin: 74px auto 24px;
-  padding: 0;
+  width: min(420px, 100%);
+  margin: 0;
+  padding: 80px 0 24px; /* отступ сверху — под крестик */
   list-style: none;
   display: grid;
+  justify-items: center;
+  row-gap: 8px;
+}
+.nav__mItem {
+  width: 100%;
 }
 .nav__mItem + .nav__mItem {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
 }
 .nav__mLink {
   display: block;
   padding: 18px 6px;
   font-size: clamp(20px, 5.6vw, 28px);
   font-weight: 800;
-  color: #f5f7fb;
+  color: var(--nav-text);
   text-decoration: none;
   letter-spacing: 0.2px;
+  text-align: center;
 }
 
-/* Респонсив */
+/* ===== Респонсив ===== */
 @media (max-width: 1024px) {
   .nav__burger {
     display: grid;
-    justify-self: end; /* бургер прижат к правому краю */
+    justify-self: end;
   }
   .nav__desk {
-    display: none; /* прячем меню — используется дропдаун */
+    display: none;
   }
 }
 
-/* reduced motion */
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   .nav__link,
   .nav__burger span {

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import "@styles/Navbar.css";
 
-/** Ссылки меню — типизированы через Route, чтобы Next/TS не ругались */
+/** Ссылки меню */
 const LINKS: ReadonlyArray<{ href: Route; label: string }> = [
   { href: "/" as Route, label: "Главная" },
   { href: "/uslugi" as Route, label: "Услуги" },
@@ -18,7 +18,7 @@ const LINKS: ReadonlyArray<{ href: Route; label: string }> = [
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  // Закрываем дропдаун при ресайзе, чтобы не залипал
+  // Закрываем меню при ресайзе, чтобы не залипало
   useEffect(() => {
     const onResize = () => setOpen(false);
     window.addEventListener("resize", onResize);
@@ -38,7 +38,7 @@ export default function Navbar() {
           <span />
         </Link>
 
-        {/* ЦЕНТР: десктоп-меню */}
+        {/* Десктоп-меню по центру */}
         <nav className="nav__desk" aria-label="Основное меню">
           <ul className="nav__list" role="list">
             {LINKS.map((l) => (
@@ -51,7 +51,7 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* СПРАВА: бургер (виден только на мобильных) */}
+        {/* Бургер справа (виден только на мобилке) */}
         <button
           type="button"
           className={`nav__burger ${open ? "is-open" : ""}`}
@@ -64,9 +64,19 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Мобильный дропдаун */}
+      {/* Мобильный оверлей */}
       {open && (
         <div className="nav__drop" role="dialog" aria-modal="true">
+          {/* Крестик внутри оверлея */}
+          <button
+            type="button"
+            className="nav__close"
+            aria-label="Закрыть меню"
+            onClick={() => setOpen(false)}
+          >
+            <span />
+          </button>
+
           <ul className="nav__mList" role="list">
             {LINKS.map((l) => (
               <li key={`m-${l.href}`} className="nav__mItem">
