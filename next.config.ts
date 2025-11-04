@@ -7,14 +7,18 @@ const nextConfig: NextConfig = {
   // Экспорт полностью статического сайта (аналог vite build)
   output: "export",
 
-  // Глобальные алиасы (если используешь tsconfig с "@/...")
+  // ✅ Новый флаг typedRoutes (раньше был в experimental)
+  typedRoutes: true,
+
+  // Здесь оставляем только реально экспериментальные фичи, если они появятся
   experimental: {
-    typedRoutes: true,
+    // serverActions: true,
   },
 
   // Настройки изображений
   images: {
-    unoptimized: true, // важно для "next export"
+    // важно для "next export"
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
