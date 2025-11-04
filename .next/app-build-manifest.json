@@ -12,23 +12,23 @@
       "static/css/app/page.css",
       "static/chunks/app/page.js"
     ],
-    "/cases/page": [
+    "/contacts/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/css/app/cases/page.css",
-      "static/chunks/app/cases/page.js"
-    ],
-    "/faq/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/faq/page.css",
-      "static/chunks/app/faq/page.js"
+      "static/css/app/contacts/page.css",
+      "static/chunks/app/contacts/page.js"
     ],
     "/career/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/career/page.css",
       "static/chunks/app/career/page.js"
+    ],
+    "/cases/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/cases/page.css",
+      "static/chunks/app/cases/page.js"
     ],
     "/_not-found/page": [
       "static/chunks/webpack.js",

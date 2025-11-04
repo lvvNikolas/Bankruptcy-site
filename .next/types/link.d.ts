@@ -36,6 +36,7 @@ declare namespace __next_route_internal_types__ {
     | `/account`
     | `/career`
     | `/cases`
+    | `/contacts`
     | `/faq`
   type DynamicRoutes<T extends string = string> = never
 
