@@ -38,6 +38,7 @@ declare namespace __next_route_internal_types__ {
     | `/cases`
     | `/contacts`
     | `/faq`
+    | `/sitemap`
   type DynamicRoutes<T extends string = string> = never
 
   type RouteImpl<T> = 
