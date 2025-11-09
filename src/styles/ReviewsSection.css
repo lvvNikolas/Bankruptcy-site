@@ -1,67 +1,79 @@
 /* =========================================================================
-   Reviews (100vh, light, аккуратная карточка)
+   Reviews — единый светлый блок с отзывами (карусель)
    ========================================================================= */
 
-:root{
-  --rv-bg: #ffffff;
-  --rv-text: #0e1525;
-  --rv-muted: #6c7280;
-  --rv-accent: #b54b45;
+:root {
+  /* опираемся на globals.css, но с дефолтами */
+  --rv-bg: var(--surface-2, #f7f8fa);
+  --rv-text: var(--text, #0f172a);
+  --rv-muted: var(--muted, #6b7280);
+  --rv-accent: var(--brand, #d1a24c);
 
-  --rv-border: #eceff3;
-  --rv-shadow: 0 20px 60px rgba(16,24,40,.10);
-
-  --rv-gold-1: #f5d67a;
-  --rv-gold-2: #ecc459;
-  --rv-gold-border: #d4a931;
-
-  --rv-radius: 20px;
+  --rv-border: rgba(15, 23, 42, 0.08);
+  --rv-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+  --rv-radius: var(--radius, 16px);
 }
 
-/* 100vh секция (safe viewport) */
-.reviews.vh{
-  min-height: 100svh;
+/* Корень секции */
+.reviews {
   background: var(--rv-bg);
-  display: grid;
-  /* центрируем контент вертикально */
-  place-items: center;
-  padding: clamp(18px, 3vw, 28px) 0;
+  color: var(--rv-text);
 }
 
-.reviews .container{
-  width: min(1080px, 92vw);
-  margin-inline: auto;
-}
-
-/* Вертикальная композиция: заголовок / сцена / точки / кнопка */
-.reviews__wrap{
-  display: grid;
-  grid-template-rows: auto 1fr auto auto;
+/* Лёгкий "экранный" эффект */
+.reviews--vh {
+  min-height: 80vh;
+  display: flex;
   align-items: center;
-  gap: clamp(14px, 2.6vw, 22px);
-  width: 100%;
+}
+
+/* Обёртка внутри контейнера */
+.reviews__wrap {
+  display: grid;
+  gap: clamp(20px, 3vw, 28px);
 }
 
 /* Заголовок */
-.reviews__title{
-  margin: 0;
+.reviews__head {
   text-align: center;
-  font-weight: 900;
-  line-height: 1.1;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.reviews__eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--fs-sm, 14px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rv-muted);
+}
+
+.reviews__title {
+  margin: 0 0 8px;
+  font-weight: 800;
+  font-size: var(--fs-2xl, clamp(28px, 3.2vw, 40px));
+  line-height: 1.2;
   color: var(--rv-text);
-  font-size: clamp(28px, 4.2vw, 52px);
 }
-.reviews__accent{ color: var(--rv-accent); }
 
-/* Сцена/треки */
-.reviews__stage{
+.reviews__accent {
+  color: var(--rv-accent);
+}
+
+.reviews__subtitle {
+  margin: 0;
+  color: var(--rv-muted);
+  font-size: var(--fs-md, 16px);
+}
+
+/* Сцена карусели */
+.reviews__stage {
   position: relative;
-  width: 100%;
-  display: grid;
-  place-items: center;
+  margin-top: clamp(20px, 3vw, 26px);
 }
 
-.reviews__rail{
+/* Лента */
+.reviews__rail {
   width: 100%;
   display: grid;
   grid-auto-flow: column;
@@ -71,119 +83,170 @@
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
-.reviews__rail::-webkit-scrollbar{ display:none; }
 
-.reviews__slide{
+.reviews__rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* Слайд */
+.reviews__slide {
   scroll-snap-align: start;
-  padding: clamp(8px, 2vw, 14px);
-  display: grid;
-  place-items: center;
+  padding: clamp(8px, 1.6vw, 12px);
 }
 
-/* Аккуратная карточка */
-.reviews__card{
-  width: min(980px, 96%);
-  background: #fff;
-  border: 1px solid var(--rv-border);
+/* Карточка отзыва */
+.reviews__card {
+  background: var(--surface, #ffffff);
   border-radius: var(--rv-radius);
-  box-shadow: var(--rv-shadow);
-  padding: clamp(22px, 3.4vw, 36px);
+  border: 1px solid var(--rv-border);
+  box-shadow: var(--shadow, var(--rv-shadow));
+  padding: clamp(22px, 3vw, 32px);
   display: grid;
-  gap: clamp(10px, 2vw, 16px);
+  gap: clamp(12px, 2vw, 16px);
 }
 
-/* Шапка */
-.reviews__head{
+/* Шапка карточки */
+.reviews__cardHead {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: center;
-  row-gap: 6px;
+  column-gap: 16px;
+  row-gap: 4px;
 }
-.reviews__name{
-  font-weight: 800;
+
+.reviews__name {
+  font-weight: 700;
+  font-size: var(--fs-md, 16px);
   color: var(--rv-text);
-  font-size: clamp(18px, 2.2vw, 20px);
 }
-.reviews__meta{
-  grid-column: 2;
-  justify-self: end;
+
+.reviews__meta {
   color: var(--rv-muted);
-  font-size: 14px;
+  font-size: var(--fs-sm, 14px);
 }
-.reviews__stars{
-  grid-column: 2;
-  justify-self: end;
-  display: grid;
-  grid-auto-flow: column;
+
+/* Звёзды */
+.reviews__stars {
+  display: inline-flex;
+  align-items: center;
   gap: 4px;
 }
-.reviews__stars svg{
-  width: 18px; height: 18px; fill: #d8dbe4;
-}
-.reviews__stars svg.on{ fill: #e5b841; }
 
-/* Текст */
-.reviews__text{
-  color: var(--rv-text);
-  font-size: clamp(18px, 2.1vw, 22px);
-  line-height: 1.6;
+.reviews__stars svg {
+  width: 18px;
+  height: 18px;
+  fill: #e5e7eb;
+}
+
+.reviews__stars svg.on {
+  fill: #f5d67a;
+}
+
+/* Текст отзыва */
+.reviews__text {
   margin: 0;
+  color: var(--rv-text);
+  font-size: var(--fs-md, 16px);
+  line-height: 1.55;
 }
 
-/* Стрелки — у краёв карточки */
-.reviews__nav{
+/* Навигационные стрелки */
+.reviews__nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 46px; height: 46px; border-radius: 50%;
-  display: grid; place-items: center;
-  color: #4a3514;
-  border: 1px solid var(--rv-gold-border);
-  background: linear-gradient(180deg, var(--rv-gold-1), var(--rv-gold-2));
-  box-shadow: 0 14px 32px rgba(229,184,65,.22);
-  transition: filter .15s ease, transform .08s ease;
-  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: var(--surface, #ffffff);
+  display: grid;
+  place-items: center;
+  color: var(--rv-text);
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    transform 0.08s ease,
+    box-shadow 0.18s ease;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
 }
-.reviews__nav:hover{ filter: brightness(1.06); }
-.reviews__nav:active{ transform: translateY(-50%) scale(.98); }
-.reviews__nav--prev{ left: clamp(6px, 1.4vw, 12px); }
-.reviews__nav--next{ right: clamp(6px, 1.4vw, 12px); }
+
+.reviews__nav svg {
+  width: 20px;
+  height: 20px;
+}
+
+.reviews__nav:hover {
+  background: #f3f4f6;
+}
+
+.reviews__nav:active {
+  transform: translateY(-50%) scale(0.96);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.18);
+}
+
+.reviews__nav--prev {
+  left: -4px;
+}
+
+.reviews__nav--next {
+  right: -4px;
+}
 
 /* Точки */
-.reviews__dots{
-  display: grid;
-  grid-auto-flow: column;
+.reviews__dots {
+  margin-top: clamp(14px, 2vw, 18px);
+  display: flex;
+  justify-content: center;
   gap: 8px;
+}
+
+.reviews__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: none;
+  background: #d4d7e0;
+  cursor: pointer;
+  padding: 0;
+  transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+.reviews__dot--active {
+  width: 22px;
+  background: var(--rv-accent);
+}
+
+/* CTA-кнопка (через глобальные .btn .btn-primary) */
+.reviews__ctaRow {
+  margin-top: clamp(20px, 3vw, 26px);
+  display: flex;
   justify-content: center;
 }
-.reviews__dot{
-  width: 10px; height: 10px; border-radius: 999px;
-  border: 0; background: #d9dce4; cursor: pointer;
-  transition: width .2s ease, background-color .2s ease;
-}
-.reviews__dot.active{ width: 26px; background: var(--rv-accent); }
 
-/* CTA */
-.reviews__cta{
-  justify-self: center;
-  padding: 14px 24px;
-  border-radius: 16px;
-  border: 1px solid var(--rv-gold-border);
-  background: linear-gradient(180deg, var(--rv-gold-1), var(--rv-gold-2));
-  color: #3d2f16;
-  font-weight: 900;
-  box-shadow: 0 14px 36px rgba(229,184,65,.22);
-  transition: transform .08s ease, filter .15s ease, box-shadow .15s ease;
+.reviews__cta {
+  font-size: var(--fs-md, 16px);
+  font-weight: 700;
+  padding-inline: 26px;
 }
-.reviews__cta:hover{
-  filter: brightness(1.04);
-  box-shadow: 0 18px 46px rgba(229,184,65,.28);
-}
-.reviews__cta:active{ transform: translateY(1px); }
 
-/* Мобайл */
-@media (max-width: 560px){
-  .reviews__nav{ display: none; } /* свайпа достаточно */
-  .reviews__meta{ grid-column: 1; justify-self: start; }
-  .reviews__stars{ grid-column: 1; justify-self: start; }
+/* Адаптив */
+@media (max-width: 768px) {
+  .reviews--vh {
+    min-height: auto;
+    align-items: flex-start;
+  }
+
+  .reviews__nav {
+    display: none; /* на мобилке свайпа достаточно */
+  }
+
+  .reviews__cardHead {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+
+  .reviews__stars {
+    justify-content: flex-start;
+  }
 }

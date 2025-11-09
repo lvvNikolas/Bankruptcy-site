@@ -1,26 +1,89 @@
-/* ===== Services — глобальные стили ===== */
+/* =========================================================================
+   Services — блок с услугами в едином стиле
+   ========================================================================= */
 
-.services-wrap.section {} /* используем общий .section */
-
-.services-grid{
-  display: grid;
-  gap: 16px;
-  margin-top: 12px;
-}
-@media (min-width: 900px){
-  .services-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+.services {
+  background: var(--surface-2, #f7f8fa);
 }
 
-.services-item h3{
-  margin: 0 0 8px;
-  font-size: 20px;
-  font-weight: 700;
+/* Заголовок секции */
+.services__head {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
 }
-.services-item p{
+
+.services__eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--fs-sm, 14px);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--muted, #6b7280);
+}
+
+.services__title {
+  margin-bottom: 8px;
+}
+
+.services__subtitle {
   margin: 0;
-  color: var(--muted);
 }
 
-.services-benefits{
-  margin-top: 14px;
+/* Сетка карточек */
+.services__grid {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+@media (min-width: 900px) {
+  .services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Карточка услуги */
+.services__item {
+  text-align: left;
+  padding: 18px 18px 20px;
+  display: grid;
+  gap: 8px;
+  transition:
+    transform 0.16s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.services__item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.12);
+}
+
+/* Заголовок/текст внутри карточки */
+.services__itemTitle {
+  margin: 0;
+  font-size: var(--fs-lg, 18px);
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.services__itemText {
+  margin: 0;
+  color: var(--muted, #6b7280);
+  font-size: var(--fs-md, 16px);
+  line-height: 1.55;
+}
+
+/* Список преимуществ под сеткой */
+.services__benefits {
+  margin-top: 18px;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+/* Немного ближе к центру на больших экранах */
+@media (min-width: 900px) {
+  .services__benefits {
+    margin-top: 22px;
+  }
 }

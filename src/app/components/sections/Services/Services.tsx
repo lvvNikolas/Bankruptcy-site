@@ -1,41 +1,72 @@
-// src/app/components/sections/Services/Services.tsx
+"use client";
+
+import "@styles/Services.css";
+
 type Props = { withHead?: boolean };
 
 export default function Services({ withHead = true }: Props) {
   return (
-    <section id="uslugi" className="section services-wrap">
+    <section
+      id="uslugi"
+      className="services section"
+      aria-labelledby="services-title"
+    >
       <div className="container">
-        <h2 className="sectionHead">Услуги</h2>
-        <p className="sectionLead">
-          Подберём оптимальную стратегию списания долгов и законно защитим ваши интересы.
-        </p>
+        <header className="services__head">
+          {withHead && (
+            <p className="services__eyebrow">
+              Юридическое сопровождение банкротства
+            </p>
+          )}
 
-        <div className="services-grid">
-          <article className="card services-item">
-            <h3>Анализ и стратегия</h3>
-            <p>Оцениваем риски, активы, кредиторов. Формируем пошаговый план.</p>
+          <h2 id="services-title" className="services__title sectionHead">
+            Услуги
+          </h2>
+
+          <p className="services__subtitle sectionLead">
+            Подберём оптимальную стратегию списания долгов и законно защитим ваши
+            интересы на каждом этапе процедуры.
+          </p>
+        </header>
+
+        <div className="services__grid">
+          <article className="card services__item">
+            <h3 className="services__itemTitle">Анализ и стратегия</h3>
+            <p className="services__itemText">
+              Оцениваем риски, активы, кредиторов и перспективы дела. Формируем
+              понятный пошаговый план действий под вашу ситуацию.
+            </p>
           </article>
 
-          <article className="card services-item">
-            <h3>Подготовка документов</h3>
-            <p>Собираем и оформляем пакет для суда или МФЦ согласно 127-ФЗ.</p>
+          <article className="card services__item">
+            <h3 className="services__itemTitle">Подготовка документов</h3>
+            <p className="services__itemText">
+              Собираем и оформляем полный пакет документов для суда или МФЦ в
+              соответствии с требованиями 127-ФЗ.
+            </p>
           </article>
 
-          <article className="card services-item">
-            <h3>Сопровождение в суде</h3>
-            <p>Представительство, взаимодействие с кредиторами, финансовый управляющий.</p>
+          <article className="card services__item">
+            <h3 className="services__itemTitle">Сопровождение в суде</h3>
+            <p className="services__itemText">
+              Представляем ваши интересы в арбитражном суде, взаимодействуем с
+              кредиторами и финансовым управляющим до списания долгов.
+            </p>
           </article>
 
-          <article className="card services-item">
-            <h3>Внесудебное банкротство</h3>
-            <p>Полное сопровождение процедуры через МФЦ при выполнении условий.</p>
+          <article className="card services__item">
+            <h3 className="services__itemTitle">Внесудебное банкротство</h3>
+            <p className="services__itemText">
+              Полностью сопровождаем процедуру через МФЦ при соблюдении условий:
+              готовим заявления, отслеживаем сроки, контролируем результат.
+            </p>
           </article>
         </div>
 
-        <ul className="cleanList services-benefits">
+        <ul className="cleanList services__benefits">
           <li>Фиксированная стоимость работ</li>
-          <li>Прозрачный договор и сроки</li>
-          <li>Поддержка 7 дней в неделю</li>
+          <li>Прозрачный договор и понятные сроки</li>
+          <li>Поддержка на связи 7 дней в неделю</li>
         </ul>
       </div>
     </section>

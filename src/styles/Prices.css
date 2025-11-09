@@ -1,35 +1,160 @@
-/* Prices — глобальные стили без CSS-modules */
+/* =========================================================================
+   Prices — блок тарифов (светлая тема, единый стиль с сайтом)
+   ========================================================================= */
 
-.prices-wrap.section {}
-
-.prices-grid {
-  display: grid;
-  gap: 16px;
-  margin-top: 16px;
+.prices {
+  background: var(--surface-2);
+  padding: clamp(56px, 8vw, 110px) 0;
 }
+
+/* ---------- Заголовок блока ---------- */
+
+.prices__head {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto clamp(32px, 5vw, 52px);
+}
+
+.prices__eyebrow {
+  margin: 0 0 var(--space-1);
+  font-size: var(--fs-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.prices__title {
+  margin-bottom: var(--space-2);
+}
+
+.prices__subtitle {
+  margin: 0;
+}
+
+/* ---------- Сетка карточек ---------- */
+
+.prices__grid {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+}
+
 @media (min-width: 900px) {
-  .prices-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .prices__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
-.prices-plan {
-  display: grid;
-  gap: 10px;
-  /* .card уже задаёт фон/бордер/радиус/тень из globals.css */
+/* ---------- Карточка тарифа ---------- */
+
+.prices__plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: clamp(18px, 2.4vw, 24px);
+  background: var(--surface);
+  border-radius: var(--radius);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow);
 }
 
-.prices-plan h3 { margin: 0; }
+/* Вариант "Стандарт" — слегка выделен */
+.prices__plan--pro {
+  border-color: rgba(209, 162, 76, 0.4);
+  box-shadow: 0 20px 50px rgba(209, 162, 76, 0.18);
+}
 
-.prices-amount {
-  font-size: 28px;
+/* Верхняя часть */
+.prices__planTop {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.prices__planName {
+  margin: 0;
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  color: var(--text);
+}
+
+.prices__planDesc {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* Цена + описание */
+.prices__priceBlock {
+  margin-top: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.prices__amount {
+  font-size: clamp(22px, 2.6vw, 28px);
+  font-weight: 800;
+  color: var(--text);
+}
+
+.prices__amount--muted {
+  color: var(--muted);
   font-weight: 700;
 }
 
-.prices-note {
+.prices__note {
+  margin: 0;
   color: var(--muted);
-  font-size: 14px;
-  margin: 0; /* чуть чище поток */
+  font-size: var(--fs-sm);
+  line-height: 1.6;
 }
 
-.prices-cta { margin-top: 8px; }
+/* Низ карточки: подпись + кнопка */
+.prices__footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
 
-/* Кнопки — используем глобальные .btn .btn-primary */
+.prices__tagline {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--muted);
+}
+
+/* Бейдж "Рекомендуем" */
+.prices__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(209, 162, 76, 0.1);
+  border: 1px solid rgba(209, 162, 76, 0.35);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* Кнопка в карточке — используем глобальный .btn, но чуть растягиваем */
+.prices__btn {
+  width: 100%;
+  justify-content: center;
+  display: inline-flex;
+}
+
+/* ---------- Адаптив ---------- */
+
+@media (max-width: 720px) {
+  .prices__plan {
+    padding: 18px 16px;
+  }
+
+  .prices__btn {
+    font-size: 15px;
+  }
+}

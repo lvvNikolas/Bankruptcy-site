@@ -1,47 +1,64 @@
-// src/app/components/sections/FAQ/FAQ.tsx
+"use client";
+
 import Head from "next/head";
+import "@styles/FAQ.css";
 
 type Props = { withHead?: boolean };
 
 export default function FAQ({ withHead = true }: Props) {
   return (
-    <section id="faq" className="section faq-wrap">
+    <section id="faq" className="faq section" aria-labelledby="faq-title">
       {withHead && (
         <Head>
-          <title>FAQ по банкротству физлиц</title>
+          <title>FAQ по банкротству физических лиц</title>
           <meta
             name="description"
-            content="Ответы на частые вопросы: имущество, ограничения, сроки."
+            content="Ответы на частые вопросы: имущество, ограничения, сроки, последствия и возможности после банкротства."
           />
         </Head>
       )}
 
       <div className="container">
-        <h2 className="sectionHead">Частые вопросы</h2>
+        <header className="faq__head">
+          <h2 id="faq-title" className="faq__title sectionHead">
+            Частые вопросы
+          </h2>
+          <p className="faq__subtitle sectionLead">
+            Мы собрали самые распространённые вопросы о банкротстве и ответили на них простым языком.
+          </p>
+        </header>
 
-        <div className="faq-item">
-          <details>
-            <summary>Какое имущество сохраняется?</summary>
+        <div className="faq__list">
+          <details className="faq__item">
+            <summary>Какое имущество сохраняется при банкротстве?</summary>
             <p>
-              Единственное жильё (если не ипотека), личные вещи и др. — согласно
-              127-ФЗ и нормам процессуального законодательства.
+              Единственное жильё (если не находится в ипотеке), личные вещи, бытовая техника
+              первой необходимости, предметы труда и другие исключения — в соответствии с
+              Федеральным законом № 127-ФЗ и нормами процессуального законодательства.
             </p>
           </details>
-        </div>
 
-        <div className="faq-item">
-          <details>
-            <summary>Сколько длится процедура?</summary>
-            <p>В среднем 6–12 месяцев — зависит от числа кредиторов и обстоятельств.</p>
-          </details>
-        </div>
-
-        <div className="faq-item">
-          <details>
-            <summary>Можно ли кредитоваться после банкротства?</summary>
+          <details className="faq__item">
+            <summary>Сколько длится процедура банкротства?</summary>
             <p>
-              Да, но банки оценивают риски. Мы даём рекомендации по восстановлению
-              кредитной истории.
+              В среднем процедура занимает от <strong>6 до 12 месяцев</strong> —
+              в зависимости от числа кредиторов, размера долгов и загруженности суда.
+            </p>
+          </details>
+
+          <details className="faq__item">
+            <summary>Можно ли брать кредиты после банкротства?</summary>
+            <p>
+              Да, кредитование возможно. Банки оценивают риски индивидуально.
+              Мы поможем восстановить кредитную историю и дадим рекомендации по дальнейшим действиям.
+            </p>
+          </details>
+
+          <details className="faq__item">
+            <summary>Сколько стоит процедура банкротства?</summary>
+            <p>
+              Стоимость зависит от количества кредиторов и особенностей вашего дела.
+              Первичная консультация — <strong>бесплатна</strong>, где мы подробно расскажем, какие расходы вас ждут.
             </p>
           </details>
         </div>

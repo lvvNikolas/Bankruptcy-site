@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import "@styles/Results.css";
 
-/** Плавное увеличение значения от 0 до target за duration мс */
+/** Хук плавного счёта от 0 до target за duration мс */
 function useCountUp(shouldRun: boolean, target: number, duration = 1400) {
   const [value, setValue] = useState(0);
   const rafRef = useRef<number | null>(null);
@@ -19,12 +19,14 @@ function useCountUp(shouldRun: boolean, target: number, duration = 1400) {
       const p = Math.min(1, elapsed / duration);
       const eased = 1 - Math.pow(1 - p, 3); // ease-out
       setValue(Math.round(target * eased));
+
       if (p < 1) {
         rafRef.current = requestAnimationFrame(animate);
       }
     };
 
     rafRef.current = requestAnimationFrame(animate);
+
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       startRef.current = null;
@@ -34,7 +36,7 @@ function useCountUp(shouldRun: boolean, target: number, duration = 1400) {
   return value;
 }
 
-/** Отдельная карточка — тут можно безопасно вызывать хуки */
+/** Одна карточка банка */
 function ResultCard({
   index,
   name,
@@ -48,43 +50,50 @@ function ResultCard({
   amount: number;
   unit: string;
 }) {
-  const ref = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
-  // Следим за видимостью конкретной карточки
+  // следим за вхождением карточки в зону видимости
   useEffect(() => {
-    const el = ref.current;
+    const el = cardRef.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setVisible(true); // запускаем анимацию один раз
+
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setVisible(true);      // запускаем счёт один раз
+            obs.unobserve(entry.target);
           }
         });
       },
       { threshold: 0.35 }
     );
-    obs.observe(el);
-    return () => obs.disconnect();
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, []);
 
-  const counted = useCountUp(visible, amount, 1400);
-  const formatted = new Intl.NumberFormat("ru-RU").format(counted);
+  const current = useCountUp(visible, amount, 1400);
+  const formatted = new Intl.NumberFormat("ru-RU").format(current);
 
   return (
-    <article className="results-card" ref={ref} data-index={index}>
-      <h3 className="results-bank">{name}</h3>
+    <article
+      ref={cardRef}
+      className="results__card"
+      data-index={index}
+    >
+      <h3 className="results__bank">{name}</h3>
 
-      <div className="results-logo">
+      <div className="results__logo">
         <Image src={img} alt={name} width={100} height={100} />
       </div>
 
-      <p className="results-label">Списали более</p>
+      <p className="results__label">Списали более</p>
 
-      <div className="results-amount">
-        <span className="results-amountNum">{formatted}</span>{" "}
-        <span className="results-amountUnit">{unit}</span>
+      <div className="results__amount">
+        <span className="results__amountNum">{formatted}</span>
+        <span className="results__amountUnit">{unit}</span>
       </div>
     </article>
   );
@@ -93,26 +102,39 @@ function ResultCard({
 export default function Results() {
   const banks = useMemo(
     () => [
-      { name: "СберБанк", img: "/media/sber.png", amount: 428, unit: "млн. руб" },
-      { name: "Альфа-Банк", img: "/media/alfa.png", amount: 173, unit: "млн. руб" },
-      { name: "Тинькофф", img: "/media/t.png", amount: 294, unit: "млн. руб" },
-      { name: "ВТБ", img: "/media/vtb.png", amount: 307, unit: "млн. руб" },
+      { name: "СберБанк", img: "/media/sber.png", amount: 428, unit: "млн ₽" },
+      { name: "Альфа-Банк", img: "/media/alfa.png", amount: 173, unit: "млн ₽" },
+      { name: "Тинькофф", img: "/media/t.png", amount: 294, unit: "млн ₽" },
+      { name: "ВТБ", img: "/media/vtb.png", amount: 307, unit: "млн ₽" },
     ],
     []
   );
 
   return (
-    <section id="results" className="results section" aria-labelledby="results-title">
+    <section
+      id="results"
+      className="results section"
+      aria-labelledby="results-title"
+    >
       <div className="container">
-        <header className="results-head">
-          <h2 id="results-title" className="results-title">
-            Мы помогли <span className="results-accent">3 000 клиентам</span>
+        <header className="results__head">
+          <p className="results__eyebrow">Результаты нашей работы</p>
+
+          <h2 id="results-title" className="results__title">
+            Мы помогли более{" "}
+            <span className="results__accent">3&nbsp;000 клиентам</span>
             <br />
-            списать более <span className="results-accent">1 млрд рублей</span>
+            списать свыше{" "}
+            <span className="results__accent">1&nbsp;млрд&nbsp;рублей</span>
           </h2>
+
+          <p className="results__subtitle">
+            Ниже лишь малая часть банков, по которым мы добились реального
+            списания задолженности в рамках процедуры банкротства.
+          </p>
         </header>
 
-        <div className="results-grid">
+        <div className="results__grid">
           {banks.map((b, i) => (
             <ResultCard
               key={b.name}
