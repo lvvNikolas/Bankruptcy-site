@@ -1,18 +1,19 @@
 /* =========================================================================
-   DebtsChat — чистая верстка диалога + анимация при скролле
-   • Аватары ВНУТРИ пузырей (flex-элементы)
-   • Ровные отступы и дыхание
-   • Светлая/тёмная темы через data-theme
-   • IntersectionObserver добавляет класс .is-in
+   DebtsChat — диалог клиента с юристом
+   • Плавное появление при скролле
+   • Аватары внутри пузырей
+   • Поддержка светлой/тёмной темы через data-theme
    ========================================================================= */
 
-:root{
+/* Все дизайн-токены задаём на корневом блоке .dc, а не глобально */
+
+.dc {
   --dc-bg: #f5f7f9;
-  --dc-surface: #fff;
+  --dc-surface: #ffffff;
   --dc-text: #101213;
   --dc-accent: #c8645c;
-  --dc-border: rgba(0,0,0,.06);
-  --dc-shadow: 0 28px 90px rgba(0,0,0,.08);
+  --dc-border: rgba(0, 0, 0, 0.06);
+  --dc-shadow: 0 28px 90px rgba(0, 0, 0, 0.08);
 
   --dc-radius: 26px;
   --dc-padY-lg: clamp(26px, 3.8vw, 44px);
@@ -26,28 +27,27 @@
 
   /* анимации */
   --ani-duration: 520ms;
-  --ani-ease: cubic-bezier(.22,.7,.22,1);
-}
+  --ani-ease: cubic-bezier(0.22, 0.7, 0.22, 1);
 
-[data-theme="dark"] .dc{
-  --dc-bg: #0e1014;
-  --dc-surface: #171a1f;
-  --dc-text: #f3f5f8;
-  --dc-accent: #d5a14d;
-  --dc-border: rgba(255,255,255,.10);
-  --dc-shadow: 0 28px 90px rgba(0,0,0,.50);
-  --dc-avatar-ring: #0e1014;
-}
-
-/* Секция */
-.dc{
   background: var(--dc-bg);
-  min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding-block: var(--dc-gap);
 }
-.dc__container{
+
+[data-theme="dark"] .dc {
+  --dc-bg: #0e1014;
+  --dc-surface: #171a1f;
+  --dc-text: #f3f5f8;
+  --dc-accent: #d5a14d;
+  --dc-border: rgba(255, 255, 255, 0.1);
+  --dc-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+  --dc-avatar-ring: #0e1014;
+}
+
+/* Контейнер */
+.dc__container {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
@@ -56,54 +56,58 @@
 }
 
 /* Базовый пузырь */
-.dc__bubble{
+.dc__bubble {
   background: var(--dc-surface);
   border: 1px solid var(--dc-border);
   border-radius: var(--dc-radius);
   box-shadow: var(--dc-shadow);
   color: var(--dc-text);
-  will-change: transform, opacity; /* чуть плавнее */
+  will-change: transform, opacity;
 }
 
-/* Крупный верхний */
-.dc__bubble--lg{
+/* Крупный верхний пузырь */
+.dc__bubble--lg {
   padding: var(--dc-padY-lg) var(--dc-padX-lg);
 }
-.dc__bubble--center{
+.dc__bubble--center {
   justify-self: center;
   max-width: 1000px;
   width: 100%;
 }
 
-/* Заголовок + аватар справа внутри блока */
-.dc__bubbleHead{
+/* Верхняя строка: текст + аватар справа */
+.dc__bubbleHead {
   display: flex;
   align-items: center;
   gap: var(--dc-inline-gap);
-  justify-content: space-between;   /* текст слева, аватар справа */
+  justify-content: space-between;
 }
-.dc__text--lg{
+
+.dc__text--lg {
   margin: 0;
   font-size: clamp(22px, 4vw, 38px);
   font-weight: 900;
   line-height: 1.18;
-  letter-spacing: .2px;
-  flex: 1 1 auto;                   /* текст занимает всю ширину */
+  letter-spacing: 0.2px;
+  flex: 1 1 auto;
 }
 
-/* Нижняя строка */
-.dc__row{
+/* Нижний ряд из двух пузырей */
+.dc__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(26px, 3vw, 60px);
   align-items: stretch;
 }
-@media (max-width: 900px){
-  .dc__row{ grid-template-columns: 1fr; }
+
+@media (max-width: 900px) {
+  .dc__row {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Средние пузыри (вопрос/ответ) — flex с аватаром внутри */
-.dc__bubble--md{
+/* Средние пузыри: вопрос / ответ */
+.dc__bubble--md {
   padding: var(--dc-padY-md) var(--dc-padX-md);
   display: flex;
   align-items: center;
@@ -112,72 +116,88 @@
   font-weight: 900;
   line-height: 1.22;
 }
-.dc__bubble--left{ justify-self: start; }
-.dc__bubble--right{
-  justify-self: end;
-  flex-direction: row-reverse;      /* аватар справа */
+.dc__bubble--left {
+  justify-self: flex-start;
+}
+.dc__bubble--right {
+  justify-self: flex-end;
+  flex-direction: row-reverse; /* аватар справа */
 }
 
-/* Текст */
-.dc__text{ margin: 0; }
-.dc__accent{ color: var(--dc-accent); }
+/* Текст и акцент */
+.dc__text {
+  margin: 0;
+}
+.dc__accent {
+  color: var(--dc-accent);
+}
 
-/* Аватар как обычный inline-элемент */
-.dc__avatar--inline{
+/* Аватар */
+.dc__avatar--inline {
   width: clamp(70px, 6vw, 88px);
   height: clamp(70px, 6vw, 88px);
   border-radius: 50%;
   overflow: hidden;
   flex: 0 0 auto;
 }
-.dc__avatarImg{
+
+.dc__avatarImg {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  /* двойной «кольцевой» бордер */
   box-shadow:
     0 0 0 6px var(--dc-avatar-ring),
     0 0 0 3px var(--dc-surface);
 }
 
-/* Ховеры */
-.dc__bubble:hover{
+/* Лёгкий hover-эффект */
+.dc__bubble {
+  transition: transform 0.2s ease;
+}
+.dc__bubble:hover {
   transform: translateY(-2px);
-  transition: transform .2s ease;
 }
 
-/* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ===== */
+/* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
 
-/* базовое состояние — невидим и чуть ниже/уменьшен */
-[data-ani]{
+/* Стартовое состояние */
+[data-ani] {
   opacity: 0;
-  transform: translateY(18px) scale(.98);
+  transform: translateY(18px) scale(0.98);
   transition:
     opacity var(--ani-duration) var(--ani-ease),
     transform var(--ani-duration) var(--ani-ease);
   transition-delay: var(--ani-delay, 0ms);
 }
 
-/* как только добавится .is-in — показываем */
-[data-ani].is-in{
+/* Когда IntersectionObserver добавил класс .is-in */
+[data-ani].is-in {
   opacity: 1;
   transform: none;
 }
 
-/* Уважение к настройке «меньше анимаций» */
-@media (prefers-reduced-motion: reduce){
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
   [data-ani],
-  [data-ani].is-in{
+  [data-ani].is-in {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-  .dc__bubble:hover{ transform: none !important; }
+
+  .dc__bubble,
+  .dc__bubble:hover {
+    transform: none !important;
+  }
 }
 
-/* Мелкая адаптация */
-@media (max-width: 600px){
-  .dc__bubble--lg{ padding: 22px 24px; }
-  .dc__bubble--md{ padding: 20px 22px; }
+/* Мобилка: чуть компактнее отступы */
+@media (max-width: 600px) {
+  .dc__bubble--lg {
+    padding: 22px 24px;
+  }
+  .dc__bubble--md {
+    padding: 20px 22px;
+  }
 }

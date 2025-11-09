@@ -1,195 +1,142 @@
 /* =========================================================================
-   CtaSection (cta3) — светлая тема
-   Три карточки + большая CTA-кнопка (скроллит к квизу)
+   CtaSection — три преимущества + CTA-кнопка (единый фирменный стиль)
    ========================================================================= */
 
 :root {
-  /* Цвета */
-  --cta3-bg: #f6f7fb;
-  --cta3-surface: #ffffff;
-  --cta3-border: #eceef3;
-  --cta3-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
-
-  --cta3-text: #101318;
-  --cta3-muted: #6c7280;
-  --cta3-accent: #b54b45;
-
-  /* Кнопка (золото) */
-  --cta3-gold-1: #f5d67a;
-  --cta3-gold-2: #ecc459;
-  --cta3-gold-3: #e5b841;
-  --cta3-gold-ring: rgba(229, 184, 65, 0.33);
-
-  /* Радиусы */
-  --cta3-r-lg: 18px;
-  --cta3-r-md: 16px;
-
-  /* Размеры */
-  --cta3-title-min: 26px;
-  --cta3-title-max: 56px;
+  --cta-bg: #f9fafb;
+  --cta-surface: #ffffff;
+  --cta-border: #e5e7eb;
+  --cta-text: var(--text, #0f172a);
+  --cta-muted: var(--muted, #475569);
+  --cta-accent: var(--brand, #d1a24c);
+  --cta-radius-lg: 18px;
+  --cta-radius-md: 14px;
+  --cta-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
 }
 
-/* === Корень секции === */
-.cta3 {
-  background: var(--cta3-bg);
-  color: var(--cta3-text);
-  padding: clamp(32px, 5vw, 68px) 0 clamp(42px, 6vw, 84px);
+/* ===== Секция ===== */
+.cta {
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  padding: clamp(48px, 6vw, 90px) 0;
 }
 
-.cta3 .container {
-  width: min(1200px, 92vw);
-  margin-inline: auto;
-}
-
-/* === Заголовок === */
-.cta3__title {
-  margin: 0 0 clamp(32px, 4.5vw, 54px);
+/* ===== Заголовок ===== */
+.cta__head {
   text-align: center;
-  line-height: 1.15;
+  max-width: 820px;
+  margin-inline: auto;
+  margin-bottom: clamp(28px, 5vw, 48px);
+}
+
+.cta__title {
+  font-size: clamp(26px, 3vw, 42px);
   font-weight: 900;
-  font-size: clamp(var(--cta3-title-min), 2.6vw, var(--cta3-title-max));
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 10px;
 }
 
-.cta3__accent {
-  color: var(--cta3-accent);
+.cta__accent {
+  color: var(--cta-accent);
 }
 
-/* === Сетка карточек === */
-.cta3__grid {
+.cta__lead {
+  margin: 0 auto;
+  color: var(--cta-muted);
+  font-size: clamp(15px, 2vw, 17px);
+  max-width: 640px;
+}
+
+/* ===== Сетка карточек ===== */
+.cta__grid {
   display: grid;
-  gap: clamp(18px, 2.8vw, 26px);
-  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 2.8vw, 32px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-@media (max-width: 980px) {
-  .cta3__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* === Карточка === */
-.cta3__card {
-  background: var(--cta3-surface);
-  border: 1px solid var(--cta3-border);
-  border-radius: var(--cta3-r-lg);
-  box-shadow: var(--cta3-shadow);
-  padding: clamp(26px, 4vw, 34px);
+/* ===== Карточка ===== */
+.cta__card {
+  background: var(--cta-surface);
+  border: 1px solid var(--cta-border);
+  border-radius: var(--cta-radius-lg);
+  box-shadow: var(--cta-shadow);
+  padding: clamp(26px, 3vw, 34px);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
 }
 
-/* === Номер карточки === */
-.cta3__num {
-  color: var(--cta3-muted);
+.cta__cardHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(14px, 2.4vw, 20px);
+}
+
+.cta__num {
+  color: var(--cta-muted);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  letter-spacing: 0.05em;
 }
 
-/* === Круглая иконка (по центру, больше размера) === */
-.cta3__ico {
-  width: clamp(86px, 9vw, 110px);
-  height: clamp(86px, 9vw, 110px);
+.cta__ico {
+  width: clamp(84px, 8vw, 110px);
+  height: clamp(84px, 8vw, 110px);
   border-radius: 50%;
-  border: 1px solid var(--cta3-border);
   background: radial-gradient(
     circle at 35% 35%,
     #fff 32%,
-    #f6f7fb 65%,
-    #eef2f8 100%
+    #f7f8fa 68%,
+    #edf1f6 100%
   );
+  border: 1px solid var(--cta-border);
   display: grid;
   place-items: center;
-  box-shadow: inset 0 4px 18px rgba(16, 24, 40, 0.06);
-  color: var(--cta3-accent);
-  margin-bottom: clamp(16px, 2.4vw, 22px);
+  color: var(--cta-accent);
+  box-shadow: inset 0 4px 16px rgba(15, 23, 42, 0.06);
 }
 
-.cta3__ico svg {
-  width: clamp(34px, 4vw, 42px);
-  height: clamp(34px, 4vw, 42px);
-}
-
-/* === Текст карточки === */
-.cta3__cardTitle {
+.cta__cardTitle {
   margin: 0 0 8px;
-  font-weight: 800;
-  line-height: 1.25;
   font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 800;
+  line-height: 1.3;
 }
 
-.cta3__cardText {
+.cta__cardText {
   margin: 0;
-  color: var(--cta3-muted);
-  font-size: clamp(14px, 1.7vw, 16px);
-  max-width: 340px;
+  color: var(--cta-muted);
+  font-size: 15px;
+  max-width: 320px;
 }
 
-/* === Кнопка === */
-.cta3__btnRow {
-  display: grid;
-  place-items: center;
-  margin-top: clamp(36px, 4vw, 48px);
+/* ===== Кнопка ===== */
+.cta__btnRow {
+  margin-top: clamp(36px, 4vw, 54px);
+  text-align: center;
 }
 
-.cta3__btn {
-  appearance: none;
-  border: 0;
-  cursor: pointer;
-  user-select: none;
-
-  display: inline-grid;
-  grid-auto-flow: column;
+.cta__btn {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-
-  padding: clamp(16px, 2.2vw, 20px) clamp(26px, 4vw, 32px);
-  border-radius: var(--cta3-r-md);
-
-  color: #3e3219;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  font-size: clamp(16px, 1.9vw, 18px);
-
-  background-image: linear-gradient(180deg, var(--cta3-gold-1), var(--cta3-gold-2));
-  border: 1px solid var(--cta3-gold-3);
-  box-shadow: 0 14px 40px rgba(229, 184, 65, 0.25),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.06);
-  transition: transform 0.08s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  gap: 10px;
+  font-weight: 700;
+  padding-inline: 26px;
+  text-transform: uppercase;
 }
 
-.cta3__btn:hover {
-  filter: brightness(1.035);
-  box-shadow: 0 18px 46px rgba(229, 184, 65, 0.29),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.08);
+.cta__btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
-.cta3__btn:active {
-  transform: translateY(1px);
-}
-
-.cta3__btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px var(--cta3-gold-ring),
-    0 14px 40px rgba(229, 184, 65, 0.25);
-}
-
-/* === Иконка в кнопке === */
-.cta3__btnIco {
-  width: 22px;
-  height: 22px;
-  display: inline-grid;
-  place-items: center;
-}
-
-/* === Микроадаптив === */
-@media (max-width: 420px) {
-  .cta3__btnIco {
-    width: 20px;
-    height: 20px;
+/* ===== Адаптив ===== */
+@media (max-width: 600px) {
+  .cta__title {
+    font-size: clamp(24px, 5vw, 32px);
   }
 }

@@ -226,82 +226,104 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/CasesSection.css ***!
   \*************************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   CasesSection — выигранные дела и отзывы (светлая тема)
+   CasesSection — выигранные дела и отзывы (светлая тема, единый стиль)
    ========================================================================= */
 
 :root {
-  --cases-bg: #f9fafb;
-  --cases-surface: #ffffff;
-  --cases-surface-2: #f4f5f7;
-  --cases-text: #0e1525;
-  --cases-muted: #6b7280;
-  --cases-brand: #b44b44; /* бордовый акцент */
-  --cases-line: #e4e7ec;
-  --radius-lg: 20px;
-  --radius-md: 16px;
-  --radius-sm: 10px;
-  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.08);
-  --shadow-soft: 0 8px 22px rgba(0, 0, 0, 0.06);
+  --cases-bg:       #f9fafb;
+  --cases-surface:  #ffffff;
+  --cases-surface2: #f4f5f7;
+  --cases-text:     var(--text, #0f172a);
+  --cases-muted:    var(--muted, #64748b);
+  --cases-brand:    var(--brand, #d1a24c);
+  --cases-line:     #e4e7ec;
+  --cases-radius-lg: 20px;
+  --cases-radius-md: 16px;
+  --cases-radius-sm: 10px;
+  --cases-shadow-md:   0 12px 32px rgba(15, 23, 42, 0.08);
+  --cases-shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.06);
 }
 
 /* ===== Секция ===== */
+
 .cases {
   background: var(--cases-bg);
   color: var(--cases-text);
   padding: clamp(48px, 7vw, 80px) 0;
 }
 
-/* ===== Заголовок ===== */
+/* ===== Заголовок секции ===== */
+
 .cases__head {
   text-align: center;
   margin-bottom: clamp(28px, 5vw, 48px);
 }
-.cases__title {
-  margin: 0;
-  font-size: clamp(28px, 4.4vw, 54px);
-  line-height: 1.15;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  color: var(--cases-brand);
+
+.cases__eyebrow {
+  margin: 0 0 6px;
+  font-size: var(--fs-sm, 14px);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--cases-muted);
 }
-.cases__title-muted {
-  color: #1f2937;
+
+.cases__title {
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4.4vw, 40px);
+  line-height: 1.1;
   font-weight: 900;
+  color: var(--cases-text);
+}
+
+.cases__lead {
+  margin: 0;
+  max-width: 640px;
+  margin-inline: auto;
+  color: var(--cases-muted);
+  font-size: clamp(15px, 1.9vw, 17px);
 }
 
 /* ===== Сетка карточек ===== */
+
 .cases__grid {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: clamp(20px, 3vw, 28px);
   gap: clamp(20px, 3vw, 28px);
+  margin-top: clamp(24px, 4vw, 32px);
 }
+
+/* ===== Карточка кейса ===== */
 
 .case {
   display: grid;
   grid-template-columns: 1fr;
-  grid-gap: 20px;
-  gap: 20px;
+  grid-gap: 18px;
+  gap: 18px;
   background: var(--cases-surface);
   border: 1px solid var(--cases-line);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-soft);
+  border-radius: var(--cases-radius-lg);
+  box-shadow: var(--cases-shadow-soft);
   padding: clamp(16px, 2.5vw, 22px);
 }
 
 @media (min-width: 1024px) {
   .case {
-    grid-template-columns: 1.2fr 1fr;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
     gap: clamp(20px, 2.8vw, 32px);
+    align-items: stretch;
   }
 }
 
-/* ===== Левая колонка ===== */
+/* Левая колонка */
+
 .case__info {
   display: grid;
   grid-gap: 14px;
   gap: 14px;
 }
+
+/* Клиент + город */
 
 .case__personRow {
   display: grid;
@@ -322,6 +344,7 @@
 .case__person {
   font-weight: 800;
   font-size: clamp(16px, 2.2vw, 18px);
+  color: var(--cases-text);
 }
 
 .case__city {
@@ -329,32 +352,38 @@
   font-size: 14px;
 }
 
+/* История */
+
 .case__story {
-  margin-top: 6px;
-  color: #333;
+  margin: 6px 0 0;
+  color: #111827;
   line-height: 1.55;
+  font-size: 15px;
 }
+
+/* Сумма списания */
 
 .case__score {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px 10px;
   align-items: baseline;
   margin-top: 6px;
 }
 
 .case__scoreLabel {
   color: var(--cases-muted);
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .case__scoreValue {
   color: var(--cases-brand);
   font-weight: 900;
-  font-size: clamp(24px, 3.8vw, 38px);
+  font-size: clamp(22px, 3.2vw, 30px);
 }
 
-/* Карточки с данными */
+/* Карточки с деталями дела */
+
 .case__cards {
   display: grid;
   grid-gap: 12px;
@@ -364,14 +393,14 @@
 
 @media (min-width: 600px) {
   .case__cards {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 .case__card {
-  background: var(--cases-surface-2);
+  background: var(--cases-surface2);
   border: 1px solid var(--cases-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--cases-radius-md);
   padding: 12px 16px;
 }
 
@@ -386,18 +415,23 @@
   color: var(--cases-text);
 }
 
+/* Кредиторы */
+
 .case__creditors {
-  background: var(--cases-surface-2);
+  background: var(--cases-surface2);
   border: 1px solid var(--cases-line);
-  border-radius: var(--radius-md);
+  border-radius: var(--cases-radius-md);
   padding: 12px 16px;
 }
+
 .case__creditorsList {
   color: var(--cases-text);
   margin-top: 4px;
+  font-size: 14px;
 }
 
-/* ===== Правая колонка (документ) ===== */
+/* ===== Правая колонка — документ ===== */
+
 .case__docs {
   display: flex;
   justify-content: center;
@@ -406,20 +440,21 @@
 
 .case__docMain {
   position: relative;
-  border: 0;
-  padding: 0;
-  cursor: zoom-in;
   width: 100%;
-  background: #fff;
-  border-radius: var(--radius-md);
+  padding: 0;
+  border: 0;
+  border-radius: var(--cases-radius-md);
   overflow: hidden;
+  cursor: zoom-in;
+  background: #fff;
   border: 1px solid var(--cases-line);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.2s ease;
+  box-shadow: var(--cases-shadow-md);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .case__docMain:hover {
   transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
 }
 
 .case__docMainImg {
@@ -429,19 +464,19 @@
   object-fit: cover;
 }
 
-/* ===== Лупа при наведении ===== */
+/* Лупа */
+
 .case__docZoom {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 74px;
-  height: 74px;
-  background: rgba(255, 255, 255, 0.95);
+  inset: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  width: 72px;
+  height: 72px;
   border-radius: 50%;
+  background: rgba(255, 255, 255, 0.96);
   display: grid;
   place-items: center;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
   opacity: 0;
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
@@ -452,49 +487,41 @@
 }
 
 .case__docZoom svg {
-  width: 32px;
-  height: 32px;
-  fill: #333;
+  width: 30px;
+  height: 30px;
+  fill: #374151;
 }
 
-/* ===== CTA ===== */
+/* ===== CTA (единый стиль кнопки) ===== */
+
 .cases__cta {
-  margin-top: clamp(20px, 4vw, 40px);
+  margin-top: clamp(24px, 4vw, 40px);
   display: grid;
   place-items: center;
 }
 
-.ctaGold {
+.cases__ctaBtn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(180deg, #f9e79f, #f4d26a);
-  color: #3a2f18;
-  border-radius: 18px;
-  padding: 16px 28px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  text-decoration: none;
-  box-shadow: 0 20px 60px rgba(233, 198, 91, 0.25);
-  transition: transform 0.12s ease, filter 0.12s ease;
+  padding-inline: 22px;
+  font-weight: 700;
 }
-.ctaGold:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.04);
-}
-.ctaGold__icon {
-  width: 22px;
-  height: 22px;
+
+.cases__ctaIcon {
+  width: 20px;
+  height: 20px;
   fill: currentColor;
 }
 
-/* ===== Лайтбокс ===== */
+/* ===== Лайтбокс документов ===== */
+
 .lb {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(15, 23, 42, 0.75);
   display: grid;
-  grid-template-columns: 64px 1fr 64px;
+  grid-template-columns: 64px minmax(0, 1fr) 64px;
   align-items: center;
   grid-gap: 12px;
   gap: 12px;
@@ -511,8 +538,8 @@
 .lb__img {
   max-width: 100%;
   max-height: calc(100vh - 120px);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--cases-radius-md);
+  box-shadow: var(--cases-shadow-md);
   background: #fff;
 }
 
@@ -522,7 +549,7 @@
           appearance: none;
   border: 0;
   background: transparent;
-  color: #fff;
+  color: #f9fafb;
   font-size: clamp(34px, 6vw, 52px);
   cursor: pointer;
   -webkit-user-select: none;
@@ -534,6 +561,7 @@
 .lb__nav:hover {
   opacity: 1;
 }
+
 .lb__nav--prev {
   justify-self: end;
 }
@@ -543,314 +571,280 @@
 
 .lb__close {
   position: fixed;
-  top: 10px;
-  right: 14px;
+  top: 12px;
+  right: 16px;
   border: 0;
-  background: rgba(255, 255, 255, 0.9);
-  color: #000;
+  background: rgba(255, 255, 255, 0.94);
+  color: #111827;
   width: 44px;
   height: 44px;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 28px;
+  font-size: 26px;
   line-height: 1;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
 }
 
-/* ===== Адаптив ===== */
-@media (max-width: 720px) {
-  .case {
-    padding: 14px;
-  }
-  .case__personRow {
-    grid-template-columns: 48px 1fr;
-  }
-  .case__avatar {
-    width: 48px;
-    height: 48px;
-  }
-  .case__cards {
-    grid-template-columns: 1fr;
-  }
-  .lb {
-    grid-template-columns: 44px 1fr 44px;
-  }
-}
+/* ===== Модалка с формой ===== */
 
-/* ===== Модалка с формой (светлая) ===== */
-.casesFormOverlay{
+.casesFormOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.45);
+  background: rgba(15, 23, 42, 0.55);
   display: grid;
   place-items: center;
   padding: 20px;
-  z-index: 1000;
+  z-index: 1100;
 }
 
-.casesForm{
+.casesForm {
   width: 100%;
   max-width: 640px;
-  background: #fff;
+  background: #ffffff;
   border: 1px solid #e5e7eb;
   border-radius: 18px;
-  box-shadow: 0 30px 80px rgba(16,24,40,.20);
+  box-shadow: 0 30px 80px rgba(16, 24, 40, 0.2);
   padding: clamp(18px, 3vw, 24px);
-  animation: casesFormIn .18s ease both;
+  animation: casesFormIn 0.18s ease both;
 }
 
-@keyframes casesFormIn{
-  from{ opacity: 0; transform: translateY(8px); }
-  to{ opacity: 1; transform: translateY(0); }
+@keyframes casesFormIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.casesForm__top{
+.casesForm__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 10px;
 }
-.casesForm__title{
+
+.casesForm__title {
   margin: 0;
   font-size: clamp(18px, 2.4vw, 22px);
   font-weight: 800;
+  color: #111827;
 }
-.casesForm__close{
+
+.casesForm__close {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
   border: 0;
-  background: #f2f4f7;
+  background: #f3f4f6;
   color: #111827;
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 24px;
   line-height: 1;
 }
-.casesForm__close:hover{ filter: brightness(1.05); }
+.casesForm__close:hover {
+  filter: brightness(1.04);
+}
+
+/* ===== Адаптив ===== */
+
+@media (max-width: 720px) {
+  .case {
+    padding: 14px;
+  }
+
+  .case__personRow {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .case__avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .casesFormOverlay {
+    padding: 12px;
+  }
+
+  .casesForm {
+    padding: 16px;
+  }
+
+  .lb {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+  }
+}
 /*!***********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/CtaSection.css ***!
   \***********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   CtaSection (cta3) — светлая тема
-   Три карточки + большая CTA-кнопка (скроллит к квизу)
+   CtaSection — три преимущества + CTA-кнопка (единый фирменный стиль)
    ========================================================================= */
 
 :root {
-  /* Цвета */
-  --cta3-bg: #f6f7fb;
-  --cta3-surface: #ffffff;
-  --cta3-border: #eceef3;
-  --cta3-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
-
-  --cta3-text: #101318;
-  --cta3-muted: #6c7280;
-  --cta3-accent: #b54b45;
-
-  /* Кнопка (золото) */
-  --cta3-gold-1: #f5d67a;
-  --cta3-gold-2: #ecc459;
-  --cta3-gold-3: #e5b841;
-  --cta3-gold-ring: rgba(229, 184, 65, 0.33);
-
-  /* Радиусы */
-  --cta3-r-lg: 18px;
-  --cta3-r-md: 16px;
-
-  /* Размеры */
-  --cta3-title-min: 26px;
-  --cta3-title-max: 56px;
+  --cta-bg: #f9fafb;
+  --cta-surface: #ffffff;
+  --cta-border: #e5e7eb;
+  --cta-text: var(--text, #0f172a);
+  --cta-muted: var(--muted, #475569);
+  --cta-accent: var(--brand, #d1a24c);
+  --cta-radius-lg: 18px;
+  --cta-radius-md: 14px;
+  --cta-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
 }
 
-/* === Корень секции === */
-.cta3 {
-  background: var(--cta3-bg);
-  color: var(--cta3-text);
-  padding: clamp(32px, 5vw, 68px) 0 clamp(42px, 6vw, 84px);
+/* ===== Секция ===== */
+.cta {
+  background: var(--cta-bg);
+  color: var(--cta-text);
+  padding: clamp(48px, 6vw, 90px) 0;
 }
 
-.cta3 .container {
-  width: min(1200px, 92vw);
-  margin-inline: auto;
-}
-
-/* === Заголовок === */
-.cta3__title {
-  margin: 0 0 clamp(32px, 4.5vw, 54px);
+/* ===== Заголовок ===== */
+.cta__head {
   text-align: center;
-  line-height: 1.15;
+  max-width: 820px;
+  margin-inline: auto;
+  margin-bottom: clamp(28px, 5vw, 48px);
+}
+
+.cta__title {
+  font-size: clamp(26px, 3vw, 42px);
   font-weight: 900;
-  font-size: clamp(var(--cta3-title-min), 2.6vw, var(--cta3-title-max));
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 10px;
 }
 
-.cta3__accent {
-  color: var(--cta3-accent);
+.cta__accent {
+  color: var(--cta-accent);
 }
 
-/* === Сетка карточек === */
-.cta3__grid {
+.cta__lead {
+  margin: 0 auto;
+  color: var(--cta-muted);
+  font-size: clamp(15px, 2vw, 17px);
+  max-width: 640px;
+}
+
+/* ===== Сетка карточек ===== */
+.cta__grid {
   display: grid;
-  grid-gap: clamp(18px, 2.8vw, 26px);
-  gap: clamp(18px, 2.8vw, 26px);
-  grid-template-columns: repeat(3, 1fr);
+  grid-gap: clamp(20px, 2.8vw, 32px);
+  gap: clamp(20px, 2.8vw, 32px);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
 
-@media (max-width: 980px) {
-  .cta3__grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* === Карточка === */
-.cta3__card {
-  background: var(--cta3-surface);
-  border: 1px solid var(--cta3-border);
-  border-radius: var(--cta3-r-lg);
-  box-shadow: var(--cta3-shadow);
-  padding: clamp(26px, 4vw, 34px);
+/* ===== Карточка ===== */
+.cta__card {
+  background: var(--cta-surface);
+  border: 1px solid var(--cta-border);
+  border-radius: var(--cta-radius-lg);
+  box-shadow: var(--cta-shadow);
+  padding: clamp(26px, 3vw, 34px);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
 }
 
-/* === Номер карточки === */
-.cta3__num {
-  color: var(--cta3-muted);
+.cta__cardHead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: clamp(14px, 2.4vw, 20px);
+}
+
+.cta__num {
+  color: var(--cta-muted);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  letter-spacing: 0.05em;
 }
 
-/* === Круглая иконка (по центру, больше размера) === */
-.cta3__ico {
-  width: clamp(86px, 9vw, 110px);
-  height: clamp(86px, 9vw, 110px);
+.cta__ico {
+  width: clamp(84px, 8vw, 110px);
+  height: clamp(84px, 8vw, 110px);
   border-radius: 50%;
-  border: 1px solid var(--cta3-border);
   background: radial-gradient(
     circle at 35% 35%,
     #fff 32%,
-    #f6f7fb 65%,
-    #eef2f8 100%
+    #f7f8fa 68%,
+    #edf1f6 100%
   );
+  border: 1px solid var(--cta-border);
   display: grid;
   place-items: center;
-  box-shadow: inset 0 4px 18px rgba(16, 24, 40, 0.06);
-  color: var(--cta3-accent);
-  margin-bottom: clamp(16px, 2.4vw, 22px);
+  color: var(--cta-accent);
+  box-shadow: inset 0 4px 16px rgba(15, 23, 42, 0.06);
 }
 
-.cta3__ico svg {
-  width: clamp(34px, 4vw, 42px);
-  height: clamp(34px, 4vw, 42px);
-}
-
-/* === Текст карточки === */
-.cta3__cardTitle {
+.cta__cardTitle {
   margin: 0 0 8px;
-  font-weight: 800;
-  line-height: 1.25;
   font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 800;
+  line-height: 1.3;
 }
 
-.cta3__cardText {
+.cta__cardText {
   margin: 0;
-  color: var(--cta3-muted);
-  font-size: clamp(14px, 1.7vw, 16px);
-  max-width: 340px;
+  color: var(--cta-muted);
+  font-size: 15px;
+  max-width: 320px;
 }
 
-/* === Кнопка === */
-.cta3__btnRow {
-  display: grid;
-  place-items: center;
-  margin-top: clamp(36px, 4vw, 48px);
+/* ===== Кнопка ===== */
+.cta__btnRow {
+  margin-top: clamp(36px, 4vw, 54px);
+  text-align: center;
 }
 
-.cta3__btn {
-  -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none;
-  border: 0;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-
-  display: inline-grid;
-  grid-auto-flow: column;
+.cta__btn {
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-
-  padding: clamp(16px, 2.2vw, 20px) clamp(26px, 4vw, 32px);
-  border-radius: var(--cta3-r-md);
-
-  color: #3e3219;
-  font-weight: 900;
-  letter-spacing: 0.01em;
-  font-size: clamp(16px, 1.9vw, 18px);
-
-  background-image: linear-gradient(180deg, var(--cta3-gold-1), var(--cta3-gold-2));
-  border: 1px solid var(--cta3-gold-3);
-  box-shadow: 0 14px 40px rgba(229, 184, 65, 0.25),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.06);
-  transition: transform 0.08s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  gap: 10px;
+  font-weight: 700;
+  padding-inline: 26px;
+  text-transform: uppercase;
 }
 
-.cta3__btn:hover {
-  filter: brightness(1.035);
-  box-shadow: 0 18px 46px rgba(229, 184, 65, 0.29),
-    inset 0 -6px 10px rgba(0, 0, 0, 0.08);
+.cta__btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 
-.cta3__btn:active {
-  transform: translateY(1px);
-}
-
-.cta3__btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 4px var(--cta3-gold-ring),
-    0 14px 40px rgba(229, 184, 65, 0.25);
-}
-
-/* === Иконка в кнопке === */
-.cta3__btnIco {
-  width: 22px;
-  height: 22px;
-  display: inline-grid;
-  place-items: center;
-}
-
-/* === Микроадаптив === */
-@media (max-width: 420px) {
-  .cta3__btnIco {
-    width: 20px;
-    height: 20px;
+/* ===== Адаптив ===== */
+@media (max-width: 600px) {
+  .cta__title {
+    font-size: clamp(24px, 5vw, 32px);
   }
 }
 /*!**********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/DebtsChat.css ***!
   \**********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   DebtsChat — чистая верстка диалога + анимация при скролле
-   • Аватары ВНУТРИ пузырей (flex-элементы)
-   • Ровные отступы и дыхание
-   • Светлая/тёмная темы через data-theme
-   • IntersectionObserver добавляет класс .is-in
+   DebtsChat — диалог клиента с юристом
+   • Плавное появление при скролле
+   • Аватары внутри пузырей
+   • Поддержка светлой/тёмной темы через data-theme
    ========================================================================= */
 
-:root{
+/* Все дизайн-токены задаём на корневом блоке .dc, а не глобально */
+
+.dc {
   --dc-bg: #f5f7f9;
-  --dc-surface: #fff;
+  --dc-surface: #ffffff;
   --dc-text: #101213;
   --dc-accent: #c8645c;
-  --dc-border: rgba(0,0,0,.06);
-  --dc-shadow: 0 28px 90px rgba(0,0,0,.08);
+  --dc-border: rgba(0, 0, 0, 0.06);
+  --dc-shadow: 0 28px 90px rgba(0, 0, 0, 0.08);
 
   --dc-radius: 26px;
   --dc-padY-lg: clamp(26px, 3.8vw, 44px);
@@ -864,28 +858,27 @@
 
   /* анимации */
   --ani-duration: 520ms;
-  --ani-ease: cubic-bezier(.22,.7,.22,1);
-}
+  --ani-ease: cubic-bezier(0.22, 0.7, 0.22, 1);
 
-[data-theme="dark"] .dc{
-  --dc-bg: #0e1014;
-  --dc-surface: #171a1f;
-  --dc-text: #f3f5f8;
-  --dc-accent: #d5a14d;
-  --dc-border: rgba(255,255,255,.10);
-  --dc-shadow: 0 28px 90px rgba(0,0,0,.50);
-  --dc-avatar-ring: #0e1014;
-}
-
-/* Секция */
-.dc{
   background: var(--dc-bg);
-  min-height: 100dvh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   padding-block: var(--dc-gap);
 }
-.dc__container{
+
+[data-theme="dark"] .dc {
+  --dc-bg: #0e1014;
+  --dc-surface: #171a1f;
+  --dc-text: #f3f5f8;
+  --dc-accent: #d5a14d;
+  --dc-border: rgba(255, 255, 255, 0.1);
+  --dc-shadow: 0 28px 90px rgba(0, 0, 0, 0.5);
+  --dc-avatar-ring: #0e1014;
+}
+
+/* Контейнер */
+.dc__container {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
@@ -895,55 +888,59 @@
 }
 
 /* Базовый пузырь */
-.dc__bubble{
+.dc__bubble {
   background: var(--dc-surface);
   border: 1px solid var(--dc-border);
   border-radius: var(--dc-radius);
   box-shadow: var(--dc-shadow);
   color: var(--dc-text);
-  will-change: transform, opacity; /* чуть плавнее */
+  will-change: transform, opacity;
 }
 
-/* Крупный верхний */
-.dc__bubble--lg{
+/* Крупный верхний пузырь */
+.dc__bubble--lg {
   padding: var(--dc-padY-lg) var(--dc-padX-lg);
 }
-.dc__bubble--center{
+.dc__bubble--center {
   justify-self: center;
   max-width: 1000px;
   width: 100%;
 }
 
-/* Заголовок + аватар справа внутри блока */
-.dc__bubbleHead{
+/* Верхняя строка: текст + аватар справа */
+.dc__bubbleHead {
   display: flex;
   align-items: center;
   gap: var(--dc-inline-gap);
-  justify-content: space-between;   /* текст слева, аватар справа */
+  justify-content: space-between;
 }
-.dc__text--lg{
+
+.dc__text--lg {
   margin: 0;
   font-size: clamp(22px, 4vw, 38px);
   font-weight: 900;
   line-height: 1.18;
-  letter-spacing: .2px;
-  flex: 1 1 auto;                   /* текст занимает всю ширину */
+  letter-spacing: 0.2px;
+  flex: 1 1 auto;
 }
 
-/* Нижняя строка */
-.dc__row{
+/* Нижний ряд из двух пузырей */
+.dc__row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: clamp(26px, 3vw, 60px);
   gap: clamp(26px, 3vw, 60px);
   align-items: stretch;
 }
-@media (max-width: 900px){
-  .dc__row{ grid-template-columns: 1fr; }
+
+@media (max-width: 900px) {
+  .dc__row {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* Средние пузыри (вопрос/ответ) — flex с аватаром внутри */
-.dc__bubble--md{
+/* Средние пузыри: вопрос / ответ */
+.dc__bubble--md {
   padding: var(--dc-padY-md) var(--dc-padX-md);
   display: flex;
   align-items: center;
@@ -952,111 +949,139 @@
   font-weight: 900;
   line-height: 1.22;
 }
-.dc__bubble--left{ justify-self: start; }
-.dc__bubble--right{
-  justify-self: end;
-  flex-direction: row-reverse;      /* аватар справа */
+.dc__bubble--left {
+  justify-self: flex-start;
+}
+.dc__bubble--right {
+  justify-self: flex-end;
+  flex-direction: row-reverse; /* аватар справа */
 }
 
-/* Текст */
-.dc__text{ margin: 0; }
-.dc__accent{ color: var(--dc-accent); }
+/* Текст и акцент */
+.dc__text {
+  margin: 0;
+}
+.dc__accent {
+  color: var(--dc-accent);
+}
 
-/* Аватар как обычный inline-элемент */
-.dc__avatar--inline{
+/* Аватар */
+.dc__avatar--inline {
   width: clamp(70px, 6vw, 88px);
   height: clamp(70px, 6vw, 88px);
   border-radius: 50%;
   overflow: hidden;
   flex: 0 0 auto;
 }
-.dc__avatarImg{
+
+.dc__avatarImg {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  /* двойной «кольцевой» бордер */
   box-shadow:
     0 0 0 6px var(--dc-avatar-ring),
     0 0 0 3px var(--dc-surface);
 }
 
-/* Ховеры */
-.dc__bubble:hover{
+/* Лёгкий hover-эффект */
+.dc__bubble {
+  transition: transform 0.2s ease;
+}
+.dc__bubble:hover {
   transform: translateY(-2px);
-  transition: transform .2s ease;
 }
 
-/* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ===== */
+/* ===== АНИМАЦИЯ ПОЯВЛЕНИЯ ===== */
 
-/* базовое состояние — невидим и чуть ниже/уменьшен */
-[data-ani]{
+/* Стартовое состояние */
+[data-ani] {
   opacity: 0;
-  transform: translateY(18px) scale(.98);
+  transform: translateY(18px) scale(0.98);
   transition:
     opacity var(--ani-duration) var(--ani-ease),
     transform var(--ani-duration) var(--ani-ease);
   transition-delay: var(--ani-delay, 0ms);
 }
 
-/* как только добавится .is-in — показываем */
-[data-ani].is-in{
+/* Когда IntersectionObserver добавил класс .is-in */
+[data-ani].is-in {
   opacity: 1;
   transform: none;
 }
 
-/* Уважение к настройке «меньше анимаций» */
-@media (prefers-reduced-motion: reduce){
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
   [data-ani],
-  [data-ani].is-in{
+  [data-ani].is-in {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
   }
-  .dc__bubble:hover{ transform: none !important; }
+
+  .dc__bubble,
+  .dc__bubble:hover {
+    transform: none !important;
+  }
 }
 
-/* Мелкая адаптация */
-@media (max-width: 600px){
-  .dc__bubble--lg{ padding: 22px 24px; }
-  .dc__bubble--md{ padding: 20px 22px; }
+/* Мобилка: чуть компактнее отступы */
+@media (max-width: 600px) {
+  .dc__bubble--lg {
+    padding: 22px 24px;
+  }
+  .dc__bubble--md {
+    padding: 20px 22px;
+  }
 }
 /*!*********************************************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/DebtsCon.css ***!
   \*********************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   DebtsCon — последствия после банкротства (адаптив + центрирование)
+   DebtsCon — последствия после банкротства
    ========================================================================= */
 
 .debtsCon {
+  --debtsCon-bg: #f7f7f8;
+  --debtsCon-surface: #ffffff;
+  --debtsCon-border: #e7e7eb;
+  --debtsCon-text: #0f1115;
+  --debtsCon-muted: #6b7280;
+  --debtsCon-accent: #ba5a52;
+  --debtsCon-shadow: 0 20px 60px rgba(0, 0, 0, 0.06),
+    0 2px 0 rgba(17, 24, 39, 0.03) inset;
+
   padding: clamp(56px, 8vw, 110px) 0;
-  background: #f7f7f8;
+  background: var(--debtsCon-bg);
 }
 
-/* ---------- Заголовок ---------- */
+/* Заголовок */
 .debtsCon__head {
   margin-bottom: clamp(28px, 4vw, 48px);
 }
+
 .debtsCon__head--center {
   text-align: center;
   max-width: 920px;
   margin-inline: auto;
 }
+
 .debtsCon__title {
   margin: 0;
   font-weight: 900;
   letter-spacing: 0.2px;
   line-height: 1.15;
   font-size: clamp(26px, 4.2vw, 40px);
-  color: #0f1115;
+  color: var(--debtsCon-text);
 }
+
 .debtsCon__subtitle {
   margin-top: 10px;
-  color: #6b7280;
+  color: var(--debtsCon-muted);
   font-size: clamp(15px, 1.9vw, 18px);
 }
 
-/* ---------- Сетка карточек ---------- */
+/* Сетка карточек */
 .debtsCon__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
@@ -1064,19 +1089,22 @@
   gap: clamp(22px, 3.2vw, 36px);
 }
 
-/* ---------- Карточка ---------- */
+/* Карточка */
 .debtsCon__card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  background: #fff;
-  border: 1px solid #e7e7eb;
+
+  background: var(--debtsCon-surface);
+  border: 1px solid var(--debtsCon-border);
   border-radius: 20px;
   padding: clamp(22px, 2.6vw, 28px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06), 0 2px 0 rgba(17, 24, 39, 0.03) inset;
+  box-shadow: var(--debtsCon-shadow);
+
   transition: transform 0.2s ease, box-shadow 0.25s ease;
 }
+
 .debtsCon__card:hover {
   transform: translateY(-2px);
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.08);
@@ -1086,12 +1114,14 @@
   flex: 1 1;
   min-width: 0;
 }
+
 .debtsCon__years {
   margin: 0 0 10px;
-  color: #ba5a52;
+  color: var(--debtsCon-accent);
   font-weight: 900;
   font-size: clamp(22px, 3vw, 28px);
 }
+
 .debtsCon__textCol p {
   margin: 6px 0;
   color: #1f2937;
@@ -1099,13 +1129,14 @@
   font-size: clamp(15px, 1.9vw, 17px);
 }
 
-/* ---------- Иконка-кружок ---------- */
+/* Иконка-круг */
 .debtsCon__iconCol {
   flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .debtsCon__iconPlate {
   display: grid;
   place-items: center;
@@ -1116,13 +1147,14 @@
   border: 1px solid #e5e7eb;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
 }
+
 .debtsCon__iconPlate img {
   object-fit: contain;
   width: clamp(80px, 8.6vw, 110px);
   height: auto;
 }
 
-/* ---------- CTA ---------- */
+/* CTA */
 .debtsCon__cta {
   display: flex;
   justify-content: center;
@@ -1130,39 +1162,19 @@
 }
 
 .debtsCon__btn {
-  -webkit-tap-highlight-color: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 18px 28px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #1a1405;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  font-size: clamp(15px, 2vw, 17px);
-  background: linear-gradient(180deg, #ffe9a7, #d1a24c);
-  box-shadow: 0 18px 45px rgba(209, 162, 76, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.2s ease;
+  padding-inline: 28px;
+  white-space: nowrap;
 }
-.debtsCon__btn:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
-.debtsCon__btn:active {
-  transform: translateY(0);
-}
-.debtsCon__btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(209, 162, 76, 0.35), 0 18px 45px rgba(209, 162, 76, 0.35);
-}
+
 .debtsCon__btnIco {
   font-size: 18px;
 }
 
-/* ---------- Модалка ---------- */
+/* Модалка */
 .debtsConModal {
   position: fixed;
   inset: 0;
@@ -1172,21 +1184,24 @@
   place-items: center;
   padding: 24px;
 }
+
 .debtsConModal__card {
   position: relative;
   width: min(860px, 100%);
   background: #0f1115;
-  color: #fff;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   box-shadow: 0 30px 120px rgba(0, 0, 0, 0.55);
   padding: clamp(22px, 3.5vw, 32px);
 }
+
 .debtsConModal__title {
   margin: 0 0 14px;
   font-weight: 800;
   font-size: clamp(18px, 2.5vw, 22px);
 }
+
 .debtsConModal__form {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1194,7 +1209,7 @@
   padding: clamp(12px, 2vw, 18px);
 }
 
-/* ---------- Крестик ---------- */
+/* Крестик */
 .debtsConModal__close {
   position: absolute;
   top: 14px;
@@ -1208,49 +1223,55 @@
   place-items: center;
   cursor: pointer;
 }
+
 .debtsConModal__close span {
   position: absolute;
   width: 22px;
   height: 2px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 2px;
 }
+
 .debtsConModal__close span:first-child {
   transform: rotate(45deg);
 }
+
 .debtsConModal__close span:last-child {
   transform: rotate(-45deg);
 }
 
-/* ---------- Адаптив ---------- */
+/* Адаптив */
 @media (max-width: 768px) {
   .debtsCon__grid {
     grid-template-columns: 1fr;
     gap: 28px;
   }
+
   .debtsCon__card {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 26px 20px;
   }
+
   .debtsCon__iconPlate {
     margin-top: 14px;
     margin-bottom: 10px;
   }
+
   .debtsCon__iconPlate img {
     width: 86px;
   }
+
   .debtsCon__cta {
-    position: relative;
     margin-top: 40px;
     justify-content: center;
   }
+
   .debtsCon__btn {
     width: 100%;
     max-width: 420px;
-    font-size: 16px;
-    padding: 16px 24px;
+    padding-inline: 24px;
     border-radius: 14px;
   }
 }
@@ -1266,10 +1287,12 @@
     padding: 16px;
     font-size: 15px;
   }
+
   .debtsCon__iconPlate {
     width: 110px;
     height: 110px;
   }
+
   .debtsCon__iconPlate img {
     width: 76px;
   }
@@ -2381,41 +2404,41 @@
   !*** css ./node_modules/next/dist/build/webpack/loaders/css-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[2]!./node_modules/next/dist/build/webpack/loaders/postcss-loader/src/index.js??ruleSet[1].rules[14].oneOf[10].use[3]!./src/styles/Debts.css ***!
   \******************************************************************************************************************************************************************************************************************************************************************/
 /* =========================================================================
-   Debts.css — секция 100svh с мощным заголовком и чистыми белыми иконками
+   Debts — секция 100svh с мощным заголовком и белыми иконками
    ========================================================================= */
 
 /* Светлая тема */
 :root {
-  --page-bg:     #ffffff;
-  --ink:         #101217;
-  --muted:       #6b7280;
-  --brand:       #d14a4a;
-  --chip-bg:     #f6f7f9;
-  --chip-bd:     #e7eaf0;
-  --section-bd:  #eceff3;
-  --ico-bg:      #ffffff;
+  --debts-page-bg: #ffffff;
+  --debts-ink: #101217;
+  --debts-muted: #6b7280;
+  --debts-brand: #d1a24c;
+  --debts-chip-bg: #f7f8fa;
+  --debts-chip-bd: #e5e7eb;
+  --debts-section-bd: #eceff3;
+  --debts-ico-bg: #ffffff;
 }
 
 /* Тёмная тема */
 body[data-theme="dark"] {
-  --page-bg:     #0c0e12;
-  --ink:         #e9edf3;
-  --muted:       #9aa3b2;
-  --brand:       #d3a24c;
-  --chip-bg:     #13161b;
-  --chip-bd:     #222833;
-  --section-bd:  #1a1f27;
-  --ico-bg:      #ffffff; /* белый фон иконок сохраняется */
+  --debts-page-bg: #0b0e12;
+  --debts-ink: #e9edf3;
+  --debts-muted: #9aa3b2;
+  --debts-brand: #d1a24c;
+  --debts-chip-bg: #13161b;
+  --debts-chip-bd: #222833;
+  --debts-section-bd: #1a1f27;
+  --debts-ico-bg: #ffffff;
 }
 
 /* ---------- Секция ---------- */
 .debts {
-  background: var(--page-bg);
+  background: var(--debts-page-bg);
   min-height: 100svh;
   display: grid;
   align-content: center;
   padding: clamp(44px, 5.5vw, 72px) 0;
-  border-block: 1px solid var(--section-bd);
+  border-block: 1px solid var(--debts-section-bd);
 }
 
 /* Контейнер */
@@ -2429,22 +2452,26 @@ body[data-theme="dark"] {
   text-align: center;
   margin-bottom: clamp(24px, 4vw, 44px);
 }
+
 .debts__title {
   margin: 0;
-  color: var(--ink);
-  font-weight: 1000;             /* усилили жирность */
+  color: var(--debts-ink);
+  font-weight: 900;
   line-height: 1.05;
-  letter-spacing: .1px;
-  font-size: clamp(28px, 4.8vw, 50px);
+  letter-spacing: 0.2px;
+  font-size: clamp(28px, 4.8vw, 52px);
 }
-.debts__accent { color: var(--brand); }
+
+.debts__accent {
+  color: var(--debts-brand);
+}
 
 .debts__lead {
-  margin-top: 10px;
-  color: var(--muted);
+  margin-top: 12px;
+  color: var(--debts-muted);
   font-size: clamp(15px, 2vw, 18px);
   line-height: 1.65;
-  max-width: 860px;
+  max-width: 820px;
   margin-inline: auto;
 }
 
@@ -2455,6 +2482,7 @@ body[data-theme="dark"] {
   grid-gap: clamp(24px, 3vw, 48px);
   gap: clamp(24px, 3vw, 48px);
 }
+
 @media (min-width: 992px) {
   .debts__grid {
     grid-template-columns: 1fr 1fr;
@@ -2467,29 +2495,34 @@ body[data-theme="dark"] {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: clamp(20px, 3vw, 32px); /* ↑ больше отступа вниз */
+  margin-bottom: clamp(20px, 3vw, 32px);
 }
+
 .debts__colTitle {
   margin: 0;
-  font-weight: 900;
-  line-height: 1.18;
-  color: var(--ink);
-  font-size: clamp(22px, 3.4vw, 32px);
+  font-weight: 800;
+  color: var(--debts-ink);
+  font-size: clamp(22px, 3.4vw, 30px);
+  line-height: 1.2;
 }
-.debts__colTitle--ok { color: var(--brand); }
 
-/* Замочки — крупнее */
+.debts__colTitle--ok {
+  color: var(--debts-brand);
+}
+
 .debts__lock {
-  color: var(--ink);
-  opacity: .85;
-  display: inline-grid;
+  display: grid;
   place-items: center;
-  margin-left: 6px;
   width: clamp(34px, 3.8vw, 40px);
   height: clamp(34px, 3.8vw, 40px);
   font-size: clamp(22px, 2.6vw, 26px);
+  color: var(--debts-ink);
+  opacity: 0.85;
 }
-.debts__lock--ok { color: var(--brand); }
+
+.debts__lock--ok {
+  color: var(--debts-brand);
+}
 
 /* ---------- Чипы ---------- */
 .debts__chips {
@@ -2497,29 +2530,42 @@ body[data-theme="dark"] {
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
   grid-gap: 14px;
   gap: 14px;
 }
+
 @media (min-width: 560px) {
-  .debts__chips { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .debts__chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .debts__chip {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: var(--chip-bg);
-  border: 1px solid var(--chip-bd);
+  background: var(--debts-chip-bg);
+  border: 1px solid var(--debts-chip-bd);
   border-radius: 999px;
   padding: 16px 20px;
-  color: var(--ink);
+  color: var(--debts-ink);
   font-weight: 700;
-  line-height: 1.25;
-  transition: border-color .15s ease, background-color .15s ease, transform .06s ease;
+  line-height: 1.3;
+  transition: border-color 0.15s ease, background-color 0.15s ease,
+    transform 0.08s ease;
 }
-.debts__chip:hover { border-color: color-mix(in oklab, var(--brand) 35%, var(--chip-bd)); }
-.debts__chip:active { transform: translateY(1px); }
+
+.debts__chip:hover {
+  border-color: color-mix(
+    in oklab,
+    var(--debts-brand) 35%,
+    var(--debts-chip-bd)
+  );
+}
+
+.debts__chip:active {
+  transform: translateY(1px);
+}
 
 /* ---------- Иконка ---------- */
 .debts__ico {
@@ -2528,35 +2574,61 @@ body[data-theme="dark"] {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--ico-bg); /* белый фон */
-  border: 1px solid var(--chip-bd);
+  background: var(--debts-ico-bg);
+  border: 1px solid var(--debts-chip-bd);
   flex: 0 0 48px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
+
 .debts__ico svg {
   width: 24px;
   height: 24px;
-  color: var(--ink);
+  color: var(--debts-ink);
 }
 
-/* ---------- Правая колонка — дымка ---------- */
+/* ---------- Правая колонка (приглушённая) ---------- */
 .debts__chips--disabled .debts__chip {
-  opacity: .7;
-  filter: saturate(.75) grayscale(.05);
-  color: color-mix(in oklab, var(--ink) 55%, var(--muted));
-  background: color-mix(in oklab, var(--chip-bg) 96%, #000 0%);
-  border-color: color-mix(in oklab, var(--chip-bd) 86%, #000 0%);
+  opacity: 0.75;
+  filter: saturate(0.85);
+  color: color-mix(in oklab, var(--debts-ink) 55%, var(--debts-muted));
+  background: color-mix(in oklab, var(--debts-chip-bg) 96%, #000 0%);
+  border-color: color-mix(in oklab, var(--debts-chip-bd) 86%, #000 0%);
 }
-.debts__chips--disabled .debts__ico { opacity: .85; }
+
+.debts__chips--disabled .debts__ico {
+  opacity: 0.85;
+}
+
+/* ---------- Кнопка ---------- */
+.debts__btnRow {
+  margin-top: clamp(36px, 5vw, 56px);
+  text-align: center;
+}
+
+.debts__btn {
+  padding-inline: 32px;
+  font-weight: 700;
+  font-size: 16px;
+}
 
 /* ---------- Mobile ---------- */
 @media (max-width: 420px) {
-  .debts__chip { padding: 14px 16px; }
-  .debts__ico { width: 44px; height: 44px; }
-  .debts__ico svg { width: 22px; height: 22px; }
+  .debts__chip {
+    padding: 14px 16px;
+  }
+  .debts__ico {
+    width: 44px;
+    height: 44px;
+  }
+  .debts__ico svg {
+    width: 22px;
+    height: 22px;
+  }
 }
 
-/* reduce motion */
+/* ---------- Reduce motion ---------- */
 @media (prefers-reduced-motion: reduce) {
-  .debts__chip { transition: none !important; }
+  .debts__chip {
+    transition: none !important;
+  }
 }

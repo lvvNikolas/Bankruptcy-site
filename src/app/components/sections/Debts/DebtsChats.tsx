@@ -5,7 +5,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import "@styles/DebtsChat.css";
 
-/** Корректный тип стиля с CSS-переменной --ani-delay */
+/** Стиль пузыря с кастомной CSS-переменной задержки анимации */
 type StyleWithDelay = CSSProperties & { ["--ani-delay"]?: string };
 
 export default function DebtsChats() {
@@ -19,49 +19,65 @@ export default function DebtsChats() {
       typeof window !== "undefined" &&
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
 
-    const items = Array.from(root.querySelectorAll<HTMLElement>("[data-ani]"));
+    const items = Array.from(
+      root.querySelectorAll<HTMLElement>("[data-ani]")
+    );
 
+    // Если пользователь просит минимум анимаций — сразу показываем всё
     if (prefersReduced) {
       items.forEach((el) => el.classList.add("is-in"));
       return;
     }
 
-    const io = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries, obs) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
             (entry.target as HTMLElement).classList.add("is-in");
             obs.unobserve(entry.target);
           }
-        });
+        }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -5% 0px" }
+      {
+        threshold: 0.15,
+        rootMargin: "0px 0px -5% 0px",
+      }
     );
 
-    items.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    items.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
   }, []);
 
-  // Готовим стили с переменной без any
+  // Задержки для плавного «каскадного» появления
   const s0: StyleWithDelay = { ["--ani-delay"]: "0ms" };
   const s1: StyleWithDelay = { ["--ani-delay"]: "120ms" };
   const s2: StyleWithDelay = { ["--ani-delay"]: "240ms" };
 
   return (
-    <section id="debts-chat" ref={rootRef} className="dc section">
+    <section
+      id="debts-chat"
+      ref={rootRef}
+      className="dc"
+      aria-label="Переписка клиента с юристом о банкротстве"
+    >
       <div className="container dc__container">
-
-        {/* Верхний блок-утверждение */}
-        <figure className="dc__bubble dc__bubble--lg dc__bubble--center" data-ani="" style={s0}>
+        {/* Верхний большой пузырь-утверждение */}
+        <figure
+          className="dc__bubble dc__bubble--lg dc__bubble--center"
+          data-ani=""
+          style={s0}
+        >
           <div className="dc__bubbleHead">
             <p className="dc__text dc__text--lg">
-              Согласно <span className="dc__accent">ФЗ-127 “О банкротстве”</span> любой гражданин
-              вправе законно списать все свои долги
+              Согласно{" "}
+              <span className="dc__accent">ФЗ-127 «О банкротстве»</span> любой
+              гражданин вправе законно списать свои долги.
             </p>
             <div className="dc__avatar dc__avatar--inline">
               <Image
                 src="/media/lawyer.jpg"
-                alt="Юрист"
+                alt="Юрист-арбитражный управляющий"
                 width={88}
                 height={88}
                 className="dc__avatarImg"
@@ -71,9 +87,13 @@ export default function DebtsChats() {
           </div>
         </figure>
 
-        {/* Нижняя строка: вопрос + ответ */}
+        {/* Нижняя строка: вопрос и ответ */}
         <div className="dc__row">
-          <figure className="dc__bubble dc__bubble--md dc__bubble--left" data-ani="" style={s1}>
+          <figure
+            className="dc__bubble dc__bubble--md dc__bubble--left"
+            data-ani=""
+            style={s1}
+          >
             <div className="dc__avatar dc__avatar--inline">
               <Image
                 src="/media/girl.png"
@@ -86,18 +106,23 @@ export default function DebtsChats() {
             <p className="dc__text">Какие последствия банкротства?</p>
           </figure>
 
-          <figure className="dc__bubble dc__bubble--md dc__bubble--right" data-ani="" style={s2}>
+          <figure
+            className="dc__bubble dc__bubble--md dc__bubble--right"
+            data-ani=""
+            style={s2}
+          >
             <div className="dc__avatar dc__avatar--inline">
               <Image
                 src="/media/lawyer.jpg"
-                alt="Юрист"
+                alt="Юрист отвечает клиенту"
                 width={84}
                 height={84}
                 className="dc__avatarImg"
               />
             </div>
             <p className="dc__text">
-              Они <span className="dc__accent">минимальны</span>,<br /> не переживайте!
+              Они <span className="dc__accent">минимальны</span>, не
+              переживайте — всё проходит в рамках закона.
             </p>
           </figure>
         </div>

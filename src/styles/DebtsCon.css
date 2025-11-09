@@ -1,55 +1,70 @@
 /* =========================================================================
-   DebtsCon — последствия после банкротства (адаптив + центрирование)
+   DebtsCon — последствия после банкротства
    ========================================================================= */
 
 .debtsCon {
+  --debtsCon-bg: #f7f7f8;
+  --debtsCon-surface: #ffffff;
+  --debtsCon-border: #e7e7eb;
+  --debtsCon-text: #0f1115;
+  --debtsCon-muted: #6b7280;
+  --debtsCon-accent: #ba5a52;
+  --debtsCon-shadow: 0 20px 60px rgba(0, 0, 0, 0.06),
+    0 2px 0 rgba(17, 24, 39, 0.03) inset;
+
   padding: clamp(56px, 8vw, 110px) 0;
-  background: #f7f7f8;
+  background: var(--debtsCon-bg);
 }
 
-/* ---------- Заголовок ---------- */
+/* Заголовок */
 .debtsCon__head {
   margin-bottom: clamp(28px, 4vw, 48px);
 }
+
 .debtsCon__head--center {
   text-align: center;
   max-width: 920px;
   margin-inline: auto;
 }
+
 .debtsCon__title {
   margin: 0;
   font-weight: 900;
   letter-spacing: 0.2px;
   line-height: 1.15;
   font-size: clamp(26px, 4.2vw, 40px);
-  color: #0f1115;
+  color: var(--debtsCon-text);
 }
+
 .debtsCon__subtitle {
   margin-top: 10px;
-  color: #6b7280;
+  color: var(--debtsCon-muted);
   font-size: clamp(15px, 1.9vw, 18px);
 }
 
-/* ---------- Сетка карточек ---------- */
+/* Сетка карточек */
 .debtsCon__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
   gap: clamp(22px, 3.2vw, 36px);
 }
 
-/* ---------- Карточка ---------- */
+/* Карточка */
 .debtsCon__card {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 22px;
-  background: #fff;
-  border: 1px solid #e7e7eb;
+
+  background: var(--debtsCon-surface);
+  border: 1px solid var(--debtsCon-border);
   border-radius: 20px;
   padding: clamp(22px, 2.6vw, 28px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06), 0 2px 0 rgba(17, 24, 39, 0.03) inset;
+  box-shadow: var(--debtsCon-shadow);
+
   transition: transform 0.2s ease, box-shadow 0.25s ease;
 }
+
 .debtsCon__card:hover {
   transform: translateY(-2px);
   box-shadow: 0 26px 70px rgba(0, 0, 0, 0.08);
@@ -59,12 +74,14 @@
   flex: 1;
   min-width: 0;
 }
+
 .debtsCon__years {
   margin: 0 0 10px;
-  color: #ba5a52;
+  color: var(--debtsCon-accent);
   font-weight: 900;
   font-size: clamp(22px, 3vw, 28px);
 }
+
 .debtsCon__textCol p {
   margin: 6px 0;
   color: #1f2937;
@@ -72,13 +89,14 @@
   font-size: clamp(15px, 1.9vw, 17px);
 }
 
-/* ---------- Иконка-кружок ---------- */
+/* Иконка-круг */
 .debtsCon__iconCol {
   flex-shrink: 0;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .debtsCon__iconPlate {
   display: grid;
   place-items: center;
@@ -89,13 +107,14 @@
   border: 1px solid #e5e7eb;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
 }
+
 .debtsCon__iconPlate img {
   object-fit: contain;
   width: clamp(80px, 8.6vw, 110px);
   height: auto;
 }
 
-/* ---------- CTA ---------- */
+/* CTA */
 .debtsCon__cta {
   display: flex;
   justify-content: center;
@@ -103,39 +122,19 @@
 }
 
 .debtsCon__btn {
-  -webkit-tap-highlight-color: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 18px 28px;
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #1a1405;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  font-size: clamp(15px, 2vw, 17px);
-  background: linear-gradient(180deg, #ffe9a7, #d1a24c);
-  box-shadow: 0 18px 45px rgba(209, 162, 76, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.2s ease;
+  padding-inline: 28px;
+  white-space: nowrap;
 }
-.debtsCon__btn:hover {
-  filter: brightness(1.05);
-  transform: translateY(-1px);
-}
-.debtsCon__btn:active {
-  transform: translateY(0);
-}
-.debtsCon__btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(209, 162, 76, 0.35), 0 18px 45px rgba(209, 162, 76, 0.35);
-}
+
 .debtsCon__btnIco {
   font-size: 18px;
 }
 
-/* ---------- Модалка ---------- */
+/* Модалка */
 .debtsConModal {
   position: fixed;
   inset: 0;
@@ -145,21 +144,24 @@
   place-items: center;
   padding: 24px;
 }
+
 .debtsConModal__card {
   position: relative;
   width: min(860px, 100%);
   background: #0f1115;
-  color: #fff;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 20px;
   box-shadow: 0 30px 120px rgba(0, 0, 0, 0.55);
   padding: clamp(22px, 3.5vw, 32px);
 }
+
 .debtsConModal__title {
   margin: 0 0 14px;
   font-weight: 800;
   font-size: clamp(18px, 2.5vw, 22px);
 }
+
 .debtsConModal__form {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -167,7 +169,7 @@
   padding: clamp(12px, 2vw, 18px);
 }
 
-/* ---------- Крестик ---------- */
+/* Крестик */
 .debtsConModal__close {
   position: absolute;
   top: 14px;
@@ -181,49 +183,55 @@
   place-items: center;
   cursor: pointer;
 }
+
 .debtsConModal__close span {
   position: absolute;
   width: 22px;
   height: 2px;
-  background: #fff;
+  background: #ffffff;
   border-radius: 2px;
 }
+
 .debtsConModal__close span:first-child {
   transform: rotate(45deg);
 }
+
 .debtsConModal__close span:last-child {
   transform: rotate(-45deg);
 }
 
-/* ---------- Адаптив ---------- */
+/* Адаптив */
 @media (max-width: 768px) {
   .debtsCon__grid {
     grid-template-columns: 1fr;
     gap: 28px;
   }
+
   .debtsCon__card {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 26px 20px;
   }
+
   .debtsCon__iconPlate {
     margin-top: 14px;
     margin-bottom: 10px;
   }
+
   .debtsCon__iconPlate img {
     width: 86px;
   }
+
   .debtsCon__cta {
-    position: relative;
     margin-top: 40px;
     justify-content: center;
   }
+
   .debtsCon__btn {
     width: 100%;
     max-width: 420px;
-    font-size: 16px;
-    padding: 16px 24px;
+    padding-inline: 24px;
     border-radius: 14px;
   }
 }
@@ -238,10 +246,12 @@
     padding: 16px;
     font-size: 15px;
   }
+
   .debtsCon__iconPlate {
     width: 110px;
     height: 110px;
   }
+
   .debtsCon__iconPlate img {
     width: 76px;
   }

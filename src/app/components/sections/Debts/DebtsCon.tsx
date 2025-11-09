@@ -2,45 +2,72 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import "@styles/DebtsCon.css";
 import LeadForm from "@components/LeadForm/LeadForm";
+import "@styles/DebtsCon.css";
 
 export default function DebtsCon() {
   const [open, setOpen] = useState(false);
 
-  // Закрытие по ESC
+  // Закрытие по Esc + блокировка скролла фона
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
   }, [open]);
 
   return (
     <>
-      <section id="debts-con" className="debtsCon section" aria-labelledby="debtsCon-title">
+      <section
+        id="debts-con"
+        className="debtsCon"
+        aria-labelledby="debtsCon-title"
+      >
         <div className="container">
+          {/* Заголовок блока */}
           <header className="debtsCon__head debtsCon__head--center">
             <h2 id="debtsCon-title" className="debtsCon__title">
               Последствия после банкротства
             </h2>
             <p className="debtsCon__subtitle">
-              Краткие ограничения после процедуры банкротства
+              Кратко о реальных ограничениях, которые действуют после списания долгов
             </p>
           </header>
 
-          {/* Карточки */}
+          {/* Сетка карточек */}
           <div className="debtsCon__grid">
             {/* 1 */}
             <article className="debtsCon__card">
               <div className="debtsCon__textCol">
                 <h3 className="debtsCon__years">5 лет</h3>
-                <p>Нельзя повторно заявить о банкротстве.</p>
-                <p>Нужно сообщать о банкротстве при подаче заявки на кредит.</p>
+                <p>Нельзя повторно обращаться в суд с заявлением о банкротстве.</p>
+                <p>При оформлении новых кредитов нужно сообщать о факте банкротства.</p>
               </div>
+
               <div className="debtsCon__iconCol">
-                <div className="debtsCon__iconPlate" role="img" aria-label="Молоток судьи">
-                  <Image src="/Media/Hammer.png" alt="" width={140} height={140} />
+                <div
+                  className="debtsCon__iconPlate"
+                  role="img"
+                  aria-label="Судебный молоток"
+                >
+                  <Image
+                    src="/media/Hammer.png"
+                    alt=""
+                    width={140}
+                    height={140}
+                  />
                 </div>
               </div>
             </article>
@@ -50,13 +77,23 @@ export default function DebtsCon() {
               <div className="debtsCon__textCol">
                 <h3 className="debtsCon__years">10 лет</h3>
                 <p>
-                  Нельзя занимать управленческую должность
-                  в кредитной организации.
+                  Нельзя занимать должности в органах управления кредитных
+                  организаций (банков).
                 </p>
               </div>
+
               <div className="debtsCon__iconCol">
-                <div className="debtsCon__iconPlate" role="img" aria-label="Банк">
-                  <Image src="/Media/Bank.png" alt="" width={140} height={140} />
+                <div
+                  className="debtsCon__iconPlate"
+                  role="img"
+                  aria-label="Здание банка"
+                >
+                  <Image
+                    src="/media/Bank.png"
+                    alt=""
+                    width={140}
+                    height={140}
+                  />
                 </div>
               </div>
             </article>
@@ -66,14 +103,23 @@ export default function DebtsCon() {
               <div className="debtsCon__textCol">
                 <h3 className="debtsCon__years">5 лет</h3>
                 <p>
-                  Нельзя работать в управлении страховых и микрофинансовых
-                  организаций, а также негосударственных пенсионных,
-                  инвестиционных и паевых фондах.
+                  Нельзя работать в органах управления страховых, микрофинансовых,
+                  негосударственных пенсионных и инвестиционных фондов.
                 </p>
               </div>
+
               <div className="debtsCon__iconCol">
-                <div className="debtsCon__iconPlate" role="img" aria-label="Замок">
-                  <Image src="/Media/Lock.png" alt="" width={140} height={140} />
+                <div
+                  className="debtsCon__iconPlate"
+                  role="img"
+                  aria-label="Замок"
+                >
+                  <Image
+                    src="/media/Lock.png"
+                    alt=""
+                    width={140}
+                    height={140}
+                  />
                 </div>
               </div>
             </article>
@@ -84,12 +130,22 @@ export default function DebtsCon() {
                 <h3 className="debtsCon__years">3 года</h3>
                 <p>
                   Нельзя быть директором, членом совета директоров или правления
-                  любого юридического лица.
+                  любых юридических лиц.
                 </p>
               </div>
+
               <div className="debtsCon__iconCol">
-                <div className="debtsCon__iconPlate" role="img" aria-label="Портфель">
-                  <Image src="/Media/SuitCase.png" alt="" width={140} height={140} />
+                <div
+                  className="debtsCon__iconPlate"
+                  role="img"
+                  aria-label="Деловой портфель"
+                >
+                  <Image
+                    src="/media/SuitCase.png"
+                    alt=""
+                    width={140}
+                    height={140}
+                  />
                 </div>
               </div>
             </article>
@@ -99,19 +155,21 @@ export default function DebtsCon() {
           <div className="debtsCon__cta">
             <button
               type="button"
-              className="debtsCon__btn"
+              className="btn btn-primary debtsCon__btn"
               onClick={() => setOpen(true)}
               aria-haspopup="dialog"
               aria-controls="debtsCon-modal"
             >
-              <span className="debtsCon__btnIco" aria-hidden>📞</span>
+              <span className="debtsCon__btnIco" aria-hidden>
+                📞
+              </span>
               <span>Получить бесплатную консультацию</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Модалка с формой */}
+      {/* Модальное окно с формой */}
       {open && (
         <div
           id="debtsCon-modal"
@@ -126,6 +184,7 @@ export default function DebtsCon() {
           <div className="debtsConModal__card">
             <button
               className="debtsConModal__close"
+              type="button"
               aria-label="Закрыть"
               onClick={() => setOpen(false)}
             >
@@ -133,8 +192,11 @@ export default function DebtsCon() {
               <span />
             </button>
 
-            <h3 id="debtsConModal-title" className="debtsConModal__title">
-              Оставьте контакты — расскажем, что именно вам можно списать
+            <h3
+              id="debtsConModal-title"
+              className="debtsConModal__title"
+            >
+              Оставьте контакты — подскажем, какие долги можно списать именно вам
             </h3>
 
             <div className="debtsConModal__form">
