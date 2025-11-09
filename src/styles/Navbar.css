@@ -1,13 +1,16 @@
 :root {
-  --nav-bg: #ffffff;
-  --nav-text: #0f172a;
-  --nav-muted: #64748b;
-  --nav-accent: #0f172a;
-  --nav-shadow: 0 10px 30px rgba(16, 24, 40, 0.06);
-  --nav-line: rgba(15, 23, 42, 0.08);
+  /* Цвета в тон hero: тёмный фон + золотой акцент */
+  --nav-bg: rgba(15, 23, 42, 0.9);          /* тёмно-синий / почти чёрный */
+  --nav-text: #f9fafb;                      /* почти белый */
+  --nav-muted: #9ca3af;
+  --nav-accent: #f9fafb;
+  --nav-underline: #f6d879;                /* золото как в кнопках hero */
+  --nav-shadow: 0 18px 42px rgba(0, 0, 0, 0.6);
+  --nav-line: rgba(15, 23, 42, 0.4);
 }
 
-/* Шапка */
+/* ===== Шапка ===== */
+
 .nav {
   position: sticky;
   top: 0;
@@ -16,43 +19,47 @@
   background: var(--nav-bg);
   border-bottom: 1px solid var(--nav-line);
   box-shadow: var(--nav-shadow);
+  backdrop-filter: blur(18px);
 }
 
 .nav__inner {
   max-width: min(1280px, calc(100% - 32px));
   margin: 0 auto;
-  min-height: 64px;
+  min-height: 68px;
 
   display: grid;
-  grid-template-columns: auto 1fr auto; /* логотип | меню | бургер */
+  grid-template-columns: auto 1fr auto; /* логотип — меню — бургер */
   align-items: center;
   gap: 16px;
 }
 
-/* ЛОГО */
+/* ===== Логотип ===== */
+
 .nav__logo {
   width: 42px;
   height: 42px;
-  border-radius: 10px;
-  background: #0f1115;
+  border-radius: 12px;
+  background: #020617;
   display: inline-grid;
   place-items: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.55);
 }
 .nav__logo > span {
   width: 22px;
   height: 22px;
-  border-radius: 6px;
-  background: #101317;
+  border-radius: 7px;
+  background: #f9fafb;
 }
 
-/* Десктоп-меню */
+/* ===== Десктоп-меню ===== */
+
 .nav__desk {
   justify-self: center;
 }
 .nav__list {
   display: flex;
   align-items: center;
-  gap: clamp(18px, 3.8vw, 44px);
+  gap: clamp(18px, 3.6vw, 44px);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -64,22 +71,33 @@
   color: var(--nav-accent);
   text-decoration: none;
   font-weight: 800;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.08em;
   white-space: nowrap;
+  text-transform: uppercase;
+  font-size: 13px;
 
-  background-image: linear-gradient(currentColor, currentColor);
+  background-image: linear-gradient(
+    to right,
+    var(--nav-underline),
+    var(--nav-underline)
+  );
   background-size: 0% 2px;
-  background-position: 0% 100%;
+  background-position: 0 100%;
   background-repeat: no-repeat;
-  transition: background-size 0.18s ease;
+  transition:
+    background-size 0.18s ease,
+    opacity 0.18s ease,
+    color 0.18s ease;
 }
 .nav__link:hover,
 .nav__link:focus-visible {
   background-size: 100% 2px;
   outline: none;
+  opacity: 0.9;
 }
 
-/* Бургер справа (мобилка) */
+/* ===== Бургер (мобилка) ===== */
+
 .nav__burger {
   width: 44px;
   height: 40px;
@@ -109,33 +127,41 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ===== Мобильный оверлей ===== */
+/* ===== Мобильное меню (оверлей) ===== */
 
-.nav__drop {
+.nav__overlay {
   position: fixed;
   inset: 0;
-  z-index: 999; /* перекрывает контент, но не мешает шапке, т.к. она выше */
-  background: #ffffff;
-  color: var(--nav-text);
-  display: grid;
-  grid-template-rows: auto 1fr; /* верхняя строка под крестик, ниже список */
-  align-items: center;
-  justify-items: center;
-  padding: max(16px, env(safe-area-inset-top)) 16px
-    max(16px, env(safe-area-inset-bottom));
-  overflow-y: auto;
+  z-index: 1200;                           /* выше шапки и контента */
+  background: rgba(15, 23, 42, 0.96);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
 }
 
-/* Кнопка-крестик внутри оверлея */
+.nav__overlayInner {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin-inline: auto;
+  padding: max(24px, env(safe-area-inset-top) + 8px) 24px
+    max(24px, env(safe-area-inset-bottom) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Кнопка-крестик */
+
 .nav__close {
   position: absolute;
   top: max(16px, env(safe-area-inset-top));
-  right: 16px;
+  right: 18px;
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  border: 1px solid var(--nav-line);
-  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(15, 23, 42, 0.95);
   display: grid;
   place-items: center;
   cursor: pointer;
@@ -164,33 +190,34 @@
 }
 
 /* Список ссылок в оверлее */
+
 .nav__mList {
-  width: min(420px, 100%);
   margin: 0;
-  padding: 80px 0 24px; /* отступ сверху — под крестик */
+  padding: 72px 0 0;
   list-style: none;
-  display: grid;
-  justify-items: center;
-  row-gap: 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
 }
 .nav__mItem {
-  width: 100%;
-}
-.nav__mItem + .nav__mItem {
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
 }
 .nav__mLink {
   display: block;
   padding: 18px 6px;
-  font-size: clamp(20px, 5.6vw, 28px);
+  font-size: clamp(18px, 5.2vw, 26px);
   font-weight: 800;
   color: var(--nav-text);
-  text-decoration: none;
-  letter-spacing: 0.2px;
   text-align: center;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* ===== Респонсив ===== */
+
 @media (max-width: 1024px) {
   .nav__burger {
     display: grid;
@@ -201,7 +228,8 @@
   }
 }
 
-/* Reduce motion */
+/* ===== Reduce motion ===== */
+
 @media (prefers-reduced-motion: reduce) {
   .nav__link,
   .nav__burger span {

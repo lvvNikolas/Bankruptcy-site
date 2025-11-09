@@ -2,61 +2,60 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Route } from "next";
 import "@styles/Navbar.css";
 
-/** Ссылки меню */
-const LINKS: ReadonlyArray<{ href: Route; label: string }> = [
-  { href: "/" as Route, label: "Главная" },
-  { href: "/uslugi" as Route, label: "Услуги" },
-  { href: "/cases" as Route, label: "Выигранные дела" },
-  { href: "/faq" as Route, label: "Вопросы и ответы" },
-  { href: "/career" as Route, label: "Карьера" },
-  { href: "/contacts" as Route, label: "Контакты" },
-];
+/** Ссылки меню (без "Услуги") */
+const LINKS = [
+  { href: "/", label: "Главная" },
+  { href: "/cases", label: "Выигранные дела" },
+  { href: "/faq", label: "Вопросы и ответы" },
+  { href: "/career", label: "Карьера" },
+  { href: "/contacts", label: "Контакты" },
+] as const;
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
-  // Закрываем меню при ресайзе, чтобы не залипало
+  // Блокируем скролл страницы, когда меню открыто
   useEffect(() => {
-    const onResize = () => setOpen(false);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  const toggleMenu = () => setOpen((v) => !v);
+  const closeMenu = () => setOpen(false);
 
   return (
     <header className="nav">
       <div className="nav__inner">
-        {/* ЛОГО слева */}
-        <Link
-          href={"/" as Route}
-          className="nav__logo"
-          aria-label="На главную"
-          prefetch={false}
-        >
+        {/* Логотип слева */}
+        <Link href="/" className="nav__logo" aria-label="На главную">
           <span />
         </Link>
 
         {/* Десктоп-меню по центру */}
         <nav className="nav__desk" aria-label="Основное меню">
           <ul className="nav__list" role="list">
-            {LINKS.map((l) => (
-              <li key={l.href} className="nav__item">
-                <Link href={l.href} className="nav__link" prefetch={false}>
-                  {l.label}
+            {LINKS.map((link) => (
+              <li key={link.href} className="nav__item">
+                <Link href={link.href} className="nav__link">
+                  {link.label}
                 </Link>
               </li>
             ))}
           </ul>
         </nav>
 
-        {/* Бургер справа (виден только на мобилке) */}
+        {/* Бургер справа (мобилка) */}
         <button
           type="button"
           className={`nav__burger ${open ? "is-open" : ""}`}
           aria-label={open ? "Закрыть меню" : "Открыть меню"}
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggleMenu}
         >
           <span />
           <span />
@@ -66,27 +65,33 @@ export default function Navbar() {
 
       {/* Мобильный оверлей */}
       {open && (
-        <div className="nav__drop" role="dialog" aria-modal="true">
-          {/* Крестик внутри оверлея */}
+        <div
+          className="nav__drop"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            // клик по фону закрывает, по контенту — нет
+            if (e.target === e.currentTarget) closeMenu();
+          }}
+        >
           <button
             type="button"
             className="nav__close"
             aria-label="Закрыть меню"
-            onClick={() => setOpen(false)}
+            onClick={closeMenu}
           >
             <span />
           </button>
 
           <ul className="nav__mList" role="list">
-            {LINKS.map((l) => (
-              <li key={`m-${l.href}`} className="nav__mItem">
+            {LINKS.map((link) => (
+              <li key={`m-${link.href}`} className="nav__mItem">
                 <Link
-                  href={l.href}
+                  href={link.href}
                   className="nav__mLink"
-                  prefetch={false}
-                  onClick={() => setOpen(false)}
+                  onClick={closeMenu}
                 >
-                  {l.label}
+                  {link.label}
                 </Link>
               </li>
             ))}
