@@ -237,9 +237,11 @@
   --cases-muted:    var(--muted, #64748b);
   --cases-brand:    var(--brand, #d1a24c);
   --cases-line:     #e4e7ec;
+
   --cases-radius-lg: 20px;
   --cases-radius-md: 16px;
   --cases-radius-sm: 10px;
+
   --cases-shadow-md:   0 12px 32px rgba(15, 23, 42, 0.08);
   --cases-shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.06);
 }
@@ -430,7 +432,7 @@
   font-size: 14px;
 }
 
-/* ===== Правая колонка — документ ===== */
+/* ===== Правая колонка — документ / PDF ===== */
 
 .case__docs {
   display: flex;
@@ -445,7 +447,7 @@
   border: 0;
   border-radius: var(--cases-radius-md);
   overflow: hidden;
-  cursor: zoom-in;
+  cursor: pointer;
   background: #fff;
   border: 1px solid var(--cases-line);
   box-shadow: var(--cases-shadow-md);
@@ -464,7 +466,7 @@
   object-fit: cover;
 }
 
-/* Лупа */
+/* Лупа для изображений */
 
 .case__docZoom {
   position: absolute;
@@ -490,6 +492,49 @@
   width: 30px;
   height: 30px;
   fill: #374151;
+}
+
+/* PDF карточка внутри документа */
+
+.case__docPdf {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  background: linear-gradient(135deg, #fef9c3, #fef3c7);
+}
+
+.case__docPdfIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #f97316;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+}
+
+.case__docPdfIcon svg {
+  width: 28px;
+  height: 28px;
+  fill: #fff7ed;
+}
+
+.case__docPdfText {
+  display: grid;
+  grid-gap: 4px;
+  gap: 4px;
+}
+
+.case__docPdfTitle {
+  font-weight: 700;
+  font-size: 15px;
+  color: #92400e;
+}
+
+.case__docPdfHint {
+  font-size: 13px;
+  color: #b45309;
 }
 
 /* ===== CTA (единый стиль кнопки) ===== */
@@ -541,6 +586,18 @@
   border-radius: var(--cases-radius-md);
   box-shadow: var(--cases-shadow-md);
   background: #fff;
+}
+
+/* iframe для PDF */
+
+.lb__frame {
+  width: 100%;
+  max-width: 100%;
+  height: min(88vh, 960px);
+  border-radius: var(--cases-radius-md);
+  border: none;
+  box-shadow: var(--cases-shadow-md);
+  background: #ffffff;
 }
 
 .lb__nav {

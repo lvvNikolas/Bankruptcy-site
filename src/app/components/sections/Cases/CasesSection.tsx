@@ -6,9 +6,11 @@ import LeadForm from "@components/LeadForm/LeadForm";
 import "@styles/CasesSection.css";
 import { CASES } from "@data/cases";
 
+type LightboxItem = { src: string; alt?: string };
+
 type LightboxState = {
   open: boolean;
-  items: { src: string; alt?: string }[];
+  items: LightboxItem[];
   index: number;
 };
 
@@ -21,7 +23,8 @@ export default function CasesSection() {
 
   const [showForm, setShowForm] = useState(false);
 
-  const openLightbox = (items: { src: string; alt?: string }[], index = 0) => {
+  const openLightbox = (items: LightboxItem[], index = 0) => {
+    if (!items.length) return;
     setLightbox({ open: true, items, index });
   };
 
@@ -30,17 +33,23 @@ export default function CasesSection() {
   };
 
   const prev = () => {
-    setLightbox((s) => ({
-      ...s,
-      index: (s.index - 1 + s.items.length) % s.items.length,
-    }));
+    setLightbox((s) => {
+      if (!s.items.length) return s;
+      return {
+        ...s,
+        index: (s.index - 1 + s.items.length) % s.items.length,
+      };
+    });
   };
 
   const next = () => {
-    setLightbox((s) => ({
-      ...s,
-      index: (s.index + 1) % s.items.length,
-    }));
+    setLightbox((s) => {
+      if (!s.items.length) return s;
+      return {
+        ...s,
+        index: (s.index + 1) % s.items.length,
+      };
+    });
   };
 
   // Esc — закрыть лайтбокс и форму
@@ -75,72 +84,103 @@ export default function CasesSection() {
           <p className="cases__eyebrow">Реальные истории клиентов</p>
           <h2 className="cases__title">Выигранные дела и списанные долги</h2>
           <p className="cases__lead">
-            Кратко и по делу: откуда клиент пришёл, какая была ситуация и к какому
-            результату мы его привели. Все кейсы подтверждены судебными актами.
+            Кратко и по делу: откуда клиент пришёл, какая была ситуация и к
+            какому результату мы его привели. Все кейсы подтверждены судебными
+            актами.
           </p>
         </header>
 
         {/* Сетка кейсов */}
         <div className="cases__grid">
-          {CASES.map((c, i) => (
-            <article key={i} className="case">
-              {/* Левая колонка — текст */}
-              <div className="case__info">
-                <div className="case__personRow">
-                  <span className="case__avatar" aria-hidden="true" />
-                  <div>
-                    <div className="case__person">{c.person}</div>
-                    <div className="case__city">{c.city}</div>
+          {CASES.map((c) => {
+            const mainDoc = c.docs[0];
+            const isPdf =
+              mainDoc?.src.toLowerCase().endsWith(".pdf") ?? false;
+
+            return (
+              <article key={c.id} className="case">
+                {/* Левая колонка — текст */}
+                <div className="case__info">
+                  <div className="case__personRow">
+                    <span className="case__avatar" aria-hidden="true" />
+                    <div>
+                      <div className="case__person">{c.person}</div>
+                      <div className="case__city">{c.city}</div>
+                    </div>
+                  </div>
+
+                  <p className="case__story">{c.story}</p>
+
+                  <div className="case__score">
+                    <span className="case__scoreLabel">Списали:</span>
+                    <span className="case__scoreValue">{c.writtenOff}</span>
+                  </div>
+
+                  <div className="case__cards">
+                    <div className="case__card">
+                      <div className="case__cardLabel">№ дела в суде</div>
+                      <div className="case__cardValue">{c.caseNo}</div>
+                    </div>
+                    <div className="case__card">
+                      <div className="case__cardLabel">Срок рассмотрения</div>
+                      <div className="case__cardValue">{c.term}</div>
+                    </div>
+                  </div>
+
+                  <div className="case__creditors">
+                    <div className="case__cardLabel">Список кредиторов</div>
+                    <div className="case__creditorsList">{c.creditors}</div>
                   </div>
                 </div>
 
-                <p className="case__story">{c.story}</p>
-
-                <div className="case__score">
-                  <span className="case__scoreLabel">Списали:</span>
-                  <span className="case__scoreValue">{c.writtenOff}</span>
+                {/* Правая колонка — документ / PDF */}
+                <div className="case__docs">
+                  {mainDoc ? (
+                    <button
+                      type="button"
+                      className="case__docMain"
+                      onClick={() => openLightbox(c.docs, 0)}
+                    >
+                      {isPdf ? (
+                        <div className="case__docPdf">
+                          <div className="case__docPdfIcon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                              <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h12V9h-4a1 1 0 0 1-1-1V4Zm1 11h-6v2h6v-2Z" />
+                            </svg>
+                          </div>
+                          <div className="case__docPdfText">
+                            <span className="case__docPdfTitle">
+                              Судебное определение (PDF)
+                            </span>
+                            <span className="case__docPdfHint">
+                              Нажмите, чтобы открыть документ
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <Image
+                            src={mainDoc.src}
+                            alt={
+                              mainDoc.alt ?? "Скан судебного определения"
+                            }
+                            width={920}
+                            height={1300}
+                            className="case__docMainImg"
+                          />
+                          <span className="case__docZoom" aria-hidden="true">
+                            <svg viewBox="0 0 24 24">
+                              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.5 20.5 19l-5-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z" />
+                            </svg>
+                          </span>
+                        </>
+                      )}
+                    </button>
+                  ) : null}
                 </div>
-
-                <div className="case__cards">
-                  <div className="case__card">
-                    <div className="case__cardLabel">№ дела в суде</div>
-                    <div className="case__cardValue">{c.caseNo}</div>
-                  </div>
-                  <div className="case__card">
-                    <div className="case__cardLabel">Срок рассмотрения</div>
-                    <div className="case__cardValue">{c.term}</div>
-                  </div>
-                </div>
-
-                <div className="case__creditors">
-                  <div className="case__cardLabel">Список кредиторов</div>
-                  <div className="case__creditorsList">{c.creditors}</div>
-                </div>
-              </div>
-
-              {/* Правая колонка — документ / скан */}
-              <div className="case__docs">
-                <button
-                  type="button"
-                  className="case__docMain"
-                  onClick={() => openLightbox(c.docs, 0)}
-                >
-                  <Image
-                    src={c.docs[0].src}
-                    alt={c.docs[0].alt ?? "Скан судебного определения"}
-                    width={920}
-                    height={1300}
-                    className="case__docMainImg"
-                  />
-                  <span className="case__docZoom" aria-hidden="true">
-                    <svg viewBox="0 0 24 24">
-                      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.5 20.5 19l-5-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z" />
-                    </svg>
-                  </span>
-                </button>
-              </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
 
         {/* CTA — единый стиль кнопки с проектом */}
@@ -163,7 +203,7 @@ export default function CasesSection() {
       </div>
 
       {/* Лайтбокс документов */}
-      {lightbox.open && (
+      {lightbox.open && lightbox.items.length > 0 && (
         <div
           className="lb"
           role="dialog"
@@ -182,13 +222,28 @@ export default function CasesSection() {
           </button>
 
           <figure className="lb__figure">
-            <Image
-              src={lightbox.items[lightbox.index].src}
-              alt={lightbox.items[lightbox.index].alt ?? "Документ"}
-              width={1100}
-              height={1560}
-              className="lb__img"
-            />
+            {(() => {
+              const current = lightbox.items[lightbox.index];
+              const isPdf = current.src.toLowerCase().endsWith(".pdf");
+              if (isPdf) {
+                return (
+                  <iframe
+                    src={current.src}
+                    title={current.alt ?? "PDF документ"}
+                    className="lb__frame"
+                  />
+                );
+              }
+              return (
+                <Image
+                  src={current.src}
+                  alt={current.alt ?? "Документ"}
+                  width={1100}
+                  height={1560}
+                  className="lb__img"
+                />
+              );
+            })()}
           </figure>
 
           <button
