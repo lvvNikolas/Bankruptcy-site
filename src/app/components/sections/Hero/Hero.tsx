@@ -1,7 +1,7 @@
 "use client";
 
 import HeroPromoForm from "@/app/components/LeadForm/HeroPromoForm";
-import "@styles/hero.css";
+import "@styles/Hero.css";
 
 export default function Hero() {
   return (
