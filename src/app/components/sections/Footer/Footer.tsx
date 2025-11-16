@@ -14,7 +14,7 @@ export default function Footer() {
           {/* Левый столбец: бренд + описание + TG + рейтинг */}
           <div className="footer__col">
             <div className="footer__logo" aria-label="ДОНУЛЯ — списание долгов">
-              ДОНУЛЯ
+              Компания
             </div>
             <p className="footer__lead">
               Помогаем законно списать долги по 127-ФЗ. Работаем по всей России.
@@ -37,7 +37,10 @@ export default function Footer() {
 
             <div className="footer__rating" aria-label="Рейтинг по отзывам Яндекс">
               <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
-                <path d="M12 .6 15 9l9 .8-7 5.6 2.3 8.8L12 18l-7.3 6.2L7 15.4 0 9.8 9 9l3-8.4Z" fill="#F8D33A" />
+                <path
+                  d="M12 .6 15 9l9 .8-7 5.6 2.3 8.8L12 18l-7.3 6.2L7 15.4 0 9.8 9 9l3-8.4Z"
+                  fill="#F8D33A"
+                />
               </svg>
               <div>
                 <div className="footer__ratingTitle">Отзывы Яндекс</div>
@@ -50,28 +53,45 @@ export default function Footer() {
           <nav className="footer__col" aria-label="Навигация">
             <div className="footer__heading">Навигация</div>
             <ul className="footer__list">
-              <li><Link href={{ pathname: "/" }}>Главная</Link></li>
-              <li><Link href={{ pathname: "/tarify" }}>Тарифы</Link></li>
-              <li><Link href={{ pathname: "/cases" }}>Выигранные дела</Link></li>
-              <li><Link href={{ pathname: "/faq" }}>Вопросы и ответы</Link></li>
-              <li><Link href={{ pathname: "/career" }}>Карьера</Link></li>
+              <li>
+                <Link href={{ pathname: "/" }}>Главная</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/tarify" }}>Тарифы</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/cases" }}>Выигранные дела</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/faq" }}>Вопросы и ответы</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/career" }}>Карьера</Link>
+              </li>
             </ul>
           </nav>
 
-          {/* Навигация 2 */}
+          {/* Разделы */}
           <nav className="footer__col" aria-label="Разделы">
             <div className="footer__heading">Разделы</div>
             <ul className="footer__list">
-              <li><Link href={{ pathname: "/oplata" }}>Оплата</Link></li>
-              <li><Link href={{ pathname: "/contacts" }}>Контакты</Link></li>
-              <li><Link href={{ pathname: "/blog" }}>Блог</Link></li>
-              <li><Link href={{ pathname: "/sitemap" }}>Карта сайта</Link></li>
+              <li>
+                <Link href={{ pathname: "/oplata" }}>Оплата</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/contacts" }}>Контакты</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/blog" }}>Блог</Link>
+              </li>
+              <li>
+                <Link href={{ pathname: "/sitemap" }}>Карта сайта</Link>
+              </li>
             </ul>
           </nav>
 
           {/* Контакты */}
           <address className="footer__col footer__contacts" aria-label="Контакты">
-            {/* Телефон — ЕДИНАЯ ЛИНИЯ: заголовок + бейдж + номер */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
@@ -94,24 +114,24 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Email */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M4 6h16a2 2 0 0 1 2 2v.3l-10 6-10-6V8a2 2 0 0 1 2-2Zm-2 5.4 9.3 5.6a2 2 0 0 0 2 0L22 11.4V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6.6Z" fill="currentColor" />
+                  <path d="M4 6h16a2 2 0 0 1 2 2v.3l-10 6-10-6V8a2 2 0 0 1 2-2Zm-2 5.4 9.3 5.6a2 2 0 0 0 2 0L22 11.4V18a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-6.6Z" />
                 </svg>
               </span>
               <div>
                 <div className="footer__contactTitle">Пишите, ответим</div>
-                <a className="footer__link" href="mailto:info@donulya.ru">info@donulya.ru</a>
+                <a className="footer__link" href="mailto:info@donulya.ru">
+                  info@donulya.ru
+                </a>
               </div>
             </div>
 
-            {/* Адрес */}
             <div className="footer__contactItem">
               <span className="footer__ico" aria-hidden="true">
                 <svg viewBox="0 0 24 24">
-                  <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" fill="currentColor" />
+                  <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
                 </svg>
               </span>
               <div>
@@ -125,14 +145,15 @@ export default function Footer() {
         {/* Нижняя полоса */}
         <div className="footer__bottom">
           <nav className="footer__legal" aria-label="Юридическая информация">
-            <Link href={{ pathname: "/privacy" }}>Политика конфиденциальности</Link>
-            <Link href={{ pathname: "/pdn" }}>Политика обработки персональных данных</Link>
-            <Link href={{ pathname: "/rekvizity" }}>Реквизиты</Link>
-            <Link href={{ pathname: "/oferta" }}>Оферта</Link>
+            <Link href={{ pathname: "/politika-konfidentsialnosti" }}>Политика конфиденциальности</Link>
+            <Link href={{ pathname: "/policy" }}>Политика обработки персональных данных</Link>
+            <Link href={{ pathname: "/sitemap" }}>Карта сайта</Link>
+            {/* <Link href={{ pathname: "/rekvizity" }}>Реквизиты</Link>
+            <Link href={{ pathname: "/oferta" }}>Оферта</Link> */}
           </nav>
 
           <div className="footer__copy">
-            © «ДОНУЛЯ», 2021–{year}. Все права защищены.
+            © «Компания», 2021–{year}. Все права защищены.
           </div>
         </div>
       </div>
