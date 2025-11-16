@@ -13,8 +13,8 @@ type Section = {
 };
 
 export const metadata: Metadata = {
-  title: "Карта сайта — Орловский и Ко",
-  description: "Быстрый доступ ко всем разделам сайта Орловский и Ко.",
+  title: "Карта сайта — Компания",
+  description: "Быстрый доступ ко всем разделам сайта Компания и Ко.",
 };
 
 const SECTIONS: Section[] = [
