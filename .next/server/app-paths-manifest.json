@@ -1,7 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
   "/policy/page": "app/policy/page.js",
   "/politika-konfidentsialnosti/page": "app/politika-konfidentsialnosti/page.js",
-  "/sitemap/page": "app/sitemap/page.js"
+  "/cases/page": "app/cases/page.js"
 }
