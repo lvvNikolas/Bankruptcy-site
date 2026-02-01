@@ -6,6 +6,7 @@ import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
 import ScrollTopButton from "@components/widgets/ScrollTopButton/ScrollTopButton";
 
+
 /* ============================================================
    GLOBAL METADATA (SEO)
    ============================================================ */

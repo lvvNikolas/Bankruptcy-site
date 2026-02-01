@@ -35,24 +35,6 @@
       "static/chunks/main-app.js",
       "static/css/app/contacts/page.css",
       "static/chunks/app/contacts/page.js"
-    ],
-    "/policy/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/policy/page.css",
-      "static/chunks/app/policy/page.js"
-    ],
-    "/politika-konfidentsialnosti/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/politika-konfidentsialnosti/page.css",
-      "static/chunks/app/politika-konfidentsialnosti/page.js"
-    ],
-    "/sitemap/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/sitemap/page.css",
-      "static/chunks/app/sitemap/page.js"
     ]
   }
 }

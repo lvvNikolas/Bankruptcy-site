@@ -1,5 +1,7 @@
 {
   "/page": "app/page.js",
-  "/policy/page": "app/policy/page.js",
-  "/politika-konfidentsialnosti/page": "app/politika-konfidentsialnosti/page.js"
+  "/cases/page": "app/cases/page.js",
+  "/faq/page": "app/faq/page.js",
+  "/career/page": "app/career/page.js",
+  "/contacts/page": "app/contacts/page.js"
 }

@@ -106,8 +106,8 @@ export default function Footer() {
                 <div className="footer__phoneRow">
                   <span className="footer__titleText">Звоните, поможем</span>
                   <span className="footer__badgeOnline">На связи</span>
-                  <a className="footer__link footer__phone" href="tel:+79324990000">
-                    +7 (932) 499-00-00
+                  <a className="footer__link footer__phone" href="tel:+79162979645">
+                    +7 (916) 297-96-45
                   </a>
                 </div>
                 <div className="footer__meta">Ежедневно с 9:00 до 21:00</div>
@@ -122,8 +122,8 @@ export default function Footer() {
               </span>
               <div>
                 <div className="footer__contactTitle">Пишите, ответим</div>
-                <a className="footer__link" href="mailto:info@donulya.ru">
-                  info@donulya.ru
+                <a className="footer__link" href="bankruptcyagencysolution@yandex.com">
+                  bankruptcyagencysolution@yandex.com
                 </a>
               </div>
             </div>
@@ -136,7 +136,7 @@ export default function Footer() {
               </span>
               <div>
                 <div className="footer__contactTitle">Приезжайте, обсудим</div>
-                <div className="footer__address">Нижняя Радищевая улица, 5с3</div>
+                <div className="footer__address">г. Москва, Пресненская набережная, д. 12-17</div>
               </div>
             </div>
           </address>
