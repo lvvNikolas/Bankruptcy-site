@@ -1,5 +1,7 @@
 {
-  "/api/lead/route": "app/api/lead/route.js",
   "/page": "app/page.js",
-  "/contacts/page": "app/contacts/page.js"
+  "/contacts/page": "app/contacts/page.js",
+  "/cases/page": "app/cases/page.js",
+  "/faq/page": "app/faq/page.js",
+  "/career/page": "app/career/page.js"
 }

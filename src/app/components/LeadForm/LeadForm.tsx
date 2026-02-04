@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,10 +9,7 @@ import "@styles/LeadForm.css";
 /* ======= Схема валидации ======= */
 const schema = z.object({
   name: z.string().trim().min(2, "Введите имя"),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
+  phone: z.string().trim().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
   debt: z.string().trim().optional(),
   agree: z.boolean().refine((v) => v === true, { message: "Обязательное согласие" }),
 });
@@ -21,8 +18,9 @@ type FormData = z.infer<typeof schema>;
 
 type Props = {
   context?: string;
-  /** Уникальный id формы (hero_lead, footer_lead, popup_lead и т.п.) */
   formId?: string;
+  /** Любые доп.данные (например ответы квиза) */
+  extraData?: Record<string, unknown>;
   onSuccess?: () => void;
 };
 
@@ -40,20 +38,32 @@ function getApiErrorMessage(json: unknown): string | null {
   return null;
 }
 
+function normalizePhone(raw: string): string {
+  if (!raw) return raw;
+  const digits = raw.replace(/\D/g, "");
+  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
+  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
+  if (raw.startsWith("+7")) return "+7" + digits.slice(1, 11);
+  return "+7" + digits.slice(0, 10);
+}
+
 export default function LeadForm({
   context = "landing",
   formId = "lead_default",
+  extraData,
   onSuccess,
 }: Props) {
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // honeypot антибот
   const honeypotValue = useRef("");
+  const mountedAt = useMemo(() => Date.now(), []);
 
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
@@ -61,6 +71,14 @@ export default function LeadForm({
     mode: "onTouched",
     defaultValues: { name: "", phone: "", debt: "", agree: false },
   });
+
+  const phone = watch("phone");
+
+  useEffect(() => {
+    if (!phone) return;
+    const normalized = normalizePhone(phone);
+    if (normalized !== phone) setValue("phone", normalized, { shouldValidate: false });
+  }, [phone, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setServerError(null);
@@ -73,10 +91,8 @@ export default function LeadForm({
       return;
     }
 
-    const page =
-      typeof window !== "undefined"
-        ? window.location.href
-        : "";
+    const page = typeof window !== "undefined" ? window.location.href : "";
+    const timeOnPageMs = Date.now() - mountedAt;
 
     try {
       const res = await fetch("/api/lead", {
@@ -88,6 +104,8 @@ export default function LeadForm({
           formId,
           page,
           ts: Date.now(),
+          timeOnPageMs,
+          extraData: extraData ?? null, // ✅
         }),
       });
 
@@ -109,18 +127,15 @@ export default function LeadForm({
 
   if (done) {
     return (
-      <div className="leadform leadform--thanks">
+      <div className="leadform leadform--thanks" role="status" aria-live="polite">
         <h3 className="leadform-thanksTitle">Заявка отправлена ✅</h3>
         <p className="leadform-thanksText">
-          Спасибо! Мы свяжемся с вами по указанному номеру. Обычно отвечаем в
-          течение <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
-        </p>
-        <p className="leadform-thanksHint">
-          Хотите быстрее? Позвоните:&nbsp;
-          <a href="tel:+79999999999">+7&nbsp;999&nbsp;999-99-99</a>
+          Спасибо! Мы свяжемся с вами по указанному номеру.
+          Обычно отвечаем в течение <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
         </p>
         <button
-          className="btn btn-primary"
+          className="lf-btn lf-btn--primary"
+          type="button"
           onClick={() => {
             setDone(false);
             setServerError(null);
@@ -135,7 +150,6 @@ export default function LeadForm({
 
   return (
     <form className="leadform" onSubmit={handleSubmit(onSubmit)} noValidate>
-      {/* Honeypot */}
       <input
         type="text"
         tabIndex={-1}
@@ -148,9 +162,7 @@ export default function LeadForm({
 
       {/* Имя */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-name">
-          Имя
-        </label>
+        <label className="leadform-label" htmlFor="lf-name">Имя</label>
         <input
           id="lf-name"
           className="leadform-input"
@@ -164,9 +176,7 @@ export default function LeadForm({
 
       {/* Телефон */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-phone">
-          Телефон
-        </label>
+        <label className="leadform-label" htmlFor="lf-phone">Телефон</label>
         <input
           id="lf-phone"
           className="leadform-input"
@@ -179,11 +189,9 @@ export default function LeadForm({
         {errors.phone && <span className="leadform-error">{errors.phone.message}</span>}
       </div>
 
-      {/* Сумма долга */}
+      {/* Долг */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-debt">
-          Сумма долга (≈)
-        </label>
+        <label className="leadform-label" htmlFor="lf-debt">Сумма долга (≈)</label>
         <input
           id="lf-debt"
           className="leadform-input"
@@ -206,19 +214,13 @@ export default function LeadForm({
       </label>
       {errors.agree && <span className="leadform-error">{errors.agree.message}</span>}
 
-      {/* Ошибка сервера */}
       {serverError && (
-        <div className="leadform-error" style={{ marginTop: 10 }}>
+        <div className="leadform-error" style={{ marginTop: 10 }} role="alert">
           {serverError}
         </div>
       )}
 
-      <button
-        className="btn btn-primary leadform-submit"
-        type="submit"
-        disabled={isSubmitting}
-        aria-disabled={isSubmitting}
-      >
+      <button className="btn btn-primary leadform-submit" type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Отправляем..." : "Получить консультацию"}
       </button>
     </form>

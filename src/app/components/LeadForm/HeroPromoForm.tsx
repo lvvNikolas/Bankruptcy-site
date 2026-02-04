@@ -9,24 +9,59 @@ import "@styles/LeadForm.css";
 /* ======= Схема валидации ======= */
 const schema = z.object({
   name: z.string().trim().min(2, "Введите имя"),
-  phone: z
-    .string()
-    .trim()
-    .regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
+  phone: z.string().trim().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
   debt: z.string().trim().optional(),
   agree: z.boolean().refine((v) => v === true, { message: "Обязательное согласие" }),
 });
+
 type FormData = z.infer<typeof schema>;
 
 type Props = {
   /** метка, откуда отправлена форма */
   context?: string;
+  /** уникальный id формы (hero_form, footer_lead, contacts_modal, cases_cta и т.п.) */
+  formId?: string;
   /** колбэк при успехе */
   onSuccess?: () => void;
 };
 
-export default function LeadForm({ context = "landing", onSuccess }: Props) {
+function getErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  return "Ошибка отправки. Попробуйте ещё раз.";
+}
+
+function getApiErrorMessage(json: unknown): string | null {
+  if (json && typeof json === "object" && "error" in json) {
+    const maybeError = (json as Record<string, unknown>).error;
+    if (typeof maybeError === "string" && maybeError.trim()) return maybeError;
+  }
+  return null;
+}
+
+function normalizePhone(raw: string): string {
+  if (!raw) return raw;
+
+  const digits = raw.replace(/\D/g, "");
+  // итог всегда: +7 + 10 цифр (не больше)
+  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
+  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
+
+  // если пользователь набрал +7..., оставляем +7 + 10 цифр
+  if (raw.startsWith("+7")) return "+7" + digits.slice(1, 11);
+
+  // иначе просто берем первые 10 цифр после +7
+  return "+7" + digits.slice(0, 10);
+}
+
+export default function LeadForm({
+  context = "landing",
+  formId = "lead_default",
+  onSuccess,
+}: Props) {
   const [done, setDone] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const honeypotValue = useRef("");
   const mountedAt = useMemo(() => Date.now(), []);
 
@@ -45,29 +80,18 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
 
   const phone = watch("phone");
 
-  // Автоформат телефона под +7XXXXXXXXXX, без сторонних либ
+  // Автоформат телефона под +7XXXXXXXXXX
   useEffect(() => {
     if (!phone) return;
-    // оставляем только цифры
-    const digits = phone.replace(/\D/g, "");
-    // приводим к +7 + 10 цифр
-    let normalized = "+7";
-    if (digits.startsWith("7")) {
-      normalized = "+7" + digits.slice(1, 11);
-    } else if (digits.startsWith("8")) {
-      normalized = "+7" + digits.slice(1, 11);
-    } else {
-      // если пользователь вручную набрал +7..., оставляем до 12 символов
-      if (phone.startsWith("+7")) {
-        normalized = "+7" + digits.slice(1, 11);
-      } else {
-        normalized = "+7" + digits.slice(0, 10);
-      }
+    const normalized = normalizePhone(phone);
+    if (normalized !== phone) {
+      setValue("phone", normalized, { shouldValidate: false });
     }
-    if (normalized !== phone) setValue("phone", normalized, { shouldValidate: false });
   }, [phone, setValue]);
 
   const onSubmit = async (data: FormData) => {
+    setServerError(null);
+
     // антибот
     if (honeypotValue.current) {
       reset();
@@ -76,19 +100,36 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
       return;
     }
 
-    try {
-      // имитация запроса
-      await new Promise((r) => setTimeout(r, 700));
+    const page = typeof window !== "undefined" ? window.location.href : "";
+    const timeOnPageMs = Date.now() - mountedAt;
 
-      // можно отправить на бек вместе с context / таймингом
-      // await fetch("/api/lead", { method: "POST", body: JSON.stringify({ ...data, context, t: Date.now() - mountedAt }) });
+    try {
+      const res = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          context,
+          formId,
+          page,
+          ts: Date.now(),
+          timeOnPageMs,
+        }),
+      });
+
+      const json: unknown = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const apiMsg = getApiErrorMessage(json);
+        throw new Error(apiMsg || "Ошибка отправки. Попробуйте ещё раз.");
+      }
 
       reset();
       setDone(true);
       onSuccess?.();
-    } catch (err) {
+    } catch (err: unknown) {
       console.error("Ошибка отправки формы:", err);
-      setDone(true);
+      setServerError(getErrorMessage(err));
     }
   };
 
@@ -107,16 +148,28 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
             />
           </svg>
         </div>
+
         <h3 className="leadform-thanksTitle">Заявка отправлена</h3>
+
         <p className="leadform-thanksText">
           Спасибо! Мы свяжемся с вами по указанному номеру. Обычно отвечаем в течение{" "}
           <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
         </p>
+
         <p className="leadform-thanksHint">
           Хотите быстрее? Позвоните:&nbsp;
           <a href="tel:+79999999999">+7&nbsp;999&nbsp;999-99-99</a>
         </p>
-        <button className="lf-btn lf-btn--primary" onClick={() => setDone(false)} style={{ marginTop: 12 }}>
+
+        <button
+          className="lf-btn lf-btn--primary"
+          type="button"
+          onClick={() => {
+            setDone(false);
+            setServerError(null);
+          }}
+          style={{ marginTop: 12 }}
+        >
           Новая заявка
         </button>
       </div>
@@ -143,6 +196,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
           <label className="leadform-label" htmlFor="lf-name">
             Имя
           </label>
+
           <div className={`lf-field ${errors.name ? "has-error" : ""}`}>
             <span className="lf-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -152,6 +206,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
                 />
               </svg>
             </span>
+
             <input
               id="lf-name"
               className="leadform-input"
@@ -161,6 +216,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
               aria-invalid={!!errors.name || undefined}
             />
           </div>
+
           {errors.name && (
             <span className="leadform-error" role="alert">
               {errors.name.message}
@@ -173,6 +229,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
           <label className="leadform-label" htmlFor="lf-phone">
             Телефон
           </label>
+
           <div className={`lf-field ${errors.phone ? "has-error" : ""}`}>
             <span className="lf-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -182,6 +239,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
                 />
               </svg>
             </span>
+
             <input
               id="lf-phone"
               className="leadform-input"
@@ -192,6 +250,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
               aria-invalid={!!errors.phone || undefined}
             />
           </div>
+
           {errors.phone && (
             <span className="leadform-error" role="alert">
               {errors.phone.message}
@@ -204,6 +263,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
           <label className="leadform-label" htmlFor="lf-debt">
             Сумма долга (≈)
           </label>
+
           <div className="lf-field">
             <span className="lf-ico" aria-hidden="true">
               <svg viewBox="0 0 24 24">
@@ -213,6 +273,7 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
                 />
               </svg>
             </span>
+
             <input
               id="lf-debt"
               className="leadform-input"
@@ -235,10 +296,18 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
           </a>
         </span>
       </label>
+
       {errors.agree && (
         <span className="leadform-error" role="alert">
           {errors.agree.message}
         </span>
+      )}
+
+      {/* Ошибка сервера */}
+      {serverError && (
+        <div className="leadform-error" style={{ marginTop: 10 }} role="alert">
+          {serverError}
+        </div>
       )}
 
       <button
@@ -255,20 +324,13 @@ export default function LeadForm({ context = "landing", onSuccess }: Props) {
           <>
             <span className="lf-btnIco" aria-hidden="true">
               <svg viewBox="0 0 24 24">
-                <path
-                  d="M2 21 23 12 2 3l4 7 9 2-9 2-4 7Z"
-                  fill="currentColor"
-                />
+                <path d="M2 21 23 12 2 3l4 7 9 2-9 2-4 7Z" fill="currentColor" />
               </svg>
             </span>
             Получить консультацию
           </>
         )}
       </button>
-
-      {/* служебно: время на странице */}
-      <input type="hidden" name="ctx" value={context} />
-      <input type="hidden" name="t" value={String(Date.now() - mountedAt)} />
     </form>
   );
 }

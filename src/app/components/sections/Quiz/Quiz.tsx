@@ -6,7 +6,12 @@ import LeadForm from "@components/LeadForm/LeadForm";
 import "@styles/Quiz.css";
 
 type Option = { id: string; label: string };
-type Question = { id: string; title: string; options: Option[]; multiple?: boolean };
+type Question = {
+  id: string;
+  title: string;
+  options: Option[];
+  multiple?: boolean;
+};
 type AnswerValue = string | string[];
 type Answers = Record<string, AnswerValue>;
 
@@ -77,13 +82,24 @@ const LS = {
   completed: "quiz.completed",
 } as const;
 
+function safeJsonParse<T>(v: string | null, fallback: T): T {
+  if (!v) return fallback;
+  try {
+    return JSON.parse(v) as T;
+  } catch {
+    return fallback;
+  }
+}
+
 export default function Quiz() {
   const total = QUESTIONS.length;
+
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
   const [showVerdict, setShowVerdict] = useState(false);
+
   const q = QUESTIONS[step];
   const formRef = useRef<HTMLDivElement | null>(null);
 
@@ -96,17 +112,19 @@ export default function Quiz() {
 
   const canProceed = completed ? true : isAnswered(q);
 
-  const progress = useMemo(
-    () => Math.round(((completed ? total : step + 1) / total) * 100),
-    [step, total, completed]
-  );
+  const progress = useMemo(() => {
+    const n = completed ? total : step + 1;
+    return Math.round((n / total) * 100);
+  }, [step, total, completed]);
 
+  // Восстановление прогресса
   useEffect(() => {
     try {
       const s = Number(localStorage.getItem(LS.step) ?? "0");
-      const a = JSON.parse(localStorage.getItem(LS.answers) ?? "{}") as Answers;
+      const a = safeJsonParse<Answers>(localStorage.getItem(LS.answers), {});
       const c = localStorage.getItem(LS.completed) === "1";
-      if (s >= 0 && s < total) setStep(s);
+
+      if (Number.isFinite(s) && s >= 0 && s < total) setStep(s);
       if (a && typeof a === "object") setAnswers(a);
       if (c) setCompleted(true);
     } catch {
@@ -114,6 +132,7 @@ export default function Quiz() {
     }
   }, [total]);
 
+  // Сохранение прогресса
   useEffect(() => {
     try {
       localStorage.setItem(LS.step, String(step));
@@ -131,10 +150,8 @@ export default function Quiz() {
 
   const toggleMulti = (qid: string, id: string) => {
     setAnswers((p) => {
-      const arr = Array.isArray(p[qid]) ? (p[qid] as string[]) : [];
-      const next = arr.includes(id)
-        ? arr.filter((x) => x !== id)
-        : [...arr, id];
+      const prev = Array.isArray(p[qid]) ? (p[qid] as string[]) : [];
+      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
       return { ...p, [qid]: next };
     });
     if (error) setError("");
@@ -162,18 +179,24 @@ export default function Quiz() {
     setError("");
     setCompleted(false);
     setShowVerdict(false);
+
     try {
-      localStorage.clear();
+      localStorage.removeItem(LS.step);
+      localStorage.removeItem(LS.answers);
+      localStorage.removeItem(LS.completed);
     } catch {
       /* ignore */
     }
   };
 
+  // Человеческое резюме (как на экране)
   const summary = useMemo(() => {
     const res: Array<[string, string]> = [];
+
     for (const question of QUESTIONS) {
       const v = answers[question.id];
       if (v === undefined) continue;
+
       if (question.multiple) {
         const labels = (v as string[])
           .map((id) => question.options.find((o) => o.id === id)?.label)
@@ -184,6 +207,7 @@ export default function Quiz() {
         if (label) res.push([question.title, label]);
       }
     }
+
     return res;
   }, [answers]);
 
@@ -219,9 +243,10 @@ export default function Quiz() {
                   <div className="quiz__personRole">Юрист по банкротству</div>
                 </div>
               </div>
+
               <p className="quiz__note">
-                Осталось {Math.max(total - (step + 1), 0)} вопрос(а).
-                Отвечайте честно — это поможет точнее оценить ситуацию.
+                Осталось {Math.max(total - (step + 1), 0)} вопрос(а). Отвечайте честно — это
+                поможет точнее оценить ситуацию.
               </p>
             </aside>
 
@@ -233,11 +258,7 @@ export default function Quiz() {
                     <span className="quiz__qNum">{step + 1}.</span> {q.title}
                   </h3>
 
-                  {q.multiple && (
-                    <div className="quiz__hint">
-                      Можно выбрать несколько вариантов
-                    </div>
-                  )}
+                  {q.multiple && <div className="quiz__hint">Можно выбрать несколько вариантов</div>}
 
                   <div className="quiz__options">
                     {q.options.map((opt) => {
@@ -249,9 +270,7 @@ export default function Quiz() {
                       return (
                         <label
                           key={opt.id}
-                          className={`quiz__card ${
-                            checked ? "is-checked" : ""
-                          }`}
+                          className={`quiz__card ${checked ? "is-checked" : ""}`}
                         >
                           <input
                             type={q.multiple ? "checkbox" : "radio"}
@@ -259,16 +278,10 @@ export default function Quiz() {
                             value={opt.id}
                             checked={checked}
                             onChange={() =>
-                              q.multiple
-                                ? toggleMulti(q.id, opt.id)
-                                : chooseSingle(q.id, opt.id)
+                              q.multiple ? toggleMulti(q.id, opt.id) : chooseSingle(q.id, opt.id)
                             }
                           />
-                          <span
-                            className={
-                              q.multiple ? "quiz__boxMark" : "quiz__circle"
-                            }
-                          />
+                          <span className={q.multiple ? "quiz__boxMark" : "quiz__circle"} />
                           <span className="quiz__label">{opt.label}</span>
                         </label>
                       );
@@ -278,21 +291,12 @@ export default function Quiz() {
                   {error && <div className="quiz__error">{error}</div>}
 
                   <div className="quiz__actions">
-                    <button
-                      className="quiz-btn ghost"
-                      onClick={onBack}
-                      disabled={step === 0}
-                    >
+                    <button className="quiz-btn ghost" onClick={onBack} disabled={step === 0}>
                       Назад
                     </button>
-                    <button
-                      className="quiz-btn primary"
-                      onClick={onNext}
-                      disabled={!canProceed}
-                    >
-                      {step < total - 1
-                        ? "Далее →"
-                        : "Получить результат"}
+
+                    <button className="quiz-btn primary" onClick={onNext} disabled={!canProceed}>
+                      {step < total - 1 ? "Далее →" : "Получить результат"}
                     </button>
                   </div>
                 </>
@@ -316,7 +320,15 @@ export default function Quiz() {
                     </ul>
                   )}
 
-                  <LeadForm context="quiz" />
+                  {/* ✅ Форма + трекинг источника + ответы квиза */}
+                  <LeadForm
+                    context="quiz"
+                    formId="quiz_form"
+                    extraData={{
+                      quizAnswers: answers,
+                      quizSummary: summary,
+                    }}
+                  />
                 </div>
               )}
             </div>
@@ -328,37 +340,28 @@ export default function Quiz() {
       {showVerdict && (
         <div
           className="quiz__overlay"
-          onClick={(e) =>
-            e.target === e.currentTarget && setShowVerdict(false)
-          }
+          onClick={(e) => e.target === e.currentTarget && setShowVerdict(false)}
         >
           <div className="quiz__modal">
             <div className="quiz__modalHeader">
               <h4>🎉 Вы подходите под процедуру банкротства</h4>
-              <button
-                className="quiz__close"
-                onClick={() => setShowVerdict(false)}
-              >
+              <button className="quiz__close" onClick={() => setShowVerdict(false)}>
                 ×
               </button>
             </div>
+
             <p>
-              Юрист свяжется, уточнит детали и расскажет, как именно она
-              пройдёт в вашем случае.
+              Юрист свяжется, уточнит детали и расскажет, как именно она пройдёт в вашем случае.
             </p>
+
             <ul>
               <li>Оценим сроки и стоимость под вашу ситуацию;</li>
               <li>Подскажем, какие документы понадобятся;</li>
               <li>Ответим на все вопросы.</li>
             </ul>
-            <div
-              className="quiz__actions"
-              style={{ justifyContent: "center" }}
-            >
-              <button
-                className="quiz-btn ghost"
-                onClick={() => setShowVerdict(false)}
-              >
+
+            <div className="quiz__actions" style={{ justifyContent: "center" }}>
+              <button className="quiz-btn ghost" onClick={() => setShowVerdict(false)}>
                 Вернуться к ответам
               </button>
               <button className="quiz-btn primary" onClick={toForm}>

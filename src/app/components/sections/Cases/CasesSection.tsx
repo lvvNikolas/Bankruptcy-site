@@ -23,16 +23,16 @@ export default function CasesSection() {
 
   const [showForm, setShowForm] = useState(false);
 
-  const openLightbox = (items: LightboxItem[], index = 0) => {
+  const openLightbox = useCallback((items: LightboxItem[], index = 0) => {
     if (!items.length) return;
     setLightbox({ open: true, items, index });
-  };
+  }, []);
 
-  const closeLightbox = () => {
+  const closeLightbox = useCallback(() => {
     setLightbox((s) => ({ ...s, open: false }));
-  };
+  }, []);
 
-  const prev = () => {
+  const prev = useCallback(() => {
     setLightbox((s) => {
       if (!s.items.length) return s;
       return {
@@ -40,9 +40,9 @@ export default function CasesSection() {
         index: (s.index - 1 + s.items.length) % s.items.length,
       };
     });
-  };
+  }, []);
 
-  const next = () => {
+  const next = useCallback(() => {
     setLightbox((s) => {
       if (!s.items.length) return s;
       return {
@@ -50,18 +50,22 @@ export default function CasesSection() {
         index: (s.index + 1) % s.items.length,
       };
     });
-  };
+  }, []);
+
+  const onOpenForm = useCallback(() => setShowForm(true), []);
+  const onCloseForm = useCallback(() => setShowForm(false), []);
 
   // Esc — закрыть лайтбокс и форму
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
+    const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       if (lightbox.open) closeLightbox();
-      if (showForm) setShowForm(false);
+      if (showForm) onCloseForm();
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [lightbox.open, showForm]);
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [lightbox.open, showForm, closeLightbox, onCloseForm]);
 
   // Лочим скролл, когда открыта форма
   useEffect(() => {
@@ -72,9 +76,6 @@ export default function CasesSection() {
       document.body.style.overflow = prevOverflow;
     };
   }, [showForm]);
-
-  const onOpenForm = useCallback(() => setShowForm(true), []);
-  const onCloseForm = useCallback(() => setShowForm(false), []);
 
   return (
     <section id="cases" className="cases">
@@ -94,8 +95,7 @@ export default function CasesSection() {
         <div className="cases__grid">
           {CASES.map((c) => {
             const mainDoc = c.docs[0];
-            const isPdf =
-              mainDoc?.src.toLowerCase().endsWith(".pdf") ?? false;
+            const isPdf = mainDoc?.src.toLowerCase().endsWith(".pdf") ?? false;
 
             return (
               <article key={c.id} className="case">
@@ -140,6 +140,7 @@ export default function CasesSection() {
                       type="button"
                       className="case__docMain"
                       onClick={() => openLightbox(c.docs, 0)}
+                      aria-label={isPdf ? "Открыть PDF документ" : "Открыть изображение документа"}
                     >
                       {isPdf ? (
                         <div className="case__docPdf">
@@ -161,9 +162,7 @@ export default function CasesSection() {
                         <>
                           <Image
                             src={mainDoc.src}
-                            alt={
-                              mainDoc.alt ?? "Скан судебного определения"
-                            }
+                            alt={mainDoc.alt ?? "Скан судебного определения"}
                             width={920}
                             height={1300}
                             className="case__docMainImg"
@@ -183,18 +182,14 @@ export default function CasesSection() {
           })}
         </div>
 
-        {/* CTA — единый стиль кнопки с проектом */}
+        {/* CTA */}
         <div className="cases__cta">
           <button
             type="button"
             className="btn btn-primary cases__ctaBtn"
             onClick={onOpenForm}
           >
-            <svg
-              className="cases__ctaIcon"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
+            <svg className="cases__ctaIcon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V21a1 1 0 0 1-1 1C10.07 22 2 13.93 2 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2Z" />
             </svg>
             Быстрая консультация по&nbsp;вашему делу
@@ -214,6 +209,7 @@ export default function CasesSection() {
           }}
         >
           <button
+            type="button"
             className="lb__nav lb__nav--prev"
             aria-label="Предыдущий документ"
             onClick={prev}
@@ -224,8 +220,9 @@ export default function CasesSection() {
           <figure className="lb__figure">
             {(() => {
               const current = lightbox.items[lightbox.index];
-              const isPdf = current.src.toLowerCase().endsWith(".pdf");
-              if (isPdf) {
+              const currentIsPdf = current.src.toLowerCase().endsWith(".pdf");
+
+              if (currentIsPdf) {
                 return (
                   <iframe
                     src={current.src}
@@ -234,6 +231,7 @@ export default function CasesSection() {
                   />
                 );
               }
+
               return (
                 <Image
                   src={current.src}
@@ -247,6 +245,7 @@ export default function CasesSection() {
           </figure>
 
           <button
+            type="button"
             className="lb__nav lb__nav--next"
             aria-label="Следующий документ"
             onClick={next}
@@ -255,6 +254,7 @@ export default function CasesSection() {
           </button>
 
           <button
+            type="button"
             className="lb__close"
             aria-label="Закрыть просмотр"
             onClick={closeLightbox}
@@ -281,6 +281,7 @@ export default function CasesSection() {
                 Оставьте контакты — юрист свяжется в течение 15 минут
               </h3>
               <button
+                type="button"
                 className="casesForm__close"
                 aria-label="Закрыть форму"
                 onClick={onCloseForm}
@@ -289,7 +290,11 @@ export default function CasesSection() {
               </button>
             </div>
 
-            <LeadForm context="cases" onSuccess={onCloseForm} />
+            <LeadForm
+              formId="cases_cta"
+              context="cases"
+              onSuccess={onCloseForm}
+            />
           </div>
         </div>
       )}
