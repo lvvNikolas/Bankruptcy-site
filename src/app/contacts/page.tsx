@@ -1,11 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "@styles/ContactsPage.css";
 import LeadForm from "@/app/components/LeadForm/LeadForm";
 
 export default function ContactsPage() {
   const [isOpen, setIsOpen] = useState(false);
+
+  // Закрытие модалки по Esc
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
 
   return (
     <main className="contacts">
@@ -34,8 +46,8 @@ export default function ContactsPage() {
               Бесплатная консультация по телефону
             </p>
 
-            <a className="contactsCard__value" href="tel:+79324990000">
-              +7&nbsp;(932)&nbsp;499-00-00
+            <a className="contactsCard__value" href="tel:+79162979645">
+              +7&nbsp;(916)&nbsp;297-96-45
             </a>
 
             {/* КНОПКА — открывает форму */}
@@ -54,8 +66,11 @@ export default function ContactsPage() {
             <h2 className="contactsCard__title">Напишите на почту</h2>
             <p className="contactsCard__note">Отвечаем в течение рабочего дня</p>
 
-            <a className="contactsCard__value" href="mailto:info@donulya.ru">
-              info@donulya.ru
+            <a
+              className="contactsCard__value"
+              href="mailto:bankruptcyagencysolution@yandex.com"
+            >
+              bankruptcyagencysolution@yandex.com
             </a>
           </article>
 
@@ -66,7 +81,7 @@ export default function ContactsPage() {
             <p className="contactsCard__note">Личные консультации по записи</p>
 
             <div className="contactsCard__value">
-              Державинский переулок, 5, 4&nbsp;этаж, офис&nbsp;401
+              г. Москва, Пресненская набережная, д. 12
             </div>
           </article>
         </section>
@@ -75,16 +90,28 @@ export default function ContactsPage() {
       {/* === МОДАЛЬНОЕ ОКНО LeadForm === */}
       {isOpen && (
         <div className="contactsModal" role="dialog" aria-modal="true">
-          <div className="contactsModal__backdrop" onClick={() => setIsOpen(false)} />
+          <button
+            type="button"
+            className="contactsModal__backdrop"
+            onClick={() => setIsOpen(false)}
+            aria-label="Закрыть"
+          />
+
           <div className="contactsModal__window">
             <button
+              type="button"
               className="contactsModal__close"
               onClick={() => setIsOpen(false)}
               aria-label="Закрыть форму"
             >
               ×
             </button>
-            <LeadForm />
+
+            <LeadForm
+              formId="contacts_modal"
+              context="contacts_page"
+              onSuccess={() => setIsOpen(false)}
+            />
           </div>
         </div>
       )}

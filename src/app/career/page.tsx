@@ -113,7 +113,7 @@ export default function CareerPage() {
 
           <div className="career-note">
             Не нашли подходящую вакансию? Напишите нам на&nbsp;
-            <a href="mailto:hr@orlovskyandco.ru">hr@orlovskyandco.ru</a> — мы
+            <a href="mailto:hr@orlovskyandco.ru">bankruptcyagencysolution@yandex.com</a> — мы
             свяжемся, когда появится подходящая позиция.
           </div>
         </div>
