@@ -196,7 +196,7 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
             summary.length
               ? `<div style="background:#ffffff;border:1px solid #edf0f5;border-radius:16px;overflow:hidden;">
                   <div style="padding:12px 14px;background:#f8fafc;border-bottom:1px solid #edf0f5;font-weight:700;color:#111827;">
-                    Ответы 
+                    Ответы
                   </div>
                   <table style="width:100%;border-collapse:collapse;">
                     <tbody>
@@ -232,9 +232,7 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
       
       <div style="background:#111827;color:#fff;border-radius:18px;padding:18px 18px;display:flex;align-items:center;justify-content:space-between;">
         <div>
-          <div style="font-size:12px;opacity:.85;margin-bottom:6px;">${escapeHtml(
-            ctx.title
-          )}</div>
+          <div style="font-size:12px;opacity:.85;margin-bottom:6px;">${escapeHtml(ctx.title)}</div>
           <div style="font-size:18px;font-weight:800;line-height:1.2;">${name} • ${phone}</div>
         </div>
         <div style="background:#f59e0b;color:#111827;font-weight:900;font-size:12px;padding:8px 10px;border-radius:999px;">
@@ -297,7 +295,7 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
 }
 
 /* ===== CORS / methods ===== */
-const corsHeaders = {
+const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST,OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type",
@@ -340,22 +338,25 @@ export async function POST(req: Request) {
     const data = schema.parse(body);
 
     if (!data.agree) {
-      return NextResponse.json({ error: "Нет согласия" }, { status: 400, headers: corsHeaders });
+      return NextResponse.json(
+        { error: "Нет согласия" },
+        { status: 400, headers: corsHeaders }
+      );
     }
 
-    // ✅ ВАЖНО: 587 = STARTTLS => secure: false
+    // 587 = STARTTLS => secure: false, requireTLS: true
     const transporter = nodemailer.createTransport({
-      host: SMTP_HOST!,
+      host: SMTP_HOST,
       port: SMTP_PORT,
-      secure: SMTP_PORT === 465, // 465 = SSL, 587 = STARTTLS
-      auth: { user: SMTP_USER!, pass: SMTP_PASS! },
-      requireTLS: SMTP_PORT === 587,
+      secure: SMTP_PORT === 465,
+      auth: { user: SMTP_USER, pass: SMTP_PASS },
+      ...(SMTP_PORT === 587 ? { requireTLS: true } : {}),
       connectionTimeout: 15_000,
       greetingTimeout: 15_000,
       socketTimeout: 20_000,
     });
 
-    // Быстрая проверка соединения (очень помогает в Vercel Logs)
+    // Очень полезно для диагностики в Vercel logs
     await transporter.verify();
 
     const meta = contextMeta(data.context);
@@ -382,7 +383,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Важно: это будет видно в Vercel logs
     if (e instanceof Error) {
       console.error("MAIL ERROR:", e.message);
       console.error("MAIL ERROR FULL:", e);
