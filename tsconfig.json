@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
@@ -11,31 +15,54 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
-
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@app/*": ["src/app/*"],
-      "@components/*": ["src/app/components/*"],
-      "@sections/*": ["src/app/components/sections/*"],
-      "@widgets/*": ["src/app/components/widgets/*"],
-      "@styles/*": ["src/styles/*"],
-      "@data/*": ["src/app/data/*"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@components/*": [
+        "src/app/components/*"
+      ],
+      "@sections/*": [
+        "src/app/components/sections/*"
+      ],
+      "@widgets/*": [
+        "src/app/components/widgets/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@data/*": [
+        "src/app/data/*"
+      ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ]
     },
-
-    "plugins": [{ "name": "next" }]
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
