@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import "@styles/Navbar.css";
 
 /** Ссылки меню (без "Услуги") */
@@ -34,7 +35,13 @@ export default function Navbar() {
       <div className="nav__inner">
         {/* Логотип слева */}
         <Link href="/" className="nav__logo" aria-label="На главную">
-          <span />
+          <Image
+            src="/media/logo.png"
+            alt="Логотип"
+            width={42}
+            height={42}
+            priority
+          />
         </Link>
 
         {/* Десктоп-меню по центру */}
