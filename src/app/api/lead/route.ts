@@ -59,8 +59,7 @@ function contextMeta(ctx?: string): { title: string; badge: string } {
   const c = (ctx || "").toLowerCase();
   if (c === "quiz") return { title: "Заявка с квиза", badge: "QUIZ" };
   if (c === "cases") return { title: "Заявка из кейсов", badge: "CASES" };
-  if (c === "contacts")
-    return { title: "Заявка со страницы контактов", badge: "CONTACTS" };
+  if (c === "contacts") return { title: "Заявка со страницы контактов", badge: "CONTACTS" };
   if (c === "hero") return { title: "Заявка из первого экрана", badge: "HERO" };
   return { title: "Заявка с сайта", badge: "SITE" };
 }
@@ -72,9 +71,7 @@ function pickQuiz(extraData?: ExtraData | null): {
 } {
   const extra: ExtraData = extraData ?? {};
 
-  const rawSummary = Array.isArray(extra.quizSummary)
-    ? (extra.quizSummary as unknown[])
-    : [];
+  const rawSummary = Array.isArray(extra.quizSummary) ? (extra.quizSummary as unknown[]) : [];
   const summary: QuizRow[] = [];
 
   for (const row of rawSummary) {
@@ -91,6 +88,7 @@ function pickQuiz(extraData?: ExtraData | null): {
       : {};
 
   const { quizSummary: _qs, quizAnswers: _qa, ...other } = extra;
+
   return { summary, answers, other };
 }
 
@@ -99,7 +97,7 @@ function buildTextMail(data: z.infer<typeof schema>): string {
   const debt = fmtMoneyLike(data.debt);
   const timeOnPage = fmtMs(data.timeOnPageMs);
 
-  const { summary, answers } = pickQuiz((data.extraData as ExtraData) ?? null);
+  const { summary, answers } = pickQuiz(data.extraData ?? null);
 
   const lines: string[] = [];
   lines.push("Новая заявка");
@@ -124,11 +122,7 @@ function buildTextMail(data: z.infer<typeof schema>): string {
     lines.push("Квиз — raw answers (id)");
     lines.push("--------------------------------");
     for (const [k, v] of Object.entries(answers)) {
-      lines.push(
-        `• ${k}: ${
-          Array.isArray(v) ? v.map(safeString).join(", ") : safeString(v)
-        }`
-      );
+      lines.push(`• ${k}: ${Array.isArray(v) ? v.map(safeString).join(", ") : safeString(v)}`);
     }
   }
 
@@ -146,7 +140,7 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
   const context = escapeHtml(data.context || "—");
   const formId = escapeHtml(data.formId || "—");
 
-  const { summary, answers, other } = pickQuiz((data.extraData as ExtraData) ?? null);
+  const { summary, answers, other } = pickQuiz(data.extraData ?? null);
 
   const summaryRows = summary
     .map(
@@ -196,7 +190,7 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
             summary.length
               ? `<div style="background:#ffffff;border:1px solid #edf0f5;border-radius:16px;overflow:hidden;">
                   <div style="padding:12px 14px;background:#f8fafc;border-bottom:1px solid #edf0f5;font-weight:700;color:#111827;">
-                    Ответы
+                    Ответы 
                   </div>
                   <table style="width:100%;border-collapse:collapse;">
                     <tbody>
@@ -294,43 +288,40 @@ function buildHtmlMail(data: z.infer<typeof schema>): string {
   `;
 }
 
-/* ===== CORS / methods ===== */
-const corsHeaders: Record<string, string> = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "POST,OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+/* ===== ENV ===== */
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = Number(process.env.SMTP_PORT || "465");
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+const MAIL_TO = process.env.MAIL_TO;
 
-export async function OPTIONS() {
-  return new NextResponse(null, { status: 204, headers: corsHeaders });
+function missingEnv(): string[] {
+  const miss: string[] = [];
+  if (!SMTP_HOST) miss.push("SMTP_HOST");
+  if (!SMTP_USER) miss.push("SMTP_USER");
+  if (!SMTP_PASS) miss.push("SMTP_PASS");
+  if (!MAIL_TO) miss.push("MAIL_TO");
+  return miss;
 }
 
-export async function GET() {
-  return NextResponse.json(
-    { error: "Method Not Allowed. Use POST." },
-    { status: 405, headers: { ...corsHeaders, Allow: "POST, OPTIONS" } }
-  );
-}
+/* ===== SMTP ===== */
+const transporter =
+  SMTP_HOST && SMTP_USER && SMTP_PASS
+    ? nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_PORT === 465,
+        auth: { user: SMTP_USER, pass: SMTP_PASS },
+      })
+    : null;
 
-/* ===== main ===== */
 export async function POST(req: Request) {
   try {
-    const SMTP_HOST = process.env.SMTP_HOST;
-    const SMTP_PORT = Number(process.env.SMTP_PORT || "587");
-    const SMTP_USER = process.env.SMTP_USER;
-    const SMTP_PASS = process.env.SMTP_PASS;
-    const MAIL_TO = process.env.MAIL_TO;
-
-    const miss: string[] = [];
-    if (!SMTP_HOST) miss.push("SMTP_HOST");
-    if (!SMTP_USER) miss.push("SMTP_USER");
-    if (!SMTP_PASS) miss.push("SMTP_PASS");
-    if (!MAIL_TO) miss.push("MAIL_TO");
-
+    const miss = missingEnv();
     if (miss.length) {
       return NextResponse.json(
         { error: `Не заданы переменные окружения: ${miss.join(", ")}` },
-        { status: 500, headers: corsHeaders }
+        { status: 500 }
       );
     }
 
@@ -338,26 +329,12 @@ export async function POST(req: Request) {
     const data = schema.parse(body);
 
     if (!data.agree) {
-      return NextResponse.json(
-        { error: "Нет согласия" },
-        { status: 400, headers: corsHeaders }
-      );
+      return NextResponse.json({ error: "Нет согласия" }, { status: 400 });
     }
 
-    // 587 = STARTTLS => secure: false, requireTLS: true
-    const transporter = nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_PORT === 465,
-      auth: { user: SMTP_USER, pass: SMTP_PASS },
-      ...(SMTP_PORT === 587 ? { requireTLS: true } : {}),
-      connectionTimeout: 15_000,
-      greetingTimeout: 15_000,
-      socketTimeout: 20_000,
-    });
-
-    // Очень полезно для диагностики в Vercel logs
-    await transporter.verify();
+    if (!transporter) {
+      return NextResponse.json({ error: "SMTP не инициализирован" }, { status: 500 });
+    }
 
     const meta = contextMeta(data.context);
     const subject = `${meta.title}: ${data.name} ${data.phone}`;
@@ -369,33 +346,23 @@ export async function POST(req: Request) {
       from: `"Заявки с сайта" <${SMTP_USER}>`,
       to: MAIL_TO,
       subject,
-      text,
-      html,
-      replyTo: SMTP_USER,
+      text, // fallback
+      html, // красивое оформление
     });
 
-    return NextResponse.json({ ok: true }, { status: 200, headers: corsHeaders });
+    return NextResponse.json({ ok: true });
   } catch (e: unknown) {
     if (e instanceof ZodError) {
-      return NextResponse.json(
-        { error: "Некорректные данные формы" },
-        { status: 400, headers: corsHeaders }
-      );
+      return NextResponse.json({ error: "Некорректные данные формы" }, { status: 400 });
     }
 
     if (e instanceof Error) {
       console.error("MAIL ERROR:", e.message);
       console.error("MAIL ERROR FULL:", e);
-      return NextResponse.json(
-        { error: `Ошибка отправки письма: ${e.message}` },
-        { status: 500, headers: corsHeaders }
-      );
+    } else {
+      console.error("MAIL ERROR:", e);
     }
 
-    console.error("MAIL ERROR:", e);
-    return NextResponse.json(
-      { error: "Ошибка отправки письма" },
-      { status: 500, headers: corsHeaders }
-    );
+    return NextResponse.json({ error: "Ошибка отправки письма" }, { status: 500 });
   }
 }

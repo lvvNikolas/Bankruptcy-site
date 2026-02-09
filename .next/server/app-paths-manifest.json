@@ -1,3 +1,13 @@
 {
-  "/page": "app/page.js"
+  "/_global-error/page": "app/_global-error/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/lead/route": "app/api/lead/route.js",
+  "/career/page": "app/career/page.js",
+  "/cases/page": "app/cases/page.js",
+  "/contacts/page": "app/contacts/page.js",
+  "/faq/page": "app/faq/page.js",
+  "/page": "app/page.js",
+  "/policy/page": "app/policy/page.js",
+  "/politika-konfidentsialnosti/page": "app/politika-konfidentsialnosti/page.js",
+  "/sitemap/page": "app/sitemap/page.js"
 }
