@@ -4,7 +4,7 @@ import "@styles/globals.css";
 import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
-import ScrollTopButton from "@components/widgets/ScrollTopButton/ScrollTopButton";
+// import ScrollTopButton from "@components/widgets/ScrollTopButton/ScrollTopButton";
 
 
 /* ============================================================
@@ -67,7 +67,7 @@ export default function RootLayout({
 
         <Footer />
         <FloatingCTA />
-        <ScrollTopButton />
+        {/* <ScrollTopButton /> */}
       </body>
     </html>
   );
