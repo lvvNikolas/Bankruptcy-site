@@ -6,7 +6,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@styles/LeadForm.css";
 
-/* ======= Схема валидации ======= */
+/* =========================
+   VALIDATION
+========================= */
+
 const schema = z.object({
   name: z.string().trim().min(2, "Введите имя"),
   phone: z.string().trim().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
@@ -16,14 +19,50 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
+/* =========================
+   TYPES
+========================= */
+
 type Props = {
-  /** метка, откуда отправлена форма */
-  context?: string;
-  /** уникальный id формы (hero_form, footer_lead, contacts_modal, cases_cta и т.п.) */
-  formId?: string;
-  /** колбэк при успехе */
+  context?: string;   // откуда форма
+  formId?: string;    // id формы
   onSuccess?: () => void;
+
+  /**
+   * Куда отправляем:
+   * - для статического сайта на хостинге: "/lead.php"
+   * - если снова будет Next API route: "/api/lead"
+   */
+  actionUrl?: string;
 };
+
+type ApiJson = Record<string, unknown> & {
+  ok?: boolean;
+  error?: string;
+  _raw?: string;
+};
+
+/* =========================
+   HELPERS
+========================= */
+
+function normalizePhone(raw: string): string {
+  if (!raw) return raw;
+
+  const digits = raw.replace(/\D/g, "");
+
+  // 7XXXXXXXXXX
+  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
+
+  // 8XXXXXXXXXX -> +7XXXXXXXXXX
+  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
+
+  // если ввели +7..., уже норм
+  if (raw.trim().startsWith("+7")) return "+7" + digits.slice(1, 11);
+
+  // иначе просто берём первые 10 цифр после +7
+  return "+7" + digits.slice(0, 10);
+}
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
@@ -32,32 +71,35 @@ function getErrorMessage(err: unknown): string {
 }
 
 function getApiErrorMessage(json: unknown): string | null {
-  if (json && typeof json === "object" && "error" in json) {
-    const maybeError = (json as Record<string, unknown>).error;
-    if (typeof maybeError === "string" && maybeError.trim()) return maybeError;
+  if (!json || typeof json !== "object") return null;
+  const rec = json as Record<string, unknown>;
+  const msg = rec.error;
+  return typeof msg === "string" && msg.trim() ? msg : null;
+}
+
+async function safeJson(res: Response): Promise<ApiJson> {
+  const text = await res.text().catch(() => "");
+  if (!text) return {};
+
+  try {
+    const parsed: unknown = JSON.parse(text);
+    if (parsed && typeof parsed === "object") return parsed as ApiJson;
+    return {};
+  } catch {
+    // сервер мог вернуть HTML/текст — сохраним кусок для диагностики
+    return { _raw: text.slice(0, 2000) };
   }
-  return null;
 }
 
-function normalizePhone(raw: string): string {
-  if (!raw) return raw;
-
-  const digits = raw.replace(/\D/g, "");
-  // итог всегда: +7 + 10 цифр (не больше)
-  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
-  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
-
-  // если пользователь набрал +7..., оставляем +7 + 10 цифр
-  if (raw.startsWith("+7")) return "+7" + digits.slice(1, 11);
-
-  // иначе просто берем первые 10 цифр после +7
-  return "+7" + digits.slice(0, 10);
-}
+/* =========================
+   COMPONENT
+========================= */
 
 export default function LeadForm({
   context = "landing",
   formId = "lead_default",
   onSuccess,
+  actionUrl = "/lead.php", // ✅ по умолчанию под статический сайт
 }: Props) {
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -84,15 +126,13 @@ export default function LeadForm({
   useEffect(() => {
     if (!phone) return;
     const normalized = normalizePhone(phone);
-    if (normalized !== phone) {
-      setValue("phone", normalized, { shouldValidate: false });
-    }
+    if (normalized !== phone) setValue("phone", normalized, { shouldValidate: false });
   }, [phone, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setServerError(null);
 
-    // антибот
+    // антибот: если заполнили скрытое поле — "успешно" и молча
     if (honeypotValue.current) {
       reset();
       setDone(true);
@@ -103,23 +143,35 @@ export default function LeadForm({
     const page = typeof window !== "undefined" ? window.location.href : "";
     const timeOnPageMs = Date.now() - mountedAt;
 
+    // payload — одинаковый для php или api
+    const payload: Record<string, unknown> = {
+      ...data,
+      context,
+      formId,
+      page,
+      ts: Date.now(),
+      timeOnPageMs,
+      // honeypot отправим тоже (пустой), чтобы php мог фильтровать
+      company: honeypotValue.current,
+    };
+
     try {
-      const res = await fetch("/api/lead", {
+      const res = await fetch(actionUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          context,
-          formId,
-          page,
-          ts: Date.now(),
-          timeOnPageMs,
-        }),
+        body: JSON.stringify(payload),
       });
 
-      const json: unknown = await res.json().catch(() => ({}));
+      const json = await safeJson(res);
 
       if (!res.ok) {
+        const apiMsg = getApiErrorMessage(json);
+        const raw = typeof json._raw === "string" ? `\n${json._raw}` : "";
+        throw new Error(apiMsg || `Ошибка отправки (HTTP ${res.status}).${raw}`);
+      }
+
+      // если сервер вернул ok=false
+      if (json && json.ok === false) {
         const apiMsg = getApiErrorMessage(json);
         throw new Error(apiMsg || "Ошибка отправки. Попробуйте ещё раз.");
       }
@@ -189,7 +241,6 @@ export default function LeadForm({
         onChange={(e) => (honeypotValue.current = e.target.value)}
       />
 
-      {/* сетка */}
       <div className="leadform-grid">
         {/* Имя */}
         <div className="leadform-row">

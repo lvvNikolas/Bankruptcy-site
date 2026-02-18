@@ -1,17 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import LeadForm from "@components/LeadForm/LeadForm";
 import "@styles/Quiz.css";
 
 type Option = { id: string; label: string };
-type Question = {
-  id: string;
-  title: string;
-  options: Option[];
-  multiple?: boolean;
-};
+type Question = { id: string; title: string; options: Option[]; multiple?: boolean };
 type AnswerValue = string | string[];
 type Answers = Record<string, AnswerValue>;
 
@@ -82,10 +77,10 @@ const LS = {
   completed: "quiz.completed",
 } as const;
 
-function safeJsonParse<T>(v: string | null, fallback: T): T {
-  if (!v) return fallback;
+function safeParse<T>(value: string | null, fallback: T): T {
+  if (!value) return fallback;
   try {
-    return JSON.parse(v) as T;
+    return JSON.parse(value) as T;
   } catch {
     return fallback;
   }
@@ -96,32 +91,55 @@ export default function Quiz() {
 
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
-  const [error, setError] = useState("");
   const [completed, setCompleted] = useState(false);
+  const [error, setError] = useState("");
   const [showVerdict, setShowVerdict] = useState(false);
 
+  const formAnchorRef = useRef<HTMLDivElement | null>(null);
+
   const q = QUESTIONS[step];
-  const formRef = useRef<HTMLDivElement | null>(null);
 
-  const isAnswered = (question: Question) => {
-    const v = answers[question.id];
-    return question.multiple
-      ? Array.isArray(v) && v.length > 0
-      : typeof v === "string" && !!v;
-  };
-
-  const canProceed = completed ? true : isAnswered(q);
+  const isAnswered = useCallback(
+    (question: Question) => {
+      const v = answers[question.id];
+      if (question.multiple) return Array.isArray(v) && v.length > 0;
+      return typeof v === "string" && v.trim().length > 0;
+    },
+    [answers]
+  );
 
   const progress = useMemo(() => {
     const n = completed ? total : step + 1;
     return Math.round((n / total) * 100);
-  }, [step, total, completed]);
+  }, [completed, step, total]);
 
-  // Восстановление прогресса
+  // Резюме (человеческий вид)
+  const summary = useMemo(() => {
+    const res: Array<[string, string]> = [];
+
+    for (const question of QUESTIONS) {
+      const v = answers[question.id];
+      if (v === undefined) continue;
+
+      if (question.multiple) {
+        const labels = (v as string[])
+          .map((id) => question.options.find((o) => o.id === id)?.label)
+          .filter(Boolean) as string[];
+        if (labels.length) res.push([question.title, labels.join(", ")]);
+      } else {
+        const label = question.options.find((o) => o.id === v)?.label;
+        if (label) res.push([question.title, label]);
+      }
+    }
+
+    return res;
+  }, [answers]);
+
+  // restore
   useEffect(() => {
     try {
       const s = Number(localStorage.getItem(LS.step) ?? "0");
-      const a = safeJsonParse<Answers>(localStorage.getItem(LS.answers), {});
+      const a = safeParse<Answers>(localStorage.getItem(LS.answers), {});
       const c = localStorage.getItem(LS.completed) === "1";
 
       if (Number.isFinite(s) && s >= 0 && s < total) setStep(s);
@@ -132,7 +150,7 @@ export default function Quiz() {
     }
   }, [total]);
 
-  // Сохранение прогресса
+  // persist
   useEffect(() => {
     try {
       localStorage.setItem(LS.step, String(step));
@@ -157,28 +175,32 @@ export default function Quiz() {
     if (error) setError("");
   };
 
+  const onBack = () => setStep((s) => Math.max(0, s - 1));
+
   const onNext = () => {
-    if (!isAnswered(q)) return setError("Выберите вариант(ы) ответа");
+    if (!isAnswered(q)) {
+      setError("Выберите вариант(ы) ответа");
+      return;
+    }
     if (step < total - 1) setStep((s) => s + 1);
     else setShowVerdict(true);
   };
 
-  const onBack = () => setStep((s) => Math.max(0, s - 1));
-
-  const toForm = () => {
+  const goToForm = () => {
     setShowVerdict(false);
     setCompleted(true);
-    requestAnimationFrame(() =>
-      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
-    );
+
+    requestAnimationFrame(() => {
+      formAnchorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   };
 
   const reset = () => {
     setStep(0);
     setAnswers({});
-    setError("");
     setCompleted(false);
     setShowVerdict(false);
+    setError("");
 
     try {
       localStorage.removeItem(LS.step);
@@ -189,30 +211,10 @@ export default function Quiz() {
     }
   };
 
-  // Человеческое резюме (как на экране)
-  const summary = useMemo(() => {
-    const res: Array<[string, string]> = [];
-
-    for (const question of QUESTIONS) {
-      const v = answers[question.id];
-      if (v === undefined) continue;
-
-      if (question.multiple) {
-        const labels = (v as string[])
-          .map((id) => question.options.find((o) => o.id === id)?.label)
-          .filter(Boolean) as string[];
-        if (labels.length) res.push([question.title, labels.join(", ")]);
-      } else {
-        const label = question.options.find((o) => o.id === v)?.label;
-        if (label) res.push([question.title, label]);
-      }
-    }
-
-    return res;
-  }, [answers]);
+  const canProceed = completed ? true : isAnswered(q);
 
   return (
-    <section id="quiz" className="quiz section">
+    <section id="quiz" className="quiz section" aria-label="Квиз">
       <div className="container">
         <h2 className="quiz__title">
           Ответьте на 6 вопросов и получите <br /> персональную консультацию
@@ -226,13 +228,13 @@ export default function Quiz() {
           </div>
 
           <div className="quiz__grid">
-            {/* Левая колонка */}
+            {/* LEFT */}
             <aside className="quiz__aside">
               <div className="quiz__person">
                 <div className="quiz__avatar">
                   <Image
                     src="/media/Mari.jpg"
-                    alt="Марийка Иерусалимская"
+                    alt="Юрист"
                     fill
                     sizes="56px"
                     className="quiz__avatarImg"
@@ -244,13 +246,19 @@ export default function Quiz() {
                 </div>
               </div>
 
-              <p className="quiz__note">
-                Осталось {Math.max(total - (step + 1), 0)} вопрос(а). Отвечайте честно — это
-                поможет точнее оценить ситуацию.
-              </p>
+              {!completed ? (
+                <p className="quiz__note">
+                  Осталось {Math.max(total - (step + 1), 0)} вопрос(а). Отвечайте честно — это
+                  поможет точнее оценить ситуацию.
+                </p>
+              ) : (
+                <p className="quiz__note">
+                  Мы получили ваши ответы. Оставьте контакты — юрист свяжется и скажет, что делать дальше.
+                </p>
+              )}
             </aside>
 
-            {/* Правая колонка */}
+            {/* RIGHT */}
             <div className="quiz__panel">
               {!completed ? (
                 <>
@@ -268,18 +276,13 @@ export default function Quiz() {
                         : answers[q.id] === opt.id;
 
                       return (
-                        <label
-                          key={opt.id}
-                          className={`quiz__card ${checked ? "is-checked" : ""}`}
-                        >
+                        <label key={opt.id} className={`quiz__card ${checked ? "is-checked" : ""}`}>
                           <input
                             type={q.multiple ? "checkbox" : "radio"}
                             name={q.id}
                             value={opt.id}
                             checked={checked}
-                            onChange={() =>
-                              q.multiple ? toggleMulti(q.id, opt.id) : chooseSingle(q.id, opt.id)
-                            }
+                            onChange={() => (q.multiple ? toggleMulti(q.id, opt.id) : chooseSingle(q.id, opt.id))}
                           />
                           <span className={q.multiple ? "quiz__boxMark" : "quiz__circle"} />
                           <span className="quiz__label">{opt.label}</span>
@@ -294,14 +297,13 @@ export default function Quiz() {
                     <button className="quiz-btn ghost" onClick={onBack} disabled={step === 0}>
                       Назад
                     </button>
-
                     <button className="quiz-btn primary" onClick={onNext} disabled={!canProceed}>
                       {step < total - 1 ? "Далее →" : "Получить результат"}
                     </button>
                   </div>
                 </>
               ) : (
-                <div ref={formRef} className="quiz__result">
+                <div ref={formAnchorRef} className="quiz__result">
                   <div className="quiz__resultHead">
                     <h3>Ваш результат</h3>
                     <button className="quiz-btn ghost" onClick={reset}>
@@ -320,13 +322,17 @@ export default function Quiz() {
                     </ul>
                   )}
 
-                  {/* ✅ Форма + трекинг источника + ответы квиза */}
+                  {/* ✅ ТУТ главное: отправляем вместе с формой ответы квиза */}
                   <LeadForm
                     context="quiz"
                     formId="quiz_form"
                     extraData={{
-                      quizAnswers: answers,
-                      quizSummary: summary,
+                      quiz: {
+                        answers,     // raw ids
+                        summary,     // human-readable
+                        stepCount: total,
+                        completedAt: Date.now(),
+                      },
                     }}
                   />
                 </div>
@@ -336,12 +342,9 @@ export default function Quiz() {
         </div>
       </div>
 
-      {/* Модалка */}
+      {/* MODAL */}
       {showVerdict && (
-        <div
-          className="quiz__overlay"
-          onClick={(e) => e.target === e.currentTarget && setShowVerdict(false)}
-        >
+        <div className="quiz__overlay" onClick={(e) => e.target === e.currentTarget && setShowVerdict(false)}>
           <div className="quiz__modal">
             <div className="quiz__modalHeader">
               <h4>🎉 Вы подходите под процедуру банкротства</h4>
@@ -350,9 +353,7 @@ export default function Quiz() {
               </button>
             </div>
 
-            <p>
-              Юрист свяжется, уточнит детали и расскажет, как именно она пройдёт в вашем случае.
-            </p>
+            <p>Юрист свяжется, уточнит детали и расскажет, как именно всё пройдёт в вашем случае.</p>
 
             <ul>
               <li>Оценим сроки и стоимость под вашу ситуацию;</li>
@@ -364,7 +365,7 @@ export default function Quiz() {
               <button className="quiz-btn ghost" onClick={() => setShowVerdict(false)}>
                 Вернуться к ответам
               </button>
-              <button className="quiz-btn primary" onClick={toForm}>
+              <button className="quiz-btn primary" onClick={goToForm}>
                 Перейти к форме
               </button>
             </div>

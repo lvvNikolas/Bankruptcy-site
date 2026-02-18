@@ -6,7 +6,9 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@styles/LeadForm.css";
 
-/* ======= Схема валидации ======= */
+/* =========================
+   VALIDATION
+========================= */
 const schema = z.object({
   name: z.string().trim().min(2, "Введите имя"),
   phone: z.string().trim().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
@@ -19,10 +21,34 @@ type FormData = z.infer<typeof schema>;
 type Props = {
   context?: string;
   formId?: string;
-  /** Любые доп.данные (например ответы квиза) */
-  extraData?: Record<string, unknown>;
+  extraData?: Record<string, unknown> | null;
   onSuccess?: () => void;
+
+  /** для статики на хостинге: "/lead.php" */
+  actionUrl?: string;
 };
+
+type ApiJson = {
+  ok?: boolean;
+  error?: string;
+  debugId?: string;
+  _raw?: string;
+};
+
+/* =========================
+   HELPERS
+========================= */
+function normalizePhone(raw: string): string {
+  if (!raw) return raw;
+  const digits = raw.replace(/\D/g, "");
+
+  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
+  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
+
+  if (raw.trim().startsWith("+7")) return "+7" + digits.slice(1, 11);
+
+  return "+7" + digits.slice(0, 10);
+}
 
 function getErrorMessage(err: unknown): string {
   if (err instanceof Error) return err.message;
@@ -30,28 +56,38 @@ function getErrorMessage(err: unknown): string {
   return "Ошибка отправки. Попробуйте ещё раз.";
 }
 
-function getApiErrorMessage(json: unknown): string | null {
-  if (json && typeof json === "object" && "error" in json) {
-    const maybeError = (json as Record<string, unknown>).error;
-    if (typeof maybeError === "string" && maybeError.trim()) return maybeError;
+async function readResponse(res: Response): Promise<ApiJson> {
+  const ct = res.headers.get("content-type") || "";
+  const text = await res.text().catch(() => "");
+
+  if (!text) return {};
+
+  // если PHP вернул JSON
+  if (ct.includes("application/json")) {
+    try {
+      return JSON.parse(text) as ApiJson;
+    } catch {
+      return { _raw: text.slice(0, 2000) };
+    }
   }
-  return null;
+
+  // если вернул текст/HTML — не валимся
+  try {
+    return JSON.parse(text) as ApiJson;
+  } catch {
+    return { _raw: text.slice(0, 2000) };
+  }
 }
 
-function normalizePhone(raw: string): string {
-  if (!raw) return raw;
-  const digits = raw.replace(/\D/g, "");
-  if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
-  if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
-  if (raw.startsWith("+7")) return "+7" + digits.slice(1, 11);
-  return "+7" + digits.slice(0, 10);
-}
-
+/* =========================
+   COMPONENT
+========================= */
 export default function LeadForm({
   context = "landing",
   formId = "lead_default",
-  extraData,
+  extraData = null,
   onSuccess,
+  actionUrl = "/lead.php",
 }: Props) {
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -77,13 +113,15 @@ export default function LeadForm({
   useEffect(() => {
     if (!phone) return;
     const normalized = normalizePhone(phone);
-    if (normalized !== phone) setValue("phone", normalized, { shouldValidate: false });
+    if (normalized !== phone) {
+      setValue("phone", normalized, { shouldValidate: false });
+    }
   }, [phone, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setServerError(null);
 
-    // антибот
+    // антибот honeypot
     if (honeypotValue.current) {
       reset();
       setDone(true);
@@ -94,33 +132,43 @@ export default function LeadForm({
     const page = typeof window !== "undefined" ? window.location.href : "";
     const timeOnPageMs = Date.now() - mountedAt;
 
+    const payload: Record<string, unknown> = {
+      ...data,
+      context,
+      formId,
+      page,
+      ts: Date.now(),
+      timeOnPageMs,
+      extraData: extraData ?? null,
+      company: honeypotValue.current || "", // пусть php тоже видит
+    };
+
     try {
-      const res = await fetch("/api/lead", {
+      const res = await fetch(actionUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          context,
-          formId,
-          page,
-          ts: Date.now(),
-          timeOnPageMs,
-          extraData: extraData ?? null, // ✅
-        }),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
       });
 
-      const json: unknown = await res.json().catch(() => ({}));
+      const json = await readResponse(res);
 
       if (!res.ok) {
-        const apiMsg = getApiErrorMessage(json);
-        throw new Error(apiMsg || "Ошибка отправки. Попробуйте ещё раз.");
+        const msg =
+          (json && typeof json.error === "string" && json.error.trim() && json.error) ||
+          `Ошибка отправки (HTTP ${res.status}).`;
+        throw new Error(msg);
+      }
+
+      // если сервер вернул ok:false
+      if (json.ok === false) {
+        throw new Error(json.error || "Ошибка отправки. Попробуйте ещё раз.");
       }
 
       reset();
       setDone(true);
       onSuccess?.();
     } catch (err: unknown) {
-      console.error("Ошибка отправки формы:", err);
+      console.error("LeadForm error:", err);
       setServerError(getErrorMessage(err));
     }
   };
@@ -130,11 +178,11 @@ export default function LeadForm({
       <div className="leadform leadform--thanks" role="status" aria-live="polite">
         <h3 className="leadform-thanksTitle">Заявка отправлена ✅</h3>
         <p className="leadform-thanksText">
-          Спасибо! Мы свяжемся с вами по указанному номеру.
-          Обычно отвечаем в течение <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
+          Спасибо! Мы свяжемся с вами по указанному номеру. Обычно отвечаем в течение{" "}
+          <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
         </p>
         <button
-          className="lf-btn lf-btn--primary"
+          className="btn btn-primary"
           type="button"
           onClick={() => {
             setDone(false);
@@ -150,6 +198,7 @@ export default function LeadForm({
 
   return (
     <form className="leadform" onSubmit={handleSubmit(onSubmit)} noValidate>
+      {/* Honeypot */}
       <input
         type="text"
         tabIndex={-1}
@@ -162,7 +211,9 @@ export default function LeadForm({
 
       {/* Имя */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-name">Имя</label>
+        <label className="leadform-label" htmlFor="lf-name">
+          Имя
+        </label>
         <input
           id="lf-name"
           className="leadform-input"
@@ -176,7 +227,9 @@ export default function LeadForm({
 
       {/* Телефон */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-phone">Телефон</label>
+        <label className="leadform-label" htmlFor="lf-phone">
+          Телефон
+        </label>
         <input
           id="lf-phone"
           className="leadform-input"
@@ -191,7 +244,9 @@ export default function LeadForm({
 
       {/* Долг */}
       <div className="leadform-row">
-        <label className="leadform-label" htmlFor="lf-debt">Сумма долга (≈)</label>
+        <label className="leadform-label" htmlFor="lf-debt">
+          Сумма долга (≈)
+        </label>
         <input
           id="lf-debt"
           className="leadform-input"
@@ -214,6 +269,7 @@ export default function LeadForm({
       </label>
       {errors.agree && <span className="leadform-error">{errors.agree.message}</span>}
 
+      {/* Ошибка сервера */}
       {serverError && (
         <div className="leadform-error" style={{ marginTop: 10 }} role="alert">
           {serverError}

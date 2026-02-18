@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import LeadForm from "@components/LeadForm/LeadForm";
 import "@styles/CasesSection.css";
@@ -14,6 +14,10 @@ type LightboxState = {
   index: number;
 };
 
+function isPdf(src: string): boolean {
+  return src.toLowerCase().endsWith(".pdf");
+}
+
 export default function CasesSection() {
   const [lightbox, setLightbox] = useState<LightboxState>({
     open: false,
@@ -25,7 +29,13 @@ export default function CasesSection() {
 
   const openLightbox = useCallback((items: LightboxItem[], index = 0) => {
     if (!items.length) return;
-    setLightbox({ open: true, items, index });
+
+    // ✅ в лайтбокс кладём ТОЛЬКО изображения (без pdf)
+    const imgItems = items.filter((it) => !isPdf(it.src));
+    if (!imgItems.length) return;
+
+    const safeIndex = Math.max(0, Math.min(imgItems.length - 1, index));
+    setLightbox({ open: true, items: imgItems, index: safeIndex });
   }, []);
 
   const closeLightbox = useCallback(() => {
@@ -35,34 +45,27 @@ export default function CasesSection() {
   const prev = useCallback(() => {
     setLightbox((s) => {
       if (!s.items.length) return s;
-      return {
-        ...s,
-        index: (s.index - 1 + s.items.length) % s.items.length,
-      };
+      return { ...s, index: (s.index - 1 + s.items.length) % s.items.length };
     });
   }, []);
 
   const next = useCallback(() => {
     setLightbox((s) => {
       if (!s.items.length) return s;
-      return {
-        ...s,
-        index: (s.index + 1) % s.items.length,
-      };
+      return { ...s, index: (s.index + 1) % s.items.length };
     });
   }, []);
 
   const onOpenForm = useCallback(() => setShowForm(true), []);
   const onCloseForm = useCallback(() => setShowForm(false), []);
 
-  // Esc — закрыть лайтбокс и форму
+  // ESC — закрыть лайтбокс / форму
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       if (lightbox.open) closeLightbox();
       if (showForm) onCloseForm();
     };
-
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [lightbox.open, showForm, closeLightbox, onCloseForm]);
@@ -77,6 +80,13 @@ export default function CasesSection() {
     };
   }, [showForm]);
 
+  // ✅ готовая функция открыть pdf
+  const openPdf = useCallback((src: string) => {
+    window.open(src, "_blank", "noopener,noreferrer");
+  }, []);
+
+  const cases = useMemo(() => CASES, []);
+
   return (
     <section id="cases" className="cases">
       <div className="container">
@@ -85,17 +95,20 @@ export default function CasesSection() {
           <p className="cases__eyebrow">Реальные истории клиентов</p>
           <h2 className="cases__title">Выигранные дела и списанные долги</h2>
           <p className="cases__lead">
-            Кратко и по делу: откуда клиент пришёл, какая была ситуация и к
-            какому результату мы его привели. Все кейсы подтверждены судебными
-            актами.
+            Кратко и по делу: откуда клиент пришёл, какая была ситуация и к какому результату мы его привели.
+            Все кейсы подтверждены судебными актами.
           </p>
         </header>
 
         {/* Сетка кейсов */}
         <div className="cases__grid">
-          {CASES.map((c) => {
-            const mainDoc = c.docs[0];
-            const isPdf = mainDoc?.src.toLowerCase().endsWith(".pdf") ?? false;
+          {cases.map((c) => {
+            const mainDoc = c.docs?.[0];
+            if (!mainDoc) return null;
+
+            const mainIsPdf = isPdf(mainDoc.src);
+            const imgDocs = c.docs.filter((d) => !isPdf(d.src));
+            const mainImgIndex = Math.max(0, imgDocs.findIndex((d) => d.src === mainDoc.src));
 
             return (
               <article key={c.id} className="case">
@@ -133,49 +146,66 @@ export default function CasesSection() {
                   </div>
                 </div>
 
-                {/* Правая колонка — документ / PDF */}
+                {/* Правая колонка — документ */}
                 <div className="case__docs">
-                  {mainDoc ? (
-                    <button
-                      type="button"
-                      className="case__docMain"
-                      onClick={() => openLightbox(c.docs, 0)}
-                      aria-label={isPdf ? "Открыть PDF документ" : "Открыть изображение документа"}
-                    >
-                      {isPdf ? (
-                        <div className="case__docPdf">
-                          <div className="case__docPdfIcon" aria-hidden="true">
-                            <svg viewBox="0 0 24 24">
-                              <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h12V9h-4a1 1 0 0 1-1-1V4Zm1 11h-6v2h6v-2Z" />
-                            </svg>
-                          </div>
-                          <div className="case__docPdfText">
-                            <span className="case__docPdfTitle">
-                              Судебное определение (PDF)
-                            </span>
-                            <span className="case__docPdfHint">
-                              Нажмите, чтобы открыть документ
-                            </span>
-                          </div>
+                  <button
+                    type="button"
+                    className="case__docMain"
+                    onClick={() => {
+                      if (mainIsPdf) openPdf(mainDoc.src);
+                      else openLightbox(c.docs, mainImgIndex);
+                    }}
+                    aria-label={mainIsPdf ? "Открыть PDF документ в новой вкладке" : "Открыть изображение документа"}
+                  >
+                    {mainIsPdf ? (
+                      <div className="case__docPdf">
+                        <div className="case__docPdfIcon" aria-hidden="true">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M6 2h9l5 5v15a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 2H6v16h12V9h-4a1 1 0 0 1-1-1V4Zm1 11h-6v2h6v-2Z" />
+                          </svg>
                         </div>
-                      ) : (
-                        <>
-                          <Image
-                            src={mainDoc.src}
-                            alt={mainDoc.alt ?? "Скан судебного определения"}
-                            width={920}
-                            height={1300}
-                            className="case__docMainImg"
-                          />
-                          <span className="case__docZoom" aria-hidden="true">
-                            <svg viewBox="0 0 24 24">
-                              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.5 20.5 19l-5-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z" />
-                            </svg>
-                          </span>
-                        </>
-                      )}
-                    </button>
-                  ) : null}
+                        <div className="case__docPdfText">
+                          <span className="case__docPdfTitle">Судебное определение (PDF)</span>
+                          <span className="case__docPdfHint">Откроется в новой вкладке</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <Image
+                          src={mainDoc.src}
+                          alt={mainDoc.alt ?? "Скан судебного определения"}
+                          width={920}
+                          height={1300}
+                          className="case__docMainImg"
+                        />
+                        <span className="case__docZoom" aria-hidden="true">
+                          <svg viewBox="0 0 24 24">
+                            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79L19 20.5 20.5 19l-5-5Zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14Z" />
+                          </svg>
+                        </span>
+                      </>
+                    )}
+                  </button>
+
+                  {/* ✅ Если в кейсе есть pdf — отдельная ссылка */}
+                  {c.docs.some((d) => isPdf(d.src)) && (
+                    <div style={{ marginTop: 10 }}>
+                      {c.docs
+                        .filter((d) => isPdf(d.src))
+                        .slice(0, 2)
+                        .map((d, i) => (
+                          <button
+                            key={`${c.id}-pdf-${i}`}
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={() => openPdf(d.src)}
+                            style={{ width: "100%", justifyContent: "center" }}
+                          >
+                            Открыть PDF
+                          </button>
+                        ))}
+                    </div>
+                  )}
                 </div>
               </article>
             );
@@ -184,11 +214,7 @@ export default function CasesSection() {
 
         {/* CTA */}
         <div className="cases__cta">
-          <button
-            type="button"
-            className="btn btn-primary cases__ctaBtn"
-            onClick={onOpenForm}
-          >
+          <button type="button" className="btn btn-primary cases__ctaBtn" onClick={onOpenForm}>
             <svg className="cases__ctaIcon" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 0 1 1 1V21a1 1 0 0 1-1 1C10.07 22 2 13.93 2 3a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.58a1 1 0 0 1-.25 1.01l-2.2 2.2Z" />
             </svg>
@@ -197,7 +223,7 @@ export default function CasesSection() {
         </div>
       </div>
 
-      {/* Лайтбокс документов */}
+      {/* Лайтбокс (ТОЛЬКО картинки) */}
       {lightbox.open && lightbox.items.length > 0 && (
         <div
           className="lb"
@@ -208,30 +234,13 @@ export default function CasesSection() {
             if (e.target === e.currentTarget) closeLightbox();
           }}
         >
-          <button
-            type="button"
-            className="lb__nav lb__nav--prev"
-            aria-label="Предыдущий документ"
-            onClick={prev}
-          >
+          <button type="button" className="lb__nav lb__nav--prev" aria-label="Предыдущий документ" onClick={prev}>
             ‹
           </button>
 
           <figure className="lb__figure">
             {(() => {
               const current = lightbox.items[lightbox.index];
-              const currentIsPdf = current.src.toLowerCase().endsWith(".pdf");
-
-              if (currentIsPdf) {
-                return (
-                  <iframe
-                    src={current.src}
-                    title={current.alt ?? "PDF документ"}
-                    className="lb__frame"
-                  />
-                );
-              }
-
               return (
                 <Image
                   src={current.src}
@@ -239,26 +248,17 @@ export default function CasesSection() {
                   width={1100}
                   height={1560}
                   className="lb__img"
+                  priority
                 />
               );
             })()}
           </figure>
 
-          <button
-            type="button"
-            className="lb__nav lb__nav--next"
-            aria-label="Следующий документ"
-            onClick={next}
-          >
+          <button type="button" className="lb__nav lb__nav--next" aria-label="Следующий документ" onClick={next}>
             ›
           </button>
 
-          <button
-            type="button"
-            className="lb__close"
-            aria-label="Закрыть просмотр"
-            onClick={closeLightbox}
-          >
+          <button type="button" className="lb__close" aria-label="Закрыть просмотр" onClick={closeLightbox}>
             ×
           </button>
         </div>
@@ -280,12 +280,7 @@ export default function CasesSection() {
               <h3 id="cases-form-title" className="casesForm__title">
                 Оставьте контакты — юрист свяжется в течение 15 минут
               </h3>
-              <button
-                type="button"
-                className="casesForm__close"
-                aria-label="Закрыть форму"
-                onClick={onCloseForm}
-              >
+              <button type="button" className="casesForm__close" aria-label="Закрыть форму" onClick={onCloseForm}>
                 ×
               </button>
             </div>
@@ -293,6 +288,7 @@ export default function CasesSection() {
             <LeadForm
               formId="cases_cta"
               context="cases"
+              actionUrl="/lead.php" // ✅ ВАЖНО для статики
               onSuccess={onCloseForm}
             />
           </div>

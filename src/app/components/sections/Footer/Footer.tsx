@@ -14,7 +14,7 @@ export default function Footer() {
           {/* Левый столбец: бренд + описание + TG + рейтинг */}
           <div className="footer__col">
             <div className="footer__logo" aria-label="ДОНУЛЯ — списание долгов">
-              Компания
+              Solution
             </div>
             <p className="footer__lead">
               Помогаем законно списать долги по 127-ФЗ. Работаем по всей России.
