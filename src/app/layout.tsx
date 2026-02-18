@@ -4,70 +4,78 @@ import "@styles/globals.css";
 import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
-// import ScrollTopButton from "@components/widgets/ScrollTopButton/ScrollTopButton";
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
-/* ============================================================
-   GLOBAL METADATA (SEO)
-   ============================================================ */
+const SITE_URL = "https://basolution.ru"; // ← поменяй если другой домен
+const SITE_NAME = "BASolution";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+
   title: {
     default: "Банкротство физических лиц — помощь по 127-ФЗ",
-    template: "%s | Юридическая помощь по банкротству",
+    template: "%s | Банкротство физических лиц",
   },
+
   description:
-    "Списываем долги законно по 127-ФЗ. Бесплатная консультация, прозрачные условия, гарантия результата. Работаем по всей России.",
+    "Списываем долги законно по 127-ФЗ. Бесплатная консультация, прозрачные условия, сопровождение до результата. Работаем по всей России.",
+
   keywords: [
     "банкротство физических лиц",
     "списание долгов",
     "127-ФЗ",
-    "юридическая помощь",
+    "юрист по банкротству",
     "финансовая защита",
   ],
+
+  // ✅ Фавиконки (работает с app/icon.png или public/favicon.png)
+  icons: {
+    icon: [
+      { url: "/favicon.ico" }, // если добавишь .ico — ок
+      { url: "/favicon.png" }, // твой текущий вариант
+    ],
+    apple: [{ url: "/apple-touch-icon.png" }], // если добавишь
+  },
+
   openGraph: {
     type: "website",
     locale: "ru_RU",
+    url: SITE_URL,
+    siteName: SITE_NAME,
     title: "Банкротство физических лиц — помощь по 127-ФЗ",
     description:
-      "Законно спишем долги. Работаем по всей России. Бесплатная консультация и сопровождение до результата.",
-    url: "https://ваш-домен.ру",
-    siteName: "Юридический центр «Компания»",
+      "Законно спишем долги. Бесплатная консультация и сопровождение до результата. Работаем по всей России.",
     images: [
       {
         url: "/og-preview.jpg",
         width: 1200,
         height: 630,
-        alt: "Банкротство физических лиц — помощь по 127-ФЗ",
+        alt: "BASolution — банкротство физических лиц",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Банкротство физических лиц — помощь по 127-ФЗ",
-    description: "Юридическая помощь по списанию долгов по 127-ФЗ.",
+    description:
+      "Юридическая помощь по списанию долгов по 127-ФЗ. Бесплатная консультация.",
     images: ["/og-preview.jpg"],
   },
-  metadataBase: new URL("https://ваш-домен.ру"),
 };
 
-/* ============================================================
-   ROOT LAYOUT
-   ============================================================ */
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" suppressHydrationWarning>
-      <body suppressHydrationWarning>
+    <html lang="ru">
+      <body>
         <Navbar />
-
         <main id="main-content">{children}</main>
-
         <Footer />
         <FloatingCTA />
-        {/* <ScrollTopButton /> */}
       </body>
     </html>
   );

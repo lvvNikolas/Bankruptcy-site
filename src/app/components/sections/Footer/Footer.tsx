@@ -22,7 +22,7 @@ export default function Footer() {
 
             <a
               className="footer__tgBtn"
-              href="https://t.me/"
+              href="https://t.me/ba_solution"
               target="_blank"
               rel="noopener noreferrer"
             >
