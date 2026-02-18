@@ -35,16 +35,12 @@ type ApiJson = {
   _raw?: string;
 };
 
-/* =========================
-   HELPERS
-========================= */
 function normalizePhone(raw: string): string {
   if (!raw) return raw;
   const digits = raw.replace(/\D/g, "");
 
   if (digits.startsWith("7")) return "+7" + digits.slice(1, 11);
   if (digits.startsWith("8")) return "+7" + digits.slice(1, 11);
-
   if (raw.trim().startsWith("+7")) return "+7" + digits.slice(1, 11);
 
   return "+7" + digits.slice(0, 10);
@@ -56,32 +52,24 @@ function getErrorMessage(err: unknown): string {
   return "Ошибка отправки. Попробуйте ещё раз.";
 }
 
+function pickError(json: ApiJson): string | null {
+  if (json && typeof json.error === "string" && json.error.trim()) return json.error.trim();
+  return null;
+}
+
 async function readResponse(res: Response): Promise<ApiJson> {
-  const ct = res.headers.get("content-type") || "";
   const text = await res.text().catch(() => "");
+  if (!text) return { _raw: "" };
 
-  if (!text) return {};
-
-  // если PHP вернул JSON
-  if (ct.includes("application/json")) {
-    try {
-      return JSON.parse(text) as ApiJson;
-    } catch {
-      return { _raw: text.slice(0, 2000) };
-    }
-  }
-
-  // если вернул текст/HTML — не валимся
+  // пробуем JSON
   try {
-    return JSON.parse(text) as ApiJson;
+    const parsed = JSON.parse(text) as ApiJson;
+    return parsed && typeof parsed === "object" ? parsed : { _raw: text.slice(0, 2000) };
   } catch {
     return { _raw: text.slice(0, 2000) };
   }
 }
 
-/* =========================
-   COMPONENT
-========================= */
 export default function LeadForm({
   context = "landing",
   formId = "lead_default",
@@ -113,15 +101,13 @@ export default function LeadForm({
   useEffect(() => {
     if (!phone) return;
     const normalized = normalizePhone(phone);
-    if (normalized !== phone) {
-      setValue("phone", normalized, { shouldValidate: false });
-    }
+    if (normalized !== phone) setValue("phone", normalized, { shouldValidate: false });
   }, [phone, setValue]);
 
   const onSubmit = async (data: FormData) => {
     setServerError(null);
 
-    // антибот honeypot
+    // антибот honeypot: если поле заполнено — молча "успех"
     if (honeypotValue.current) {
       reset();
       setDone(true);
@@ -140,28 +126,35 @@ export default function LeadForm({
       ts: Date.now(),
       timeOnPageMs,
       extraData: extraData ?? null,
-      company: honeypotValue.current || "", // пусть php тоже видит
+      company: "", // honeypot
     };
 
     try {
       const res = await fetch(actionUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json, text/plain, */*",
+        },
         body: JSON.stringify(payload),
       });
 
       const json = await readResponse(res);
 
+      // 1) HTTP ошибка
       if (!res.ok) {
-        const msg =
-          (json && typeof json.error === "string" && json.error.trim() && json.error) ||
-          `Ошибка отправки (HTTP ${res.status}).`;
-        throw new Error(msg);
+        const msg = pickError(json) || `Ошибка отправки (HTTP ${res.status}).`;
+        const raw = json._raw ? `\nОтвет сервера: ${json._raw}` : "";
+        throw new Error(msg + raw);
       }
 
-      // если сервер вернул ok:false
-      if (json.ok === false) {
-        throw new Error(json.error || "Ошибка отправки. Попробуйте ещё раз.");
+      // 2) ✅ УСПЕХ ТОЛЬКО ok === true
+      if (json.ok !== true) {
+        const msg =
+          pickError(json) ||
+          "Сервер не подтвердил отправку (ok !== true). Проверьте lead.php / mail().";
+        const raw = json._raw ? `\nОтвет сервера: ${json._raw}` : "";
+        throw new Error(msg + raw);
       }
 
       reset();
@@ -181,6 +174,7 @@ export default function LeadForm({
           Спасибо! Мы свяжемся с вами по указанному номеру. Обычно отвечаем в течение{" "}
           <b>10–15 минут</b> в рабочее время (7:00–19:00 МСК).
         </p>
+
         <button
           className="btn btn-primary"
           type="button"
