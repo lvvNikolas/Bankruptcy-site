@@ -1,12 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import HeroPromoForm from "@/app/components/LeadForm/HeroPromoForm";
 import "@styles/Hero.css";
 
 export default function Hero() {
   return (
     <section id="hero" className="hero" aria-label="Главный блок">
-      {/* Фон: видео + ровный оверлей */}
+      {/* Фон: видео (desktop) / картинка (mobile) + ровный оверлей */}
       <div className="hero__bg" aria-hidden="true">
         <video
           className="hero__video"
@@ -15,7 +16,21 @@ export default function Hero() {
           muted
           loop
           playsInline
+          preload="metadata"
         />
+
+        {/* На телефонах показываем femida.png вместо видео */}
+        <div className="hero__mobileBg">
+          <Image
+            src="/media/femida.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="hero__mobileBgImg"
+          />
+        </div>
+
         <div className="hero__bgOverlay" />
       </div>
 
@@ -25,13 +40,12 @@ export default function Hero() {
           {/* Левая колонка — оффер */}
           <div className="hero__left">
             <h1 className="hero__title">
-              Списание долгов{" "}
-              <span className="hero__accent">законно</span> и безопасно
+              Списание долгов <span className="hero__accent">законно</span> и безопасно
             </h1>
 
             <p className="hero__lead">
-              Бесплатно оценим вашу ситуацию по 127-ФЗ, подскажем оптимальный
-              путь и рассчитаем сроки и стоимость. Работаем по всей России.
+              Бесплатно оценим вашу ситуацию по 127-ФЗ, подскажем оптимальный путь и
+              рассчитаем сроки и стоимость. Работаем по всей России.
             </p>
 
             <ul className="hero__bullets">
@@ -66,8 +80,8 @@ export default function Hero() {
               <HeroPromoForm />
 
               <p className="hero__foot">
-                Отправляя форму, вы даёте{" "}
-                <a href="/sogl">согласие</a> на обработку персональных данных.
+                Отправляя форму, вы даёте <a href="/sogl">согласие</a> на обработку
+                персональных данных.
               </p>
             </div>
           </div>

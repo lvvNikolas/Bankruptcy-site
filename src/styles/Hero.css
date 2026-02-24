@@ -1,29 +1,28 @@
 /* =========================================================================
-   HERO с видео-фоном, без градиентов на фоне
+   HERO: desktop/video, mobile/image (femida.png), без градиентов
    ========================================================================= */
 
 :root {
-  /* Текст поверх видео */
-  --hero-text:   #f9fafb;
-  --hero-muted:  #e5e7eb;
-  --hero-accent: #f97373;   /* акцент "законно" */
+  /* Текст поверх фона */
+  --hero-text: #f9fafb;
+  --hero-muted: #e5e7eb;
+  --hero-accent: #f97373;
 
   /* Кнопки */
   --gold-1: #f6d879;
   --gold-2: #e6c05b;
 
   /* Карточка формы */
-  --hero-card-bg:   #ffffff;
+  --hero-card-bg: #ffffff;
   --hero-card-text: #0f172a;
 
-  --line:   rgba(0, 0, 0, 0.10);
+  --line: rgba(0, 0, 0, 0.10);
   --shadow: 0 24px 64px rgba(0, 0, 0, 0.08);
 
   --radius-lg: 22px;
   --radius-md: 14px;
 }
 
-/* Секция: высота минимум на экран, с отступами под navbar / scroll-hint */
 .hero {
   position: relative;
   min-height: 100svh;
@@ -41,7 +40,7 @@
 }
 
 /* =========================================================================
-   Фон: видео + ровный прозрачный слой (БЕЗ градиентов)
+   Background: video (desktop) / image (mobile) + overlay
    ========================================================================= */
 
 .hero__bg {
@@ -58,11 +57,23 @@
   transform: scale(1.02);
 }
 
-/* просто лёгкое затемнение, чтобы текст был читабельным */
+/* mobile image wrapper (по умолчанию скрыт) */
+.hero__mobileBg {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.hero__mobileBgImg {
+  object-fit: cover;
+  transform: scale(1.02);
+}
+
+/* легкое затемнение */
 .hero__bgOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45); /* без градиентов */
+  background: rgba(0, 0, 0, 0.45);
 }
 
 /* =========================================================================
@@ -82,7 +93,7 @@
 }
 
 /* =========================================================================
-   Левая колонка — заголовок / текст / буллеты / кнопки
+   Left column
    ========================================================================= */
 
 .hero__title {
@@ -106,7 +117,7 @@
   bottom: -6px;
   width: 100%;
   height: 10px;
-  background: rgba(0, 0, 0, 0.0); /* подчёркивание убрал, чтобы без градиента */
+  background: rgba(0, 0, 0, 0);
 }
 
 .hero__lead {
@@ -145,7 +156,7 @@
   font-style: normal;
 }
 
-/* Кнопки */
+/* Buttons */
 
 .hero__actions {
   display: flex;
@@ -170,14 +181,10 @@
 
   color: #3e3219;
   background: linear-gradient(180deg, var(--gold-1), var(--gold-2));
-  box-shadow:
-    0 12px 34px rgba(229, 184, 65, 0.25),
+  box-shadow: 0 12px 34px rgba(229, 184, 65, 0.25),
     inset 0 -6px 10px rgba(0, 0, 0, 0.06);
 
-  transition:
-    transform 0.08s ease,
-    filter 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: transform 0.08s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 .hero__btn:hover {
@@ -201,7 +208,7 @@
 }
 
 /* =========================================================================
-   Правая колонка — карточка формы
+   Right column (form card)
    ========================================================================= */
 
 .hero__right {
@@ -251,7 +258,7 @@
 }
 
 /* =========================================================================
-   Хинт "Прокрутите вниз"
+   Scroll hint
    ========================================================================= */
 
 .hero__scroll {
@@ -344,7 +351,7 @@
 }
 
 /* =========================================================================
-   Адаптив
+   Responsive
    ========================================================================= */
 
 @media (max-width: 960px) {
@@ -363,7 +370,16 @@
   }
 }
 
+/* ✅ только на телефонах: выключаем видео, включаем картинку */
 @media (max-width: 680px) {
+  .hero__video {
+    display: none;
+  }
+
+  .hero__mobileBg {
+    display: block;
+  }
+
   .hero__title {
     font-size: clamp(26px, 7vw, 32px);
   }
