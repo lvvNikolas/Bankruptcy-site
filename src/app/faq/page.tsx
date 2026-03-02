@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-
 import "@styles/FAQPage.css";
 
-// СЕО — server component ОК
+import Quiz from "@/app/components/sections/Quiz/Quiz";
+
 export const metadata: Metadata = {
   title: "Вопросы и ответы",
   description:
@@ -15,10 +15,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-// ⚠️ при необходимости скорректируй пути под свой проект
-import Quiz from "@/app/components/sections/Quiz/Quiz";
-import Footer from "@/app/components/sections/Footer/Footer";
 
 type FAQ = { q: string; a: string };
 
@@ -62,14 +58,61 @@ const FAQ_ITEMS: FAQ[] = [
   },
 ];
 
+const SITE_URL = "https://basolution.ru";
+
+function toPlainText(s: string) {
+  // чтобы schema была аккуратной: без лишних переносов/двойных пробелов
+  return s.replace(/\s+/g, " ").trim();
+}
+
 export default function FAQPage() {
   // Две ровные колонки (даже при нечётном количестве)
   const mid = Math.ceil(FAQ_ITEMS.length / 2);
   const colA = FAQ_ITEMS.slice(0, mid);
   const colB = FAQ_ITEMS.slice(mid);
 
+  // ✅ Schema.org: FAQPage + BreadcrumbList
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: FAQ_ITEMS.map((item) => ({
+        "@type": "Question",
+        name: toPlainText(item.q),
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: toPlainText(item.a),
+        },
+      })),
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Главная",
+          item: `${SITE_URL}/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Вопросы и ответы",
+          item: `${SITE_URL}/faq/`,
+        },
+      ],
+    },
+  ];
+
   return (
     <>
+      {/* ✅ Schema.org JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* HERO */}
       <header className="faq-hero" aria-labelledby="faq-title">
         <div className="container">
@@ -129,7 +172,6 @@ export default function FAQPage() {
       <section id="quiz" className="container faq-quiz">
         <Quiz />
       </section>
-
     </>
   );
 }

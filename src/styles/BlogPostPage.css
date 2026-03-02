@@ -1,0 +1,146 @@
+/* ===== HERO ===== */
+.post-hero {
+  background: linear-gradient(135deg, #0f1e3d 0%, #1a3a6b 100%);
+  color: #fff;
+  padding: 64px 0 56px;
+}
+
+.post-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.post-crumbs li + li::before {
+  content: "/";
+  margin-right: 8px;
+}
+
+.post-crumbs a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.post-crumbs a:hover {
+  color: #fff;
+}
+
+.post-category {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+}
+
+.post-title {
+  font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  max-width: 700px;
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.post-meta__dot {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== BODY ===== */
+.post-body {
+  padding: 56px 0 16px;
+  background: #fff;
+}
+
+.post-content {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.post-intro {
+  font-size: 1.15rem;
+  line-height: 1.75;
+  color: #2d3748;
+  margin: 0 0 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #e8ecf4;
+  font-weight: 400;
+}
+
+.post-section {
+  margin-bottom: 36px;
+}
+
+.post-section__heading {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0f1e3d;
+  margin: 0 0 14px;
+  padding-left: 16px;
+  border-left: 3px solid #2c5fad;
+  line-height: 1.3;
+}
+
+.post-section__text {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #4a5568;
+  margin: 0;
+}
+
+/* ===== BACK LINK ===== */
+.post-back {
+  padding: 32px 0;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.post-back__link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a3a6b;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.post-back__link:hover {
+  color: #2c5fad;
+  text-decoration: underline;
+}
+
+/* ===== QUIZ ===== */
+.post-quiz {
+  padding: 0 0 64px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .post-content,
+  .post-back,
+  .post-quiz {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

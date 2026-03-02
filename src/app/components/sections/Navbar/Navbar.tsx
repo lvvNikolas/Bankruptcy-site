@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import type { Route } from "next";
 import Image from "next/image";
 import "@styles/Navbar.css";
 
@@ -9,6 +10,7 @@ import "@styles/Navbar.css";
 const LINKS = [
   { href: "/", label: "Главная" },
   { href: "/cases", label: "Выигранные дела" },
+  { href: "/blog", label: "Блог" },
   { href: "/faq", label: "Вопросы и ответы" },
   { href: "/career", label: "Карьера" },
   { href: "/contacts", label: "Контакты" },
@@ -58,7 +60,7 @@ export default function Navbar() {
           <ul className="nav__list" role="list">
             {LINKS.map((link) => (
               <li key={link.href} className="nav__item">
-                <Link href={link.href} className="nav__link">
+                <Link href={link.href as Route} className="nav__link">
                   {link.label}
                 </Link>
               </li>
@@ -101,7 +103,7 @@ export default function Navbar() {
             <ul className="nav__mList" role="list">
               {LINKS.map((link) => (
                 <li key={`m-${link.href}`} className="nav__mItem">
-                  <Link href={link.href} className="nav__mLink" onClick={closeMenu}>
+                  <Link href={link.href as Route} className="nav__mLink" onClick={closeMenu}>
                     {link.label}
                   </Link>
                 </li>

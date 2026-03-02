@@ -10,8 +10,18 @@ export const viewport = {
   initialScale: 1,
 };
 
-const SITE_URL = "https://basolution.ru"; // ← поменяй если другой домен
+const SITE_URL = "https://basolution.ru";
 const SITE_NAME = "BASolution";
+
+// 👉 Заполни актуальные данные
+const PHONE = "+79162979645"; // например "+79162979645"
+const EMAIL = "bankruptcyagencysolution@yandex.com";
+const ADDRESS = {
+  addressCountry: "RU",
+  addressLocality: "Москва",
+  streetAddress: "Пресненская набережная, д. 12-17",
+  postalCode: "", // если знаешь — укажи
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -32,13 +42,9 @@ export const metadata: Metadata = {
     "финансовая защита",
   ],
 
-  // ✅ Фавиконки (работает с app/icon.png или public/favicon.png)
   icons: {
-    icon: [
-      { url: "/favicon.ico" }, // если добавишь .ico — ок
-      { url: "/favicon.png" }, // твой текущий вариант
-    ],
-    apple: [{ url: "/apple-touch-icon.png" }], // если добавишь
+    icon: [{ url: "/favicon.ico" }, { url: "/favicon.png" }],
+    apple: [{ url: "/apple-touch-icon.png" }],
   },
 
   openGraph: {
@@ -69,6 +75,37 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  // ✅ Schema.org JSON-LD
+  const jsonLd = [
+    {
+      "@context": "https://schema.org",
+      "@type": ["Organization", "LegalService"],
+      name: SITE_NAME,
+      url: SITE_URL,
+      logo: `${SITE_URL}/favicon.png`,
+      image: [`${SITE_URL}/og-preview.jpg`],
+      description:
+        "Юридическая помощь по банкротству физических лиц по 127-ФЗ. Бесплатная консультация, сопровождение до результата.",
+      areaServed: "RU",
+      telephone: PHONE,
+      email: EMAIL,
+      address: {
+        "@type": "PostalAddress",
+        ...ADDRESS,
+      },
+      sameAs: [
+        // сюда можно добавить соцсети, например Telegram
+        // "https://t.me/your_username",
+      ],
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+  ];
+
   return (
     <html lang="ru">
       <body>
@@ -76,6 +113,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main-content">{children}</main>
         <Footer />
         <FloatingCTA />
+
+        {/* ✅ Schema.org */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </body>
     </html>
   );
