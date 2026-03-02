@@ -1,163 +1,317 @@
 /* =========================================================================
-   Страница "Карьера" — аккуратный светлый дизайн в едином стиле
+   Страница "Карьера" — премиум-дизайн, золотые акценты
    ========================================================================= */
 
-/* Контейнер */
-.container {
-  width: min(1200px, 92vw);
-  margin-inline: auto;
-}
+/* =========================================================================
+   Hero
+   ========================================================================= */
 
-/* ---------- HERO ---------- */
 .career-hero {
   position: relative;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.05);
-  padding: clamp(48px, 6vw, 72px) 0;
+  background: linear-gradient(135deg, #080e1f 0%, #0f1e3d 60%, #162848 100%);
+  padding: clamp(48px, 7vw, 88px) 0 clamp(40px, 6vw, 72px);
+  overflow: hidden;
 }
+
+/* Точечный паттерн */
+.career-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(246, 216, 121, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+/* Золотое свечение */
+.career-hero::after {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(246, 216, 121, 0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ---------- Хлебные крошки ---------- */
 
 .career-crumbs ol {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   list-style: none;
-  margin: 0 0 14px;
+  margin: 0 0 20px;
   padding: 0;
-  color: #9ca3af;
-  font-size: 15px;
-}
-.career-crumbs li + li::before {
-  content: "/";
-  color: #d1d5db;
-  margin: 0 6px;
-}
-.career-crumbs a {
-  color: #6b7280;
-  text-decoration: none;
-}
-.career-crumbs a:hover {
-  color: #111827;
-  text-decoration: underline;
+  font-size: 0.82rem;
 }
 
+.career-crumbs li + li::before {
+  content: "/";
+  color: rgba(255, 255, 255, 0.25);
+  margin: 0 4px;
+}
+
+.career-crumbs a {
+  color: rgba(255, 255, 255, 0.45);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.career-crumbs a:hover {
+  color: #f6d879;
+}
+
+.career-crumbs li[aria-current="page"] {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ---------- Заголовок ---------- */
+
 .career-title {
-  margin: 0 0 12px;
-  font-size: clamp(36px, 5vw, 56px);
+  position: relative;
+  z-index: 1;
+  margin: 0 0 16px;
+  font-size: clamp(34px, 5vw, 56px);
   font-weight: 900;
-  color: #0e1525;
-  line-height: 1.1;
+  color: #fff;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
 }
 
 .career-lead {
+  position: relative;
+  z-index: 1;
   margin: 0;
-  color: #4b5563;
-  font-size: clamp(16px, 1.8vw, 18px);
-  max-width: 60ch;
-  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: clamp(15px, 1.8vw, 17px);
+  max-width: 58ch;
+  line-height: 1.65;
 }
 
-/* ---------- VACANCY SECTION ---------- */
+/* =========================================================================
+   Секция вакансий
+   ========================================================================= */
+
 .career-section {
-  background: #fafafa;
-  padding: clamp(40px, 6vw, 80px) 0;
+  background: #f4f6fb;
+  padding: clamp(40px, 6vw, 80px) 0 clamp(56px, 8vw, 96px);
 }
 
-/* Сетка вакансий */
+/* Сетка */
 .career-grid {
   display: grid;
-  gap: 32px;
+  gap: 20px;
   list-style: none;
   padding: 0;
   margin: 0;
 }
-@media (min-width: 900px) {
+
+@media (min-width: 860px) {
   .career-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* ---------- CARD ---------- */
+/* =========================================================================
+   Карточка вакансии
+   ========================================================================= */
+
 .vacancy-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 18px;
-  background: #ffffff;
-  border: 1px solid rgba(15, 23, 42, 0.05);
-  border-radius: 16px;
-  padding: clamp(20px, 3vw, 28px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #e8edf5;
+  border-radius: 22px;
+  padding: clamp(24px, 3vw, 32px);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(15, 30, 61, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Золотая полоска сверху */
+.vacancy-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f6d879, #e6c05b);
+}
+
 .vacancy-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  transform: translateY(-2px);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(15, 30, 61, 0.11);
+}
+
+/* ---------- Бейдж "Открыта" ---------- */
+
+.vacancy-card::after {
+  content: "Открыта";
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #16a34a;
+  background: rgba(22, 163, 74, 0.1);
+  border: 1px solid rgba(22, 163, 74, 0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+/* ---------- Контент ---------- */
+
+.vacancy-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .vacancy-title {
   margin: 0;
-  font-size: clamp(20px, 2.3vw, 24px);
-  font-weight: 700;
-  color: #b91c1c;
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 900;
+  color: #0f1e3d;
+  line-height: 1.25;
+  padding-right: 80px; /* место под бейдж */
 }
 
 .vacancy-intro {
-  margin: 6px 0 0;
-  color: #374151;
-  line-height: 1.6;
-  font-size: 16px;
+  margin: 0;
+  color: #475569;
+  line-height: 1.65;
+  font-size: clamp(14px, 1.5vw, 15.5px);
 }
 
 .vacancy-date {
-  margin-top: 12px;
-  color: #9ca3af;
-  font-size: 14px;
+  margin: 0;
+  color: #94a3b8;
+  font-size: 0.78rem;
 }
 
-/* ---------- BUTTON ---------- */
+.vacancy-date time {
+  font-weight: 600;
+  color: #64748b;
+}
+
+/* ---------- Кнопка ---------- */
+
 .vacancy-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #b91c1c;
-  border: 1px solid rgba(185, 28, 28, 0.25);
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  color: #2a1f08;
+  background: linear-gradient(160deg, #f6d879 0%, #e6c05b 100%);
+  box-shadow: 0 8px 24px rgba(230, 192, 91, 0.3);
   text-decoration: none;
-  background: #fff;
-  transition: all 0.2s ease;
   align-self: flex-start;
-}
-.vacancy-btn:hover {
-  background: #fef2f2;
-  border-color: rgba(185, 28, 28, 0.45);
-}
-.vacancy-icon {
-  transition: transform 0.2s ease;
-}
-.vacancy-btn:hover .vacancy-icon {
-  transform: translateX(3px);
+  transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* ---------- NOTE ---------- */
+.vacancy-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 36px rgba(230, 192, 91, 0.42);
+}
+
+.vacancy-btn:active {
+  transform: translateY(0);
+}
+
+.vacancy-icon {
+  transition: transform 0.18s ease;
+  flex-shrink: 0;
+}
+
+.vacancy-btn:hover .vacancy-icon {
+  transform: translateX(4px);
+}
+
+/* =========================================================================
+   Блок "Не нашли вакансию"
+   ========================================================================= */
+
 .career-note {
   margin-top: 40px;
-  background: #ffffff;
-  border: 1px dashed rgba(185, 28, 28, 0.25);
-  padding: 20px;
-  border-radius: 14px;
-  font-size: 15px;
-  color: #4b5563;
+  background: #fff;
+  border: 1px solid #e8edf5;
+  border-radius: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  font-size: clamp(14px, 1.5vw, 15.5px);
+  color: #475569;
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.65;
+  box-shadow: 0 4px 20px rgba(15, 30, 61, 0.05);
+  position: relative;
+  overflow: hidden;
 }
+
+/* Золотая полоска */
+.career-note::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f6d879, #e6c05b);
+}
+
 .career-note a {
-  color: #b91c1c;
+  color: #a07800;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 700;
 }
+
 .career-note a:hover {
   text-decoration: underline;
+}
+
+/* =========================================================================
+   Адаптив
+   ========================================================================= */
+
+@media (max-width: 560px) {
+  .vacancy-title {
+    padding-right: 0;
+  }
+
+  .vacancy-card::after {
+    position: static;
+    display: inline-flex;
+    width: fit-content;
+    margin-bottom: 4px;
+  }
+
+  .vacancy-info {
+    flex-direction: column;
+  }
+
+  .vacancy-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vacancy-card,
+  .vacancy-btn,
+  .vacancy-icon {
+    transition: none !important;
+  }
 }
