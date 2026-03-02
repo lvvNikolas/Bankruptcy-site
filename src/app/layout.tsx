@@ -4,6 +4,7 @@ import "@styles/globals.css";
 import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
+import ScrollTopButton from "@/app/components/widgets/ScrollTopButton/ScrollTopButton";
 
 export const viewport = {
   width: "device-width",
@@ -113,6 +114,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main-content">{children}</main>
         <Footer />
         <FloatingCTA />
+        <ScrollTopButton />
 
         {/* ✅ Schema.org */}
         <script
