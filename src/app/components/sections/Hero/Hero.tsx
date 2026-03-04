@@ -37,6 +37,7 @@ export default function Hero() {
 
           {/* Левая колонка */}
           <div className="hero__left">
+            <p className="hero__company">Юридическая компания Солюшен</p>
             <span className="hero__eyebrow">Банкротство физических лиц · 127-ФЗ</span>
 
             <h1 className="hero__title">

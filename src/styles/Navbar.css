@@ -215,32 +215,69 @@
   margin: 0;
   padding: 72px 0 0;
   list-style: none;
-
   width: 100%;
-
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
+  gap: 4px;
 }
 
 .nav__mItem {
-  border-bottom: 1px solid rgba(148, 163, 184, 0.24);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+  animation: navItemIn 0.35s ease both;
+  animation-delay: calc(var(--i, 0) * 60ms + 80ms);
+}
+
+@keyframes navItemIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .nav__mLink {
-  display: block;
-  padding: 18px 6px;
-
-  font-size: clamp(18px, 5.2vw, 26px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 6px;
+  font-size: clamp(16px, 4.8vw, 22px);
   font-weight: 800;
-
-  color: var(--nav-text);
+  color: rgba(255, 255, 255, 0.75);
   text-align: center;
   text-decoration: none;
-
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  transition: color 0.18s ease;
+}
+
+.nav__mLink:hover,
+.nav__mLink:focus-visible {
+  color: #f6d879;
+}
+
+/* CTA телефон */
+
+.nav__mCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 16px 32px;
+  border-radius: 14px;
+  background: linear-gradient(160deg, #f6d879 0%, #e6c05b 100%);
+  color: #2a1f08;
+  font-size: 1.05rem;
+  font-weight: 900;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  box-shadow: 0 10px 32px rgba(230, 192, 91, 0.35);
+  animation: navItemIn 0.35s ease both;
+  animation-delay: calc(6 * 60ms + 80ms);
+  transition: filter 0.15s, transform 0.1s;
+}
+
+.nav__mCta:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
 }
 
 /* ===== Респонсив ===== */

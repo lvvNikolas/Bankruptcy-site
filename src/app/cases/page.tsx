@@ -9,12 +9,52 @@ export const metadata: Metadata = {
   description:
     "Реальные успешно завершённые дела по списанию долгов и защите интересов клиентов.",
   openGraph: {
-    title: "Выигранные дела",
+    title: "Выигранные дела | BASolution",
     description:
       "Реальные успешно завершённые дела по списанию долгов и защите интересов клиентов.",
     type: "website",
+    images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
   },
 };
+
+const SITE_URL = "https://basolution.ru";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Выигранные дела", item: `${SITE_URL}/cases/` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Выигранные дела BASolution",
+    description: "Реальные кейсы по списанию долгов через банкротство физических лиц",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Максим Головко — списание 500 000 ₽ (Симферополь)",
+        url: `${SITE_URL}/cases/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Виктор Дронов — списание 2 500 000 ₽ (Москва)",
+        url: `${SITE_URL}/cases/`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: "Валера Пименов — списание 1 500 000 ₽ (Санкт-Петербург)",
+        url: `${SITE_URL}/cases/`,
+      },
+    ],
+  },
+];
 
 /** Секции (пути оставлены твоими) */
 import CasesSection from "@/app/components/sections/Cases/CasesSection";
@@ -25,6 +65,10 @@ import Quiz from "@/app/components/sections/Quiz/Quiz";
 export default function CasesPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* HERO без изображения, чистый светлый блок */}
       <header className="cases-hero" aria-labelledby="cases-title">
         <div className="container">

@@ -6,11 +6,12 @@ export const metadata: Metadata = {
   title: "Политика конфиденциальности и обработки персональных данных",
   description:
     "Политика обработки и защиты персональных данных пользователей сайта и клиентов оператора.",
+  robots: { index: false, follow: false },
 };
 
-const OPERATOR_NAME = 'ИП «________»'; // подставь своё наименование
-const SITE_URL = "https://________";   // подставь домен сайта
-const CONTACT_EMAIL = "info@________"; // подставь рабочую почту
+const OPERATOR_NAME = 'BASolution'; // укажи юридическое наименование ИП/ООО
+const SITE_URL = "https://basolution.ru";
+const CONTACT_EMAIL = "bankruptcyagencysolution@yandex.com";
 
 export default function PrivacyPolicyPage() {
   return (

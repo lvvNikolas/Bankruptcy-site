@@ -20,8 +20,7 @@ const EMAIL = "bankruptcyagencysolution@yandex.com";
 const ADDRESS = {
   addressCountry: "RU",
   addressLocality: "Москва",
-  streetAddress: "Пресненская набережная, д. 12-17",
-  postalCode: "", // если знаешь — укажи
+  streetAddress: "Пресненская набережная, д. 12",
 };
 
 export const metadata: Metadata = {
@@ -92,7 +91,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       email: EMAIL,
       address: {
         "@type": "PostalAddress",
-        ...ADDRESS,
+        addressCountry: ADDRESS.addressCountry,
+        addressLocality: ADDRESS.addressLocality,
+        streetAddress: ADDRESS.streetAddress,
       },
       sameAs: [
         // сюда можно добавить соцсети, например Telegram

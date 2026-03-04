@@ -43,8 +43,108 @@ const VACANCIES: Vacancy[] = [
   },
 ];
 
+const SITE_URL = "https://basolution.ru";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 2, name: "Карьера", item: `${SITE_URL}/career/` },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Вакансии BASolution",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        item: {
+          "@type": "JobPosting",
+          title: "Арбитражный управляющий",
+          description:
+            "Ищем в команду опытного арбитражного управляющего с портфолио успешных дел. Задача — контроль помощников и ведение процедур банкротства физлиц.",
+          datePosted: "2023-01-29",
+          employmentType: "FULL_TIME",
+          hiringOrganization: {
+            "@type": "Organization",
+            name: "BASolution",
+            sameAs: SITE_URL,
+          },
+          jobLocation: {
+            "@type": "Place",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Москва",
+              addressCountry: "RU",
+            },
+          },
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        item: {
+          "@type": "JobPosting",
+          title: "Помощник арбитражного управляющего",
+          description:
+            "Требуется помощник с опытом от 3 лет. Консультирование клиентов, подготовка документов и сопровождение судебных заседаний.",
+          datePosted: "2023-01-26",
+          employmentType: "FULL_TIME",
+          hiringOrganization: {
+            "@type": "Organization",
+            name: "BASolution",
+            sameAs: SITE_URL,
+          },
+          jobLocation: {
+            "@type": "Place",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Москва",
+              addressCountry: "RU",
+            },
+          },
+        },
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        item: {
+          "@type": "JobPosting",
+          title: "Юрист по банкротству физических лиц",
+          description:
+            "Ищем грамотного юриста, готового представлять интересы клиентов в судах, готовить договоры и контролировать юридические процессы компании.",
+          datePosted: "2023-01-09",
+          employmentType: "FULL_TIME",
+          hiringOrganization: {
+            "@type": "Organization",
+            name: "BASolution",
+            sameAs: SITE_URL,
+          },
+          jobLocation: {
+            "@type": "Place",
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Москва",
+              addressCountry: "RU",
+            },
+          },
+        },
+      },
+    ],
+  },
+];
+
 export default function CareerPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     <main>
       {/* HERO */}
       <header className="career-hero" aria-labelledby="career-title">
@@ -119,5 +219,6 @@ export default function CareerPage() {
         </div>
       </section>
     </main>
+    </>
   );
 }
