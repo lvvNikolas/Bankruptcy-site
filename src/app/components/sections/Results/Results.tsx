@@ -82,6 +82,8 @@ function ResultCard({
       ref={cardRef}
       className="results__card"
       data-index={index}
+      data-visible={visible}
+      style={{ "--i": index } as React.CSSProperties}
     >
       <h3 className="results__bank">{name}</h3>
 
@@ -122,7 +124,7 @@ export default function Results() {
 
           <h2 id="results-title" className="results__title">
             Мы помогли более{" "}
-            <span className="results__accent">3&nbsp;000 клиентам</span>
+            <span className="results__accent">500 клиентам</span>
             <br />
             списать свыше{" "}
             <span className="results__accent">1&nbsp;млрд&nbsp;рублей</span>
@@ -133,6 +135,21 @@ export default function Results() {
             списания задолженности в рамках процедуры банкротства.
           </p>
         </header>
+
+        <div className="results__stats" aria-hidden="true">
+          <div className="results__stat">
+            <span className="results__statNum">500+</span>
+            <span className="results__statLabel">клиентов</span>
+          </div>
+          <div className="results__stat">
+            <span className="results__statNum">1&nbsp;млрд+</span>
+            <span className="results__statLabel">рублей списано</span>
+          </div>
+          <div className="results__stat">
+            <span className="results__statNum">98%</span>
+            <span className="results__statLabel">дел выиграно</span>
+          </div>
+        </div>
 
         <div className="results__grid">
           {banks.map((b, i) => (
