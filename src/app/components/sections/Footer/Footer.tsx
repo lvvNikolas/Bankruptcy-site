@@ -57,9 +57,6 @@ export default function Footer() {
                 <Link href={{ pathname: "/" }}>Главная</Link>
               </li>
               <li>
-                <Link href={{ pathname: "/tarify" }}>Тарифы</Link>
-              </li>
-              <li>
                 <Link href={{ pathname: "/cases" }}>Выигранные дела</Link>
               </li>
               <li>
@@ -75,9 +72,6 @@ export default function Footer() {
           <nav className="footer__col" aria-label="Разделы">
             <div className="footer__heading">Разделы</div>
             <ul className="footer__list">
-              <li>
-                <Link href={{ pathname: "/oplata" }}>Оплата</Link>
-              </li>
               <li>
                 <Link href={{ pathname: "/contacts" }}>Контакты</Link>
               </li>

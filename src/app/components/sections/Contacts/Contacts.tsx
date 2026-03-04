@@ -25,13 +25,13 @@ export default function Contacts({ withHead = true }: Props) {
         <div style={{ marginTop: "1.5rem" }}>
           <p>
             📞 Телефон:{" "}
-            <a href="tel:+7 (916) 297-96-45" className="link">
+            <a href="tel:+79162979645" className="link">
               +7&nbsp;916&nbsp;297-96-45
             </a>
           </p>
           <p>
             ✉️ E-mail:{" "}
-            <a href="mailto:info@example.ru" className="link">
+            <a href="mailto:bankruptcyagencysolution@yandex.com" className="link">
               bankruptcyagencysolution@yandex.com
             </a>
           </p>

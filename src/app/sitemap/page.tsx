@@ -13,8 +13,8 @@ type Section = {
 };
 
 export const metadata: Metadata = {
-  title: "Карта сайта — Компания",
-  description: "Быстрый доступ ко всем разделам сайта Компания и Ко.",
+  title: "Карта сайта — BASolution",
+  description: "Быстрый доступ ко всем разделам сайта BASolution.",
 };
 
 const SECTIONS: Section[] = [
@@ -22,8 +22,8 @@ const SECTIONS: Section[] = [
     title: "Основные разделы",
     links: [
       { href: "/" as Route, label: "Главная" },
-      { href: "/uslugi" as Route, label: "Услуги" },
       { href: "/cases" as Route, label: "Выигранные дела" },
+      { href: "/blog" as Route, label: "Блог" },
       { href: "/faq" as Route, label: "Вопросы и ответы" },
       { href: "/career" as Route, label: "Карьера" },
       { href: "/contacts" as Route, label: "Контакты" },
@@ -32,10 +32,8 @@ const SECTIONS: Section[] = [
   {
     title: "Полезная информация",
     links: [
-      // эти роуты тоже должны существовать в app/, иначе просто убери/переименуй
-      { href: "/privacy-policy" as Route, label: "Политика конфиденциальности" },
-      { href: "/terms-of-use" as Route, label: "Пользовательское соглашение" },
-      { href: "/disclosures" as Route, label: "Раскрытия информации" },
+      { href: "/politika-konfidentsialnosti" as Route, label: "Политика конфиденциальности" },
+      { href: "/policy" as Route, label: "Политика обработки персональных данных" },
     ],
   },
 ];
@@ -46,7 +44,7 @@ export default function SitemapPage() {
       <div className="container">
         <h1 className="sitemap__title">Карта сайта</h1>
         <p className="sitemap__desc">
-          Быстрый доступ ко всем страницам сайта «Орловский и Ко».
+          Быстрый доступ ко всем страницам сайта BASolution.
         </p>
 
         <div className="sitemap__grid">

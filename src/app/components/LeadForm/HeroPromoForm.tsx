@@ -342,7 +342,7 @@ export default function LeadForm({
         <input type="checkbox" {...register("agree")} />
         <span>
           Согласен(а) с{" "}
-          <a href="/politika-konfidencialnosti" target="_blank" rel="noreferrer">
+          <a href="/politika-konfidentsialnosti" target="_blank" rel="noreferrer">
             политикой конфиденциальности
           </a>
         </span>
