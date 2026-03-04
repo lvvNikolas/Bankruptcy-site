@@ -1,244 +1,391 @@
 /* =========================================================================
-   Footer — тёмный, аккуратный, адаптивный
+   Footer — premium dark, gold accents
    ========================================================================= */
 
-.footer{
-  --bg: #0b0c10;
-  --text: #e7ecf6;
-  --muted: #a6afbd;
-  --brand: #b54b45;                 /* бордовый акцент */
-  --gold1: #f5d67a;
-  --gold2: #ecc459;
-  --goldBorder: #d4a931;
-  --line: rgba(255,255,255,.06);
+.footer {
+  --f-bg:          #080e1f;
+  --f-surface:     rgba(255, 255, 255, 0.04);
+  --f-text:        #e2e8f4;
+  --f-muted:       #8a96aa;
+  --f-line:        rgba(255, 255, 255, 0.07);
+  --f-gold1:       #f6d879;
+  --f-gold2:       #e6c05b;
+  --f-goldBorder:  rgba(246, 216, 121, 0.35);
+  --f-goldGlow:    rgba(229, 184, 65, 0.22);
 
-  background: var(--bg);
-  color: var(--text);
-  border-top: 1px solid var(--line);
+  background: var(--f-bg);
+  color: var(--f-text);
+  border-top: 1px solid var(--f-line);
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.6;
+  position: relative;
 }
 
-.footer .container{
+/* Тонкая gold линия сверху */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--f-gold1), var(--f-gold2), transparent);
+}
+
+.footer .container {
   width: min(1200px, 92vw);
   margin-inline: auto;
-  padding: 32px 0 20px;
+  padding: clamp(40px, 5vw, 64px) 0 clamp(24px, 3vw, 36px);
 }
 
-/* ====== Верх: сетка 4 колонки (на планшет 2, на мобилке 1) ====== */
-.footer__grid{
+/* ====== Сетка 4 колонки ====== */
+
+.footer__grid {
   display: grid;
-  grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-  gap: 32px;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: clamp(24px, 3.5vw, 48px);
   align-items: start;
 }
 
 /* ====== Левый блок ====== */
-.footer__col{ min-width: 0; }
 
-.footer__logo{
-  margin: 0 0 8px;
-  font-size: 28px;
-  font-weight: 900;
-  letter-spacing: .2px;
-  color: var(--brand);
+.footer__col {
+  min-width: 0;
 }
 
-.footer__lead{
-  margin: 0 0 16px;
-  color: var(--muted);
-  max-width: 520px;
+/* Логотип — gold gradient текст */
+.footer__logo {
+  margin: 0 0 12px;
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  background: linear-gradient(135deg, var(--f-gold1) 0%, var(--f-gold2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+.footer__lead {
+  margin: 0 0 20px;
+  color: var(--f-muted);
+  max-width: 340px;
+  font-size: 14px;
+  line-height: 1.65;
 }
 
 /* Telegram CTA */
-.footer__tgBtn{
+.footer__tgBtn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 14px;
-  color: var(--text);
+  padding: 11px 16px;
+  border: 1px solid var(--f-line);
+  border-radius: 12px;
+  color: var(--f-text);
   text-decoration: none;
-  background: rgba(255,255,255,.03);
-  transition: border-color .15s ease, transform .06s ease, background-color .15s ease;
+  background: var(--f-surface);
+  font-size: 14px;
+  font-weight: 600;
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    transform 0.08s ease;
 }
-.footer__tgBtn:hover{
-  border-color: rgba(176,74,69,.55);
-  background: rgba(176,74,69,.08);
+
+.footer__tgBtn:hover {
+  border-color: var(--f-goldBorder);
+  background: var(--f-goldGlow);
+  text-decoration: none;
+  color: var(--f-gold1);
 }
-.footer__tgBtn:active{ transform: translateY(1px); }
+
+.footer__tgBtn:active {
+  transform: translateY(1px);
+}
 
 /* Рейтинг */
-.footer__rating{
-  display: flex; align-items: center; gap: 10px;
-  margin-top: 18px;
-}
-.footer__ratingTitle{ color: var(--muted); font-size: 14px; }
-.footer__ratingValue{ font-weight: 800; color: var(--text); }
-
-/* ====== Навигация ====== */
-.footer__heading{
-  margin: 0 0 10px;
-  font-weight: 800;
-  color: var(--text);
-}
-
-.footer__list{
-  list-style: none;
-  padding: 0; margin: 0;
-  display: grid; gap: 8px;
-}
-.footer__list a{
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s ease;
-}
-.footer__list a:hover{ color: var(--brand); }
-
-/* ====== Контакты ====== */
-.footer__contacts{ font-style: normal; }
-
-.footer__contactItem{
-  display: grid;
-  grid-template-columns: 40px 1fr;
-  gap: 12px;
-  align-items: start;
-  margin: 14px 0;
-}
-
-.footer__ico{
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  display: grid; place-items: center;
-  color: #5a3d14;
-  background: linear-gradient(180deg, var(--gold1), var(--gold2));
-  border: 1px solid var(--goldBorder);
-  box-shadow: 0 12px 28px rgba(229,184,65,.25);
-}
-.footer__ico svg{ width: 20px; height: 20px; }
-
-/* Титул и ссылки */
-.footer__contactTitle{
-  font-weight: 800; color: var(--text);
-}
-.footer__address{ color: var(--text); }
-
-.footer__link{
-  color: var(--text);
-  text-decoration: none;
-}
-.footer__link:hover{ color: var(--brand); }
-.footer__meta{ color: var(--muted); font-size: 13px; margin-top: 2px; }
-
-/* ====== ЕДИНАЯ ЛИНИЯ телефона (Заголовок — Бейдж — Номер) ====== */
-.footer__phoneRow{
+.footer__rating {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;               /* чтобы на узких не ломалось некрасиво */
-  gap: 10px 12px;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 10px 14px;
+  background: var(--f-surface);
+  border: 1px solid var(--f-line);
+  border-radius: 12px;
+  width: fit-content;
+}
+
+.footer__ratingTitle {
+  color: var(--f-muted);
+  font-size: 13px;
+}
+
+.footer__ratingValue {
+  font-weight: 800;
+  font-size: 18px;
+  color: var(--f-text);
+  line-height: 1;
+}
+
+/* ====== Навигация ====== */
+
+.footer__heading {
+  margin: 0 0 14px;
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--f-muted);
+}
+
+.footer__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.footer__list a {
+  color: var(--f-text);
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.8;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.footer__list a:hover {
+  opacity: 1;
+  color: var(--f-gold1);
+  text-decoration: none;
+}
+
+/* ====== Контакты ====== */
+
+.footer__contacts {
+  font-style: normal;
+}
+
+.footer__contactItem {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 12px;
+  align-items: start;
+  margin: 0 0 18px;
+}
+
+.footer__contactItem:last-child {
+  margin-bottom: 0;
+}
+
+/* Gold иконки */
+.footer__ico {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: #2a1f08;
+  background: linear-gradient(145deg, var(--f-gold1), var(--f-gold2));
+  border: 1px solid var(--f-goldBorder);
+  box-shadow: 0 8px 20px var(--f-goldGlow);
+  flex-shrink: 0;
+}
+
+.footer__ico svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.footer__contactTitle {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--f-muted);
+  margin-bottom: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.footer__address {
+  color: var(--f-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.footer__link {
+  color: var(--f-text);
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.15s ease;
+}
+
+.footer__link:hover {
+  color: var(--f-gold1);
+  text-decoration: none;
+}
+
+.footer__meta {
+  color: var(--f-muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* Телефонная строка */
+.footer__phoneRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
   margin-bottom: 4px;
 }
 
-.footer__titleText{
-  font-weight: 800;
-  color: var(--text);
-  white-space: nowrap;
+.footer__titleText {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--f-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.footer__badgeOnline{
+.footer__phone {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--f-text);
+  white-space: nowrap;
+  display: block;
+  margin-top: 2px;
+}
+
+/* Бейдж "На связи" */
+.footer__badgeOnline {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-  padding: 4px 10px;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
   border-radius: 999px;
-  background: #2e7d32;
-  color: #eaffea;
+  background: rgba(22, 163, 74, 0.15);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  color: #4ade80;
   white-space: nowrap;
-}
-.footer__badgeOnline::before{
-  content: "●";
-  display: inline-block;
-  font-size: 12px;
+  letter-spacing: 0.04em;
 }
 
-.footer__phone{
-  font-weight: 800;
-  color: var(--text);
-  white-space: nowrap;
+.footer__badgeOnline::before {
+  content: "●";
+  font-size: 8px;
+  animation: blink 2s step-start infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
 }
 
 /* ====== Нижняя полоса ====== */
-.footer__bottom{
-  margin-top: 28px; padding-top: 18px;
-  border-top: 1px solid var(--line);
-  display: flex; flex-wrap: wrap;
-  gap: 12px; align-items: center; justify-content: space-between;
+
+.footer__bottom {
+  margin-top: clamp(24px, 4vw, 40px);
+  padding-top: 18px;
+  border-top: 1px solid var(--f-line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
 }
-.footer__legal{
-  display: flex; gap: 18px; flex-wrap: wrap;
+
+.footer__legal {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-.footer__legal a{
-  color: var(--muted);
+
+.footer__legal a {
+  color: var(--f-muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.15s ease;
+}
+
+.footer__legal a:hover {
+  color: var(--f-gold1);
   text-decoration: none;
 }
-.footer__legal a:hover{ color: var(--brand); }
-.footer__copy{ color: var(--muted); font-size: 13px; }
+
+.footer__copy {
+  color: var(--f-muted);
+  font-size: 13px;
+}
 
 /* =========================================================================
    Адаптив
    ========================================================================= */
 
-/* планшет: 2 колонки */
-@media (max-width: 1100px){
-  .footer__grid{ grid-template-columns: 1.2fr 1fr; }
+@media (max-width: 1100px) {
+  .footer__grid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
+  }
 }
 
-/* телефон: одна колонка, выравнивание по центру */
-@media (max-width: 740px){
-  .footer__grid{
+@media (max-width: 740px) {
+  .footer__grid {
     grid-template-columns: 1fr;
-    gap: 26px;
+    gap: 28px;
   }
 
-  .footer .container{ padding: 28px 0 18px; }
+  .footer .container {
+    padding-block: 36px 20px;
+  }
 
   .footer__col,
   .footer__rating,
   .footer__list,
   .footer__bottom,
-  .footer__legal{
+  .footer__legal {
     text-align: center;
     justify-content: center;
   }
 
-  /* Контактные карточки — иконка сверху, текст под ней */
-  .footer__contactItem{
+  .footer__lead {
+    max-width: 100%;
+  }
+
+  .footer__rating {
+    margin-inline: auto;
+  }
+
+  .footer__contactItem {
     grid-template-columns: 1fr;
     justify-items: center;
     text-align: center;
-    gap: 10px;
-    margin: 18px 0;
-  }
-  .footer__ico{ margin-bottom: 2px; }
-
-  .footer__phoneRow{
-    justify-content: center;      /* на мобилке всё по центру */
-    gap: 8px 10px;
+    gap: 8px;
+    margin-bottom: 22px;
   }
 
-  .footer__bottom{
+  .footer__phoneRow {
+    justify-content: center;
+  }
+
+  .footer__bottom {
     flex-direction: column;
     gap: 10px;
+    text-align: center;
   }
 }
 
-/* Микроправки для очень узких экранов */
-@media (max-width: 380px){
-  .footer__phoneRow{ gap: 6px 8px; }
-  .footer__badgeOnline{ padding: 3px 8px; font-size: 12px; }
-  .footer__ico{ width: 38px; height: 38px; }
+@media (max-width: 380px) {
+  .footer__ico {
+    width: 38px;
+    height: 38px;
+  }
+
+  .footer__badgeOnline {
+    font-size: 10px;
+  }
 }

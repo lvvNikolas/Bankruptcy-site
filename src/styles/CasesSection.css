@@ -1,70 +1,72 @@
 /* =========================================================================
-   CasesSection — выигранные дела и отзывы (светлая тема, единый стиль)
+   CasesSection — premium redesign
    ========================================================================= */
-
-:root {
-  --cases-bg:       #f9fafb;
-  --cases-surface:  #ffffff;
-  --cases-surface2: #f4f5f7;
-  --cases-text:     var(--text, #0f172a);
-  --cases-muted:    var(--muted, #64748b);
-  --cases-brand:    var(--brand, #d1a24c);
-  --cases-line:     #e4e7ec;
-
-  --cases-radius-lg: 20px;
-  --cases-radius-md: 16px;
-  --cases-radius-sm: 10px;
-
-  --cases-shadow-md:   0 12px 32px rgba(15, 23, 42, 0.08);
-  --cases-shadow-soft: 0 8px 22px rgba(15, 23, 42, 0.06);
-}
 
 /* ===== Секция ===== */
 
 .cases {
-  background: var(--cases-bg);
-  color: var(--cases-text);
-  padding: clamp(48px, 7vw, 80px) 0;
+  background: var(--surface-2, #f7f8fa);
+  color: var(--text);
+  padding: clamp(64px, 8vw, 108px) 0;
 }
 
-/* ===== Заголовок секции ===== */
+/* ===== Шапка ===== */
 
 .cases__head {
   text-align: center;
-  margin-bottom: clamp(28px, 5vw, 48px);
+  max-width: 760px;
+  margin-inline: auto;
+  margin-bottom: clamp(32px, 5vw, 52px);
 }
 
+/* Eyebrow-бейдж */
 .cases__eyebrow {
-  margin: 0 0 6px;
-  font-size: var(--fs-sm, 14px);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 18px;
+  border-radius: 999px;
+  background: rgba(230, 192, 91, 0.12);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  font-size: var(--eyebrow-size, 0.68rem);
+  font-weight: var(--eyebrow-weight, 700);
+  letter-spacing: var(--eyebrow-spacing, 0.1em);
   text-transform: uppercase;
-  letter-spacing: 0.16em;
-  color: var(--cases-muted);
+  color: #8a6800;
+  margin: 0 0 18px;
+}
+
+.cases__eyebrow::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d4a017;
+  flex-shrink: 0;
 }
 
 .cases__title {
-  margin: 0 0 10px;
-  font-size: clamp(28px, 4.4vw, 40px);
-  line-height: 1.1;
-  font-weight: 900;
-  color: var(--cases-text);
+  margin: 0 0 12px;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-heavy, 800);
+  line-height: var(--lh-heading, 1.2);
+  letter-spacing: -0.01em;
+  color: var(--text);
 }
 
 .cases__lead {
   margin: 0;
-  max-width: 640px;
-  margin-inline: auto;
-  color: var(--cases-muted);
-  font-size: clamp(15px, 1.9vw, 17px);
+  color: var(--muted);
+  font-size: var(--fs-md, 16px);
+  line-height: var(--lh-body, 1.65);
 }
 
-/* ===== Сетка карточек ===== */
+/* ===== Сетка кейсов ===== */
 
 .cases__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: clamp(20px, 3vw, 28px);
-  margin-top: clamp(24px, 4vw, 32px);
+  gap: clamp(20px, 3vw, 32px);
 }
 
 /* ===== Карточка кейса ===== */
@@ -72,63 +74,84 @@
 .case {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
-  background: var(--cases-surface);
-  border: 1px solid var(--cases-line);
-  border-radius: var(--cases-radius-lg);
-  box-shadow: var(--cases-shadow-soft);
-  padding: clamp(16px, 2.5vw, 22px);
+  gap: 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.07);
+  padding: clamp(20px, 2.8vw, 28px);
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.22s ease, border-color 0.18s ease;
+}
+
+/* Золотая полоска сверху */
+.case::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f6d879, #e6c05b);
+  border-radius: 20px 20px 0 0;
+}
+
+.case:hover {
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.12);
+  border-color: rgba(209, 162, 76, 0.25);
 }
 
 @media (min-width: 1024px) {
   .case {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: clamp(20px, 2.8vw, 32px);
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(24px, 3vw, 36px);
     align-items: stretch;
   }
 }
 
-/* Левая колонка */
+/* ===== Левая колонка: инфо ===== */
 
 .case__info {
   display: grid;
-  gap: 14px;
+  gap: 16px;
 }
 
 /* Клиент + город */
 
 .case__personRow {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 12px;
+  display: flex;
   align-items: center;
+  gap: 14px;
 }
 
 .case__avatar {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   background: radial-gradient(35% 35% at 30% 30%, #e9d0b0, #c49a6a);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px rgba(209, 162, 76, 0.3);
+  flex-shrink: 0;
 }
 
 .case__person {
   font-weight: 800;
-  font-size: clamp(16px, 2.2vw, 18px);
-  color: var(--cases-text);
+  font-size: clamp(15px, 2vw, 17px);
+  color: var(--text);
 }
 
 .case__city {
-  color: var(--cases-muted);
-  font-size: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
 }
 
-/* История */
+/* История клиента */
 
 .case__story {
-  margin: 6px 0 0;
-  color: #111827;
-  line-height: 1.55;
+  margin: 0;
+  color: #374151;
+  line-height: 1.6;
   font-size: 15px;
 }
 
@@ -136,28 +159,32 @@
 
 .case__score {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 10px;
-  align-items: baseline;
-  margin-top: 6px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(209, 162, 76, 0.08);
+  border: 1px solid rgba(209, 162, 76, 0.25);
+  border-radius: 14px;
 }
 
 .case__scoreLabel {
-  color: var(--cases-muted);
-  font-size: 15px;
+  color: var(--muted);
+  font-size: 14px;
+  white-space: nowrap;
 }
 
 .case__scoreValue {
-  color: var(--cases-brand);
   font-weight: 900;
-  font-size: clamp(22px, 3.2vw, 30px);
+  font-size: clamp(20px, 3vw, 28px);
+  color: #a07800;
+  line-height: 1;
 }
 
-/* Карточки с деталями дела */
+/* Мета-карточки: № дела, срок */
 
 .case__cards {
   display: grid;
-  gap: 12px;
+  gap: 10px;
   grid-template-columns: 1fr;
 }
 
@@ -168,44 +195,53 @@
 }
 
 .case__card {
-  background: var(--cases-surface2);
-  border: 1px solid var(--cases-line);
-  border-radius: var(--cases-radius-md);
+  background: var(--surface-soft, #f3f4f6);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 12px;
   padding: 12px 16px;
+  border-left: 3px solid rgba(209, 162, 76, 0.5);
 }
 
 .case__cardLabel {
-  color: var(--cases-muted);
-  font-size: 13px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .case__cardValue {
   font-weight: 700;
-  color: var(--cases-text);
+  font-size: 14px;
+  color: var(--text);
 }
 
 /* Кредиторы */
 
 .case__creditors {
-  background: var(--cases-surface2);
-  border: 1px solid var(--cases-line);
-  border-radius: var(--cases-radius-md);
+  background: var(--surface-soft, #f3f4f6);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 12px;
   padding: 12px 16px;
+  border-left: 3px solid rgba(209, 162, 76, 0.5);
 }
 
 .case__creditorsList {
-  color: var(--cases-text);
+  color: var(--text);
   margin-top: 4px;
   font-size: 14px;
+  line-height: 1.5;
 }
 
-/* ===== Правая колонка — документ / PDF ===== */
+/* ===== Правая колонка: документ ===== */
 
 .case__docs {
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
+  gap: 10px;
 }
 
 .case__docMain {
@@ -213,18 +249,18 @@
   width: 100%;
   padding: 0;
   border: 0;
-  border-radius: var(--cases-radius-md);
+  border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
   background: #fff;
-  border: 1px solid var(--cases-line);
-  box-shadow: var(--cases-shadow-md);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.09);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .case__docMain:hover {
   transform: translateY(-2px);
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.14);
 }
 
 .case__docMainImg {
@@ -234,19 +270,19 @@
   object-fit: cover;
 }
 
-/* Лупа для изображений */
+/* Лупа */
 
 .case__docZoom {
   position: absolute;
   inset: 50%;
-  transform: translate(-50%, -50%) scale(0.92);
-  width: 72px;
-  height: 72px;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 68px;
+  height: 68px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.97);
   display: grid;
   place-items: center;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.2);
   opacity: 0;
   transition: opacity 0.18s ease, transform 0.18s ease;
 }
@@ -257,19 +293,19 @@
 }
 
 .case__docZoom svg {
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   fill: #374151;
 }
 
-/* PDF карточка внутри документа */
+/* PDF карточка */
 
 .case__docPdf {
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 16px 18px;
-  background: linear-gradient(135deg, #fef9c3, #fef3c7);
+  padding: 18px 20px;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
 }
 
 .case__docPdfIcon {
@@ -280,6 +316,7 @@
   display: grid;
   place-items: center;
   box-shadow: 0 8px 20px rgba(249, 115, 22, 0.4);
+  flex-shrink: 0;
 }
 
 .case__docPdfIcon svg {
@@ -304,10 +341,10 @@
   color: #b45309;
 }
 
-/* ===== CTA (единый стиль кнопки) ===== */
+/* ===== CTA ===== */
 
 .cases__cta {
-  margin-top: clamp(24px, 4vw, 40px);
+  margin-top: clamp(32px, 5vw, 48px);
   display: grid;
   place-items: center;
 }
@@ -316,7 +353,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding-inline: 22px;
+  padding-inline: 28px;
   font-weight: 700;
 }
 
@@ -326,12 +363,13 @@
   fill: currentColor;
 }
 
-/* ===== Лайтбокс документов ===== */
+/* ===== Лайтбокс ===== */
 
 .lb {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.75);
+  background: rgba(8, 14, 31, 0.82);
+  backdrop-filter: blur(4px);
   display: grid;
   grid-template-columns: 64px minmax(0, 1fr) 64px;
   align-items: center;
@@ -349,21 +387,9 @@
 .lb__img {
   max-width: 100%;
   max-height: calc(100vh - 120px);
-  border-radius: var(--cases-radius-md);
-  box-shadow: var(--cases-shadow-md);
+  border-radius: 14px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
   background: #fff;
-}
-
-/* iframe для PDF */
-
-.lb__frame {
-  width: 100%;
-  max-width: 100%;
-  height: min(88vh, 960px);
-  border-radius: var(--cases-radius-md);
-  border: none;
-  box-shadow: var(--cases-shadow-md);
-  background: #ffffff;
 }
 
 .lb__nav {
@@ -375,8 +401,10 @@
   cursor: pointer;
   user-select: none;
   line-height: 1;
-  opacity: 0.85;
+  opacity: 0.75;
+  transition: opacity 0.15s ease;
 }
+
 .lb__nav:hover {
   opacity: 1;
 }
@@ -384,32 +412,40 @@
 .lb__nav--prev {
   justify-self: end;
 }
+
 .lb__nav--next {
   justify-self: start;
 }
 
 .lb__close {
   position: fixed;
-  top: 12px;
+  top: 14px;
   right: 16px;
   border: 0;
-  background: rgba(255, 255, 255, 0.94);
+  background: rgba(255, 255, 255, 0.95);
   color: #111827;
   width: 44px;
   height: 44px;
   border-radius: 12px;
   cursor: pointer;
   font-size: 26px;
-  line-height: 1;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
+  line-height: 44px;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: background 0.15s ease;
 }
 
-/* ===== Модалка с формой ===== */
+.lb__close:hover {
+  background: #fff;
+}
+
+/* ===== Форма-модалка ===== */
 
 .casesFormOverlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.55);
+  background: rgba(8, 14, 31, 0.65);
+  backdrop-filter: blur(4px);
   display: grid;
   place-items: center;
   padding: 20px;
@@ -418,79 +454,81 @@
 
 .casesForm {
   width: 100%;
-  max-width: 640px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  box-shadow: 0 30px 80px rgba(16, 24, 40, 0.2);
-  padding: clamp(18px, 3vw, 24px);
-  animation: casesFormIn 0.18s ease both;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(8, 14, 31, 0.4);
+  animation: casesFormIn 0.22s ease both;
 }
 
 @keyframes casesFormIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* Тёмная шапка (как в quiz/contacts) */
 .casesForm__top {
+  background: linear-gradient(160deg, #0f1e3d 0%, #162848 100%);
+  padding: 22px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 10px;
 }
 
 .casesForm__title {
   margin: 0;
-  font-size: clamp(18px, 2.4vw, 22px);
+  font-size: clamp(17px, 2.2vw, 20px);
   font-weight: 800;
-  color: #111827;
+  color: #fff;
 }
 
 .casesForm__close {
   appearance: none;
-  border: 0;
-  background: #f3f4f6;
-  color: #111827;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
   cursor: pointer;
-  font-size: 24px;
+  font-size: 22px;
   line-height: 1;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
 }
+
 .casesForm__close:hover {
-  filter: brightness(1.04);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Тело формы */
+.casesForm > .leadform {
+  padding: 20px 24px 24px;
 }
 
 /* ===== Адаптив ===== */
 
 @media (max-width: 720px) {
   .case {
-    padding: 14px;
-  }
-
-  .case__personRow {
-    grid-template-columns: 48px 1fr;
+    padding: 16px;
   }
 
   .case__avatar {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
   }
 
   .casesFormOverlay {
     padding: 12px;
+    align-items: flex-end;
   }
 
   .casesForm {
-    padding: 16px;
+    border-radius: 20px 20px 0 0;
   }
 
   .lb {

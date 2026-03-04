@@ -215,7 +215,8 @@ export default function Quiz() {
 
   return (
     <section id="quiz" className="quiz section" aria-label="Квиз">
-      <div className="container">
+      <div className="container quiz__head">
+        <p className="quiz__eyebrow">6 вопросов · Бесплатно</p>
         <h2 className="quiz__title">
           Ответьте на 6 вопросов и получите <br /> персональную консультацию
         </h2>
@@ -246,16 +247,9 @@ export default function Quiz() {
                 </div>
               </div>
 
-              {!completed ? (
-                <p className="quiz__note">
-                  Осталось {Math.max(total - (step + 1), 0)} вопрос(а). Отвечайте честно — это
-                  поможет точнее оценить ситуацию.
-                </p>
-              ) : (
-                <p className="quiz__note">
-                  Мы получили ваши ответы. Оставьте контакты — юрист свяжется и скажет, что делать дальше.
-                </p>
-              )}
+              <p className="quiz__note">
+                Отвечайте честно — это поможет точнее оценить вашу ситуацию и подобрать оптимальный путь.
+              </p>
             </aside>
 
             {/* RIGHT */}

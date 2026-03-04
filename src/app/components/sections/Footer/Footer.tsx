@@ -122,7 +122,7 @@ export default function Footer() {
               </span>
               <div>
                 <div className="footer__contactTitle">Пишите, ответим</div>
-                <a className="footer__link" href="bankruptcyagencysolution@yandex.com">
+                <a className="footer__link" href="mailto:bankruptcyagencysolution@yandex.com">
                   bankruptcyagencysolution@yandex.com
                 </a>
               </div>
@@ -153,7 +153,7 @@ export default function Footer() {
           </nav>
 
           <div className="footer__copy">
-            © «Компания», 2021–{year}. Все права защищены.
+            © BASolution, 2021–{year}. Все права защищены.
           </div>
         </div>
       </div>
