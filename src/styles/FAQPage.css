@@ -12,9 +12,31 @@
 
 .faq-hero {
   position: relative;
-  background: #ffffff;
+  background: linear-gradient(180deg, #fafbfc 0%, #ffffff 100%);
   border-bottom: 1px solid rgba(15, 23, 42, 0.06);
   padding: clamp(40px, 5vw, 72px) 0;
+}
+
+.faq-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a6800;
+  background: rgba(230, 192, 91, 0.12);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  border-radius: 20px;
+  padding: 5px 14px;
+  margin-bottom: 12px;
+}
+
+.faq-eyebrow::before {
+  content: "●";
+  font-size: 0.5em;
+  color: #d1a24c;
 }
 
 /* Хлебные крошки */
@@ -141,6 +163,17 @@
 .faq-a {
   color: #374151;
   line-height: 1.65;
+}
+
+/* Открытое состояние */
+.faq-card[open] {
+  border-color: rgba(209, 162, 76, 0.4);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+}
+
+.faq-card[open] .faq-icon::before,
+.faq-card[open] .faq-icon::after {
+  background: #d1a24c;
 }
 
 /* Ховер/фокус */

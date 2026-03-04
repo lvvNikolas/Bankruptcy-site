@@ -24,6 +24,7 @@ export default function Debts({ withHead = true }: Props) {
       <div className="container debts__container">
         {/* Центрированный мощный заголовок */}
         <header className="debts__head">
+          <p className="debts__eyebrow">Разбираем по категориям</p>
           <h2 id="debts-title" className="debts__title">
             Какие долги можно<br />
             <span className="debts__accent">списать</span>, а какие — нет?

@@ -125,6 +125,7 @@ export default function FAQPage() {
             </ol>
           </nav>
 
+          <p className="faq-eyebrow">8 ответов на частые вопросы</p>
           <h1 id="faq-title" className="faq-title">
             Вопросы и ответы
           </h1>

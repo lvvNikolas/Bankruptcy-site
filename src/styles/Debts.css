@@ -48,6 +48,28 @@ body[data-theme="dark"] {
   margin-bottom: clamp(24px, 4vw, 44px);
 }
 
+.debts__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #8a6800;
+  background: rgba(230, 192, 91, 0.12);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  border-radius: 20px;
+  padding: 5px 14px;
+  margin-bottom: 16px;
+}
+
+.debts__eyebrow::before {
+  content: "●";
+  font-size: 0.5em;
+  color: #d1a24c;
+}
+
 .debts__title {
   margin: 0;
   color: var(--debts-ink);
@@ -177,6 +199,17 @@ body[data-theme="dark"] {
   width: 24px;
   height: 24px;
   color: var(--debts-ink);
+}
+
+/* ---------- Gold иконки в левой колонке ---------- */
+.debts__chips:not(.debts__chips--disabled) .debts__ico {
+  background: linear-gradient(145deg, #f6d879, #e6c05b);
+  border-color: rgba(209, 162, 76, 0.3);
+  box-shadow: 0 4px 12px rgba(229, 184, 65, 0.25);
+}
+
+.debts__chips:not(.debts__chips--disabled) .debts__ico svg {
+  color: #2a1f08;
 }
 
 /* ---------- Правая колонка (приглушённая) ---------- */

@@ -21,9 +21,10 @@
 .debtsCon__eyebrow {
   display: inline-flex;
   align-items: center;
-  background: rgba(186, 90, 82, 0.07);
-  border: 1px solid rgba(186, 90, 82, 0.2);
-  color: #ba5a52;
+  gap: 6px;
+  background: rgba(230, 192, 91, 0.12);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  color: #8a6800;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -31,6 +32,12 @@
   padding: 5px 14px;
   border-radius: 20px;
   margin-bottom: 16px;
+}
+
+.debtsCon__eyebrow::before {
+  content: "●";
+  font-size: 0.5em;
+  color: #d1a24c;
 }
 
 .debtsCon__title {
@@ -93,7 +100,7 @@
   top: 0;
   bottom: 0;
   width: 4px;
-  background: linear-gradient(180deg, #ba5a52, #e07a72);
+  background: linear-gradient(180deg, #f6d879, #e6c05b);
   border-radius: 0 4px 4px 0;
 }
 
@@ -121,7 +128,7 @@
   transform: translateY(-50%);
   font-size: 5.5rem;
   font-weight: 900;
-  color: rgba(186, 90, 82, 0.06);
+  color: rgba(209, 162, 76, 0.08);
   letter-spacing: -0.04em;
   pointer-events: none;
   user-select: none;
@@ -135,7 +142,7 @@
   font-size: clamp(26px, 3vw, 34px);
   font-weight: 900;
   letter-spacing: -0.02em;
-  color: #ba5a52;
+  color: #b8860b;
   line-height: 1;
 }
 
@@ -166,7 +173,7 @@
   background: linear-gradient(145deg, #faf5f5, #f3f4f6);
   border: 1px solid #ede9e9;
   box-shadow:
-    0 8px 24px rgba(186, 90, 82, 0.08),
+    0 8px 24px rgba(209, 162, 76, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
