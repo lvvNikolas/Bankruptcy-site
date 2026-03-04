@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
+import { Manrope } from "next/font/google";
 import "@styles/globals.css";
+
+const manrope = Manrope({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-sans",
+  display: "swap",
+});
 
 import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
@@ -109,7 +117,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   ];
 
   return (
-    <html lang="ru">
+    <html lang="ru" className={manrope.variable}>
       <body>
         <Navbar />
         <main id="main-content">{children}</main>

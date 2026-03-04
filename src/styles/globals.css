@@ -25,11 +25,11 @@
   --shadow-sm:  0 6px 18px rgba(15, 23, 42, 0.06);
   --ring:       0 0 0 3px rgba(209, 162, 76, 0.25);
 
-  /* Типографика + контейнер */
-  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto,
-               "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji",
-               "Segoe UI Symbol", sans-serif;
-  --font-serif: "Playfair Display", "Times New Roman", Georgia, serif;
+  /* ── Шрифт ─────────────────────────────────────────────────────────
+     Manrope загружается через next/font/google в layout.tsx.
+     --font-sans здесь — fallback-цепочка на случай SSR/ошибки.
+     ─────────────────────────────────────────────────────────────── */
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --maxw: 1200px;
 
@@ -43,19 +43,46 @@
   --space-7: 40px;
   --space-8: 56px;
 
-  /* Размеры шрифтов (базовые) */
+  /* ── Типографическая шкала ──────────────────────────────────────────
+     Используй эти переменные вместо хардкода размеров в секциях.
+     ─────────────────────────────────────────────────────────────── */
+
+  /* Базовые размеры */
   --fs-xs: 12px;
   --fs-sm: 14px;
   --fs-md: 16px;
   --fs-lg: 18px;
-  --fs-xl:  clamp(22px, 2.4vw, 26px);
-  --fs-2xl: clamp(28px, 3.2vw, 34px);
-  --fs-3xl: clamp(32px, 4vw, 42px);
 
-  /* Размеры заголовков секций */
-  --h1-size: var(--fs-3xl);
-  --h2-size: var(--fs-2xl);
-  --h3-size: var(--fs-xl);
+  /* Заголовки (fluid) */
+  --fs-h1: clamp(32px, 5vw,   56px);  /* Hero / страничный h1 */
+  --fs-h2: clamp(26px, 3.5vw, 40px);  /* Заголовок секции */
+  --fs-h3: clamp(18px, 2vw,   22px);  /* Карточка / подраздел */
+  --fs-h4: clamp(15px, 1.6vw, 17px);  /* Мелкий заголовок */
+
+  /* Алиасы (обратная совместимость) */
+  --h1-size: var(--fs-h1);
+  --h2-size: var(--fs-h2);
+  --h3-size: var(--fs-h3);
+  --fs-xl:   var(--fs-h3);
+  --fs-2xl:  var(--fs-h2);
+  --fs-3xl:  var(--fs-h1);
+
+  /* Веса */
+  --fw-regular: 400;
+  --fw-medium:  500;
+  --fw-semi:    600;
+  --fw-bold:    700;
+  --fw-heavy:   800;
+
+  /* Межстрочные интервалы */
+  --lh-tight:   1.1;
+  --lh-heading: 1.2;
+  --lh-body:    1.65;
+
+  /* Eyebrow-бейджи */
+  --eyebrow-size:    0.68rem;
+  --eyebrow-weight:  700;
+  --eyebrow-spacing: 0.1em;
 
   /* Кнопки */
   --btn-height: 52px;
@@ -142,15 +169,17 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-serif);
-  line-height: 1.18;
+  font-family: var(--font-sans);
+  line-height: var(--lh-heading);
   margin: 0 0 var(--space-3);
   color: var(--text);
+  font-weight: var(--fw-heavy);
 }
 
-h1 { font-size: var(--h1-size); font-weight: 800; letter-spacing: 0.02em; }
-h2 { font-size: var(--h2-size); font-weight: 700; }
-h3 { font-size: var(--h3-size); font-weight: 600; }
+h1 { font-size: var(--fs-h1); letter-spacing: -0.02em; }
+h2 { font-size: var(--fs-h2); letter-spacing: -0.01em; }
+h3 { font-size: var(--fs-h3); font-weight: var(--fw-bold); }
+h4 { font-size: var(--fs-h4); font-weight: var(--fw-bold); }
 
 p {
   margin: 0 0 var(--space-3);
@@ -165,9 +194,11 @@ small {
 
 .sectionHead {
   margin: 0 0 var(--space-3);
-  font-family: var(--font-serif);
-  font-size: var(--h2-size);
-  font-weight: 700;
+  font-family: var(--font-sans);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-heavy);
+  line-height: var(--lh-heading);
+  letter-spacing: -0.01em;
   text-align: center;
   color: var(--text);
 }
@@ -177,7 +208,8 @@ small {
   max-width: 760px;
   margin: 0 auto var(--space-5);
   text-align: center;
-  font-size: var(--fs-md);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-body);
 }
 
 /* 4) Ссылки */
