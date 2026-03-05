@@ -13,8 +13,8 @@ export default function Footer() {
         <div className="footer__grid">
           {/* Левый столбец: бренд + описание + TG + рейтинг */}
           <div className="footer__col">
-            <div className="footer__logo" aria-label="Solution — списание долгов">
-              Solution
+            <div className="footer__logo" aria-label="Юридическое агентство по банкротству Солюшен">
+              Юридическое агентство<br />по банкротству Солюшен
             </div>
             <p className="footer__lead">
               Помогаем законно списать долги по 127-ФЗ. Работаем по всей России.
@@ -147,7 +147,7 @@ export default function Footer() {
           </nav>
 
           <div className="footer__copy">
-            © BASolution, 2021–{year}. Все права защищены.
+            © Юридическое агентство по банкротству Солюшен, 2019–{year}. Все права защищены.
           </div>
         </div>
       </div>

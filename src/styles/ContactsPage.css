@@ -19,31 +19,26 @@
 
 .contacts__hero {
   position: relative;
-  background: linear-gradient(135deg, #080e1f 0%, #0f1e3d 60%, #162848 100%);
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 28px;
   padding: clamp(36px, 5vw, 64px) clamp(28px, 4vw, 56px);
   overflow: hidden;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.05);
+  isolation: isolate;
 }
 
-/* Точечный паттерн */
-.contacts__hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(246, 216, 121, 0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-}
-
-/* Декоративное золотое свечение */
+/* Мягкое золотое свечение */
 .contacts__hero::after {
   content: "";
   position: absolute;
-  top: -60px;
-  right: -60px;
-  width: 320px;
-  height: 320px;
-  background: radial-gradient(circle, rgba(246, 216, 121, 0.1) 0%, transparent 70%);
+  right: -120px;
+  top: -100px;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff6da, rgba(255, 246, 218, 0) 70%);
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -52,9 +47,9 @@
   z-index: 1;
   display: inline-flex;
   align-items: center;
-  background: rgba(246, 216, 121, 0.12);
-  border: 1px solid rgba(246, 216, 121, 0.3);
-  color: #f6d879;
+  background: rgba(230, 192, 91, 0.12);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  color: #8a6800;
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -70,16 +65,26 @@
   margin: 0 0 14px;
   font-size: clamp(28px, 4vw, 46px);
   font-weight: 900;
-  color: #fff;
+  color: #0e1525;
   line-height: 1.1;
   letter-spacing: -0.02em;
+}
+
+.contacts__title::after {
+  content: "";
+  display: block;
+  width: 76px;
+  height: 6px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d1a24c, #f4d483);
 }
 
 .contacts__lead {
   position: relative;
   z-index: 1;
   margin: 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: #374151;
   font-size: clamp(14px, 1.6vw, 16px);
   line-height: 1.65;
   max-width: 560px;

@@ -8,30 +8,24 @@
 
 .career-hero {
   position: relative;
-  background: linear-gradient(135deg, #080e1f 0%, #0f1e3d 60%, #162848 100%);
-  padding: clamp(48px, 7vw, 88px) 0 clamp(40px, 6vw, 72px);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  padding: clamp(36px, 5vw, 72px) 0;
   overflow: hidden;
+  isolation: isolate;
 }
 
-/* Точечный паттерн */
-.career-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(circle, rgba(246, 216, 121, 0.07) 1px, transparent 1px);
-  background-size: 28px 28px;
-  pointer-events: none;
-}
-
-/* Золотое свечение */
+/* Мягкое золотое свечение справа */
 .career-hero::after {
   content: "";
   position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 360px;
-  height: 360px;
-  background: radial-gradient(circle, rgba(246, 216, 121, 0.09) 0%, transparent 70%);
+  right: -140px;
+  top: -120px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff6da, rgba(255, 246, 218, 0) 70%);
+  z-index: 0;
   pointer-events: none;
 }
 
@@ -44,29 +38,32 @@
   align-items: center;
   gap: 6px;
   list-style: none;
-  margin: 0 0 20px;
+  margin: 0 0 12px;
   padding: 0;
   font-size: 0.82rem;
+  color: #9ca3af;
 }
 
 .career-crumbs li + li::before {
-  content: "/";
-  color: rgba(255, 255, 255, 0.25);
+  content: "›";
+  color: #d1d5db;
   margin: 0 4px;
 }
 
 .career-crumbs a {
-  color: rgba(255, 255, 255, 0.45);
+  color: #6b7280;
   text-decoration: none;
   transition: color 0.15s;
 }
 
 .career-crumbs a:hover {
-  color: #f6d879;
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .career-crumbs li[aria-current="page"] {
-  color: rgba(255, 255, 255, 0.5);
+  color: #9ca3af;
 }
 
 /* ---------- Заголовок ---------- */
@@ -74,19 +71,29 @@
 .career-title {
   position: relative;
   z-index: 1;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
   font-size: clamp(34px, 5vw, 56px);
   font-weight: 900;
-  color: #fff;
+  color: #0e1525;
   line-height: 1.08;
   letter-spacing: -0.02em;
+}
+
+.career-title::after {
+  content: "";
+  display: block;
+  width: 76px;
+  height: 6px;
+  margin-top: 12px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d1a24c, #f4d483);
 }
 
 .career-lead {
   position: relative;
   z-index: 1;
   margin: 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: #374151;
   font-size: clamp(15px, 1.8vw, 17px);
   max-width: 58ch;
   line-height: 1.65;

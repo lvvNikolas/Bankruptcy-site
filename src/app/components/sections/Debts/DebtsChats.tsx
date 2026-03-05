@@ -74,15 +74,18 @@ export default function DebtsChats() {
               <span className="dc__accent">ФЗ-127 «О банкротстве»</span> любой
               гражданин вправе законно списать свои долги.
             </p>
-            <div className="dc__avatar dc__avatar--inline">
-              <Image
-                src="/media/lawyer.jpg"
-                alt="Юрист-арбитражный управляющий"
-                width={88}
-                height={88}
-                className="dc__avatarImg"
-                priority
-              />
+            <div className="dc__avatarWrap">
+              <div className="dc__avatar dc__avatar--inline">
+                <Image
+                  src="/media/lawyer.jpg"
+                  alt="Юрист-арбитражный управляющий"
+                  width={88}
+                  height={88}
+                  className="dc__avatarImg"
+                  priority
+                />
+              </div>
+              <span className="dc__avatarName">Николай Орловский<br />Юрист по банкротству</span>
             </div>
           </div>
         </figure>
@@ -94,14 +97,17 @@ export default function DebtsChats() {
             data-ani=""
             style={s1}
           >
-            <div className="dc__avatar dc__avatar--inline">
-              <Image
-                src="/media/girl.png"
-                alt="Клиент"
-                width={84}
-                height={84}
-                className="dc__avatarImg"
-              />
+            <div className="dc__avatarWrap">
+              <div className="dc__avatar dc__avatar--inline">
+                <Image
+                  src="/media/girl.png"
+                  alt="Клиент"
+                  width={84}
+                  height={84}
+                  className="dc__avatarImg"
+                />
+              </div>
+              <span className="dc__avatarName">Анна<br />Клиент</span>
             </div>
             <p className="dc__text">Какие последствия банкротства?</p>
           </figure>
@@ -111,14 +117,17 @@ export default function DebtsChats() {
             data-ani=""
             style={s2}
           >
-            <div className="dc__avatar dc__avatar--inline">
-              <Image
-                src="/media/lawyer.jpg"
-                alt="Юрист отвечает клиенту"
-                width={84}
-                height={84}
-                className="dc__avatarImg"
-              />
+            <div className="dc__avatarWrap">
+              <div className="dc__avatar dc__avatar--inline">
+                <Image
+                  src="/media/lawyer.jpg"
+                  alt="Юрист отвечает клиенту"
+                  width={84}
+                  height={84}
+                  className="dc__avatarImg"
+                />
+              </div>
+              <span className="dc__avatarName">Николай Орловский<br />Юрист по банкротству</span>
             </div>
             <p className="dc__text">
               Они <span className="dc__accent">минимальны</span>, не
