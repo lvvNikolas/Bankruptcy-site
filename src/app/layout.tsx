@@ -13,6 +13,7 @@ import Navbar from "@/app/components/sections/Navbar/Navbar";
 import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
 import ScrollTopButton from "@/app/components/widgets/ScrollTopButton/ScrollTopButton";
+import CookieBanner from "@/app/components/widgets/CookieBanner/CookieBanner";
 
 export const viewport = {
   width: "device-width",
@@ -147,6 +148,7 @@ ym(107006423,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webv
         <Footer />
         <FloatingCTA />
         <ScrollTopButton />
+        <CookieBanner />
 
         {/* ✅ Schema.org */}
         <script
