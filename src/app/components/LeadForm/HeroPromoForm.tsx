@@ -210,7 +210,7 @@ export default function LeadForm({
 
         <p className="leadform-thanksHint">
           Хотите быстрее? Позвоните:&nbsp;
-          <a href="tel:+79999999999">+7&nbsp;999&nbsp;999-99-99</a>
+          <a href="tel:+79162979645">+7&nbsp;(916)&nbsp;297-96-45</a>
         </p>
 
         <button
