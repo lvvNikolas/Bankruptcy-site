@@ -152,7 +152,7 @@ select {
 .container {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 clamp(16px, 4vw, 32px);
 }
 
 .section {

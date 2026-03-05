@@ -16,13 +16,13 @@
   --dc-shadow: 0 28px 90px rgba(0, 0, 0, 0.08);
 
   --dc-radius: 26px;
-  --dc-padY-lg: clamp(26px, 3.8vw, 44px);
-  --dc-padX-lg: clamp(28px, 4.2vw, 56px);
-  --dc-padY-md: clamp(22px, 3vw, 36px);
-  --dc-padX-md: clamp(26px, 3.8vw, 44px);
+  --dc-padY-lg: clamp(20px, 3.8vw, 44px);
+  --dc-padX-lg: clamp(20px, 4.2vw, 56px);
+  --dc-padY-md: clamp(18px, 3vw, 36px);
+  --dc-padX-md: clamp(18px, 3.8vw, 44px);
 
-  --dc-gap: clamp(28px, 5vh, 64px);
-  --dc-inline-gap: clamp(16px, 2vw, 22px);
+  --dc-gap: clamp(20px, 4vh, 48px);
+  --dc-inline-gap: clamp(14px, 2vw, 22px);
   --dc-avatar-ring: #edf0f3;
 
   /* анимации */
@@ -30,10 +30,9 @@
   --ani-ease: cubic-bezier(0.22, 0.7, 0.22, 1);
 
   background: var(--dc-bg);
-  min-height: 100svh;
   display: flex;
   align-items: center;
-  padding-block: var(--dc-gap);
+  padding-block: clamp(40px, 7vw, 80px);
 }
 
 [data-theme="dark"] .dc {
@@ -85,7 +84,7 @@
 
 .dc__text--lg {
   margin: 0;
-  font-size: clamp(22px, 4vw, 38px);
+  font-size: clamp(18px, 3.5vw, 38px);
   font-weight: 900;
   line-height: 1.18;
   letter-spacing: 0.2px;
@@ -147,7 +146,8 @@
   color: #64748b;
   text-align: center;
   line-height: 1.35;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 90px;
 }
 
 /* Аватар */
@@ -210,12 +210,93 @@
   }
 }
 
-/* Мобилка: чуть компактнее отступы */
+/* Планшет */
+@media (max-width: 768px) {
+  .dc__bubble--center {
+    max-width: 100%;
+  }
+}
+
+/* Мобилка */
 @media (max-width: 600px) {
   .dc__bubble--lg {
-    padding: 22px 24px;
+    padding: 18px 20px;
+  }
+
+  /* Большой пузырь: текст сверху, аватар снизу строчно */
+  .dc__bubbleHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .dc__bubbleHead .dc__avatarWrap {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .dc__bubbleHead .dc__avatarName {
+    text-align: left;
+    max-width: 160px;
+  }
+
+  /* Средние пузыри: ВСЕГДА колонка — аватар сверху, текст снизу */
+  .dc__bubble--md {
+    flex-direction: column !important;
+    align-items: flex-start;
+    padding: 18px 20px;
+    font-size: 15px;
+    font-weight: 800;
+    gap: 10px;
+  }
+
+  .dc__bubble--md .dc__avatarWrap {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Правый пузырь — аватар выровнен вправо */
+  .dc__bubble--right {
+    align-items: flex-end;
+  }
+
+  .dc__bubble--right .dc__avatarWrap {
+    flex-direction: row-reverse;
+  }
+
+  .dc__bubble--right .dc__avatarName {
+    text-align: right;
+  }
+
+  /* Текст занимает всю ширину */
+  .dc__bubble--md .dc__text {
+    width: 100%;
+  }
+
+  .dc__avatar--inline {
+    width: 44px;
+    height: 44px;
+  }
+
+  .dc__avatarName {
+    font-size: 11px;
+    max-width: 130px;
+  }
+}
+
+/* Маленький мобильный */
+@media (max-width: 400px) {
+  .dc__bubble--lg,
+  .dc__bubble--md {
+    padding: 14px 16px;
   }
   .dc__bubble--md {
-    padding: 20px 22px;
+    font-size: 14px;
+  }
+  .dc__avatar--inline {
+    width: 38px;
+    height: 38px;
   }
 }

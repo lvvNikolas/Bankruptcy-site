@@ -102,15 +102,10 @@
   to  { transform: none;            opacity: 1; }
 }
 
-/* Мобильная версия: кнопка по центру */
+/* Мобильная версия: скрываем */
 @media (max-width: 480px){
   .floating-cta-wrap{
-    left: 0; right: 0; bottom: 14px; justify-content: center;
-  }
-  .floating-cta-fab{
-    width: calc(100% - 40px);
-    max-width: 300px; border-radius: 18px;
-    padding: 14px 22px 14px 44px;
+    display: none;
   }
 }
 
