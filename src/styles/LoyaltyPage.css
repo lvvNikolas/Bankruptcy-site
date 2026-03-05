@@ -1,0 +1,559 @@
+/* =========================================================================
+   Программа лояльности — партнёрская страница
+   Цветовые токены: золото #d1a24c / #f6d879 / #e6c05b, navy #0f1e3d
+   ========================================================================= */
+
+/* =========================================================================
+   HERO
+   ========================================================================= */
+
+.lp-hero {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  padding: clamp(36px, 5vw, 72px) 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Золотое свечение */
+.lp-hero::after {
+  content: "";
+  position: absolute;
+  right: -100px;
+  top: -80px;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #fff6da, rgba(255, 246, 218, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Хлебные крошки */
+.lp-crumbs ol {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  font-size: 0.82rem;
+  color: #9ca3af;
+}
+
+.lp-crumbs li + li::before {
+  content: "›";
+  color: #d1d5db;
+  margin: 0 4px;
+}
+
+.lp-crumbs a {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.lp-crumbs a:hover {
+  color: #0f172a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Бейдж */
+.lp-hero__badge {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  margin: 0 0 14px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #7a5500;
+  background: rgba(209, 162, 76, 0.12);
+  border: 1px solid rgba(209, 162, 76, 0.3);
+}
+
+/* Заголовок */
+.lp-hero__title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 14px;
+  font-size: clamp(28px, 4.5vw, 54px);
+  font-weight: 900;
+  color: #0e1525;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lp-hero__title::after {
+  content: "";
+  display: block;
+  width: 76px;
+  height: 6px;
+  margin-top: 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d1a24c, #f4d483);
+}
+
+.lp-hero__accent {
+  color: #b07800;
+  white-space: nowrap;
+}
+
+/* Подзаголовок */
+.lp-hero__sub {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 36px;
+  color: #374151;
+  font-size: clamp(15px, 1.8vw, 17px);
+  max-width: 58ch;
+  line-height: 1.65;
+}
+
+/* Статистика */
+.lp-hero__stats {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.lp-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 16px 28px;
+  background: #fafbff;
+  border: 1px solid #e8edf5;
+  border-radius: 16px;
+}
+
+.lp-stat__num {
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 900;
+  color: #b07800;
+  line-height: 1;
+}
+
+.lp-stat__label {
+  font-size: 0.78rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.lp-stat__divider {
+  width: 1px;
+  height: 40px;
+  background: #e8edf5;
+  display: none; /* hidden on mobile, shown on wider screens */
+}
+
+@media (min-width: 640px) {
+  .lp-hero__stats {
+    flex-wrap: nowrap;
+    background: #fafbff;
+    border: 1px solid #e8edf5;
+    border-radius: 20px;
+    padding: 0;
+    display: inline-flex;
+  }
+
+  .lp-stat {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    padding: 18px 32px;
+  }
+
+  .lp-stat__divider {
+    display: block;
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================================================
+   ОБЩИЕ ЗАГОЛОВКИ СЕКЦИЙ
+   ========================================================================= */
+
+.lp-section-title {
+  margin: 0 0 10px;
+  font-size: clamp(24px, 3.5vw, 40px);
+  font-weight: 900;
+  color: #0e1525;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-align: center;
+}
+
+.lp-section-title--light {
+  color: #ffffff;
+}
+
+.lp-section-sub {
+  margin: 0 0 40px;
+  color: #6b7280;
+  font-size: clamp(14px, 1.6vw, 16px);
+  text-align: center;
+}
+
+.lp-section-sub--light {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* =========================================================================
+   STEPS — как это работает
+   ========================================================================= */
+
+.lp-steps {
+  background: #f4f6fb;
+  padding: clamp(48px, 7vw, 88px) 0;
+}
+
+.lp-steps__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 860px) {
+  .lp-steps__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.lp-step {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 22px;
+  padding: clamp(24px, 3vw, 36px);
+  box-shadow: 0 4px 20px rgba(15, 30, 61, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Золотая полоска сверху */
+.lp-step::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f6d879, #e6c05b);
+}
+
+.lp-step:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(15, 30, 61, 0.1);
+}
+
+.lp-step__num {
+  display: inline-block;
+  margin-bottom: 16px;
+  font-size: 2.8rem;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(209, 162, 76, 0.25);
+  letter-spacing: -0.03em;
+}
+
+.lp-step__title {
+  margin: 0 0 10px;
+  font-size: clamp(17px, 2vw, 20px);
+  font-weight: 800;
+  color: #0f1e3d;
+  line-height: 1.25;
+}
+
+.lp-step__desc {
+  margin: 0;
+  color: #475569;
+  font-size: clamp(14px, 1.4vw, 15px);
+  line-height: 1.65;
+}
+
+/* =========================================================================
+   REASONS — почему нас легко рекомендовать
+   ========================================================================= */
+
+.lp-reasons {
+  background: #0f1e3d;
+  padding: clamp(48px, 7vw, 88px) 0;
+}
+
+.lp-reasons__grid {
+  display: grid;
+  gap: 20px;
+}
+
+@media (min-width: 600px) {
+  .lp-reasons__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1020px) {
+  .lp-reasons__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.lp-reason {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 20px;
+  padding: clamp(22px, 2.5vw, 30px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.lp-reason:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-3px);
+}
+
+.lp-reason__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(209, 162, 76, 0.15);
+  color: #d1a24c;
+  margin-bottom: 16px;
+}
+
+.lp-reason__title {
+  margin: 0 0 8px;
+  font-size: clamp(16px, 1.8vw, 18px);
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.25;
+}
+
+.lp-reason__desc {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: clamp(13px, 1.3vw, 14.5px);
+  line-height: 1.65;
+}
+
+/* =========================================================================
+   EARNINGS — таблица заработка
+   ========================================================================= */
+
+.lp-earn {
+  background: #ffffff;
+  padding: clamp(48px, 7vw, 88px) 0;
+}
+
+.lp-earn__wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.lp-earn__table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(15, 30, 61, 0.07);
+}
+
+.lp-earn__table thead {
+  background: #0f1e3d;
+}
+
+.lp-earn__table th {
+  padding: 14px 24px;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lp-earn__table td {
+  padding: 16px 24px;
+  font-size: clamp(15px, 1.6vw, 16px);
+  color: #0f1e3d;
+  border-bottom: 1px solid #f1f3f8;
+}
+
+.lp-earn__table tr:last-child td {
+  border-bottom: none;
+}
+
+.lp-earn__table tbody tr:nth-child(odd) {
+  background: #fafbff;
+}
+
+.lp-earn__table tbody tr:nth-child(even) {
+  background: #ffffff;
+}
+
+.lp-earn__row--accent td {
+  background: linear-gradient(90deg, #fffbee, #fff8e0) !important;
+  color: #7a5500;
+  font-weight: 800;
+  font-size: clamp(16px, 1.8vw, 18px);
+}
+
+.lp-earn__note {
+  margin-top: 20px;
+  padding: 18px 22px;
+  background: #f4f6fb;
+  border: 1px solid #e8edf5;
+  border-radius: 14px;
+  font-size: clamp(13px, 1.4vw, 14.5px);
+  color: #475569;
+  line-height: 1.65;
+}
+
+.lp-earn__note strong {
+  color: #0f1e3d;
+}
+
+/* =========================================================================
+   CTA — форма
+   ========================================================================= */
+
+.lp-cta {
+  background: #f4f6fb;
+  padding: clamp(48px, 7vw, 88px) 0;
+}
+
+.lp-cta__inner {
+  display: grid;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .lp-cta__inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+}
+
+.lp-cta__title {
+  margin: 0 0 14px;
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 900;
+  color: #0e1525;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.lp-cta__sub {
+  margin: 0 0 24px;
+  color: #374151;
+  font-size: clamp(14px, 1.5vw, 16px);
+  line-height: 1.65;
+}
+
+.lp-cta__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lp-cta__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: clamp(14px, 1.4vw, 15px);
+  color: #374151;
+  line-height: 1.5;
+}
+
+.lp-cta__list li::before {
+  content: "";
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  background: linear-gradient(135deg, #f6d879, #e6c05b);
+  border-radius: 50%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 13l4 4L19 7' stroke='%23523a00' strokeWidth='2.5' strokeLinecap='round' strokeLinejoin='round'/%3E%3C/svg%3E");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 12px;
+}
+
+.lp-cta__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: clamp(18px, 2.2vw, 22px);
+  font-weight: 800;
+  color: #0f1e3d;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.lp-cta__phone::before {
+  content: "📞";
+  font-size: 1em;
+}
+
+.lp-cta__phone:hover {
+  color: #b07800;
+}
+
+/* Форма справа */
+.lp-cta__form-wrap {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  border-radius: 24px;
+  padding: clamp(24px, 3vw, 36px);
+  box-shadow: 0 8px 40px rgba(15, 30, 61, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.lp-cta__form-wrap::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #f6d879, #e6c05b);
+}
+
+.lp-cta__form-title {
+  margin: 0 0 20px;
+  font-size: clamp(17px, 2vw, 19px);
+  font-weight: 800;
+  color: #0f1e3d;
+}
+
+/* =========================================================================
+   REDUCED MOTION
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-step,
+  .lp-reason {
+    transition: none !important;
+  }
+}

@@ -13,6 +13,7 @@ const LINKS = [
   { href: "/blog", label: "Блог" },
   { href: "/faq", label: "Вопросы и ответы" },
   { href: "/career", label: "Карьера" },
+  { href: "/programma-loyalnosti", label: "Программа лояльности" },
   { href: "/contacts", label: "Контакты" },
 ] as const;
 
