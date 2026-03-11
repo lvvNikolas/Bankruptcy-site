@@ -145,7 +145,7 @@ export default function CareerPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-    <main>
+    <div>
       {/* HERO */}
       <header className="career-hero" aria-labelledby="career-title">
         <div className="container">
@@ -218,7 +218,7 @@ export default function CareerPage() {
           </div>
         </div>
       </section>
-    </main>
-    </>
+    </div>
+</>
   );
 }

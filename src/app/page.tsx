@@ -8,7 +8,6 @@ import Results from "@/app/components/sections/Results/Results";
 import CasesSection from "@/app/components/sections/Cases/CasesSection";
 import CtaSection from "@/app/components/sections/Cta/CtaSection";
 import ReviewsSection from "@/app/components/sections/ReviewsSection/ReviewsSection";
-import LoyaltyBanner from "@/app/components/sections/LoyaltyBanner/LoyaltyBanner";
 
 export const metadata: Metadata = {
   title: {
@@ -52,7 +51,6 @@ export default function Home() {
       <CasesSection />
       <CtaSection />
       <ReviewsSection />
-      <LoyaltyBanner />
     </>
   );
 }

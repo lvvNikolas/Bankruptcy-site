@@ -20,7 +20,7 @@ export default function ContactsPage() {
   }, [isOpen]);
 
   return (
-    <main className="contacts">
+    <div className="contacts">
       <div className="container contacts__inner">
         {/* HERO */}
         <header className="contacts__hero">
@@ -124,6 +124,6 @@ export default function ContactsPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

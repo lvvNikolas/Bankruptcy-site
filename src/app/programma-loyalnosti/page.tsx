@@ -105,7 +105,7 @@ export default function LoyaltyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <main>
+      <div>
         {/* ===== HERO ===== */}
         <header className="lp-hero">
           <div className="container">
@@ -266,7 +266,7 @@ export default function LoyaltyPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
     </>
   );
 }
