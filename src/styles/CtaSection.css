@@ -180,3 +180,15 @@
     padding: 24px 20px;
   }
 }
+
+@media (max-width: 480px) {
+  .cta__btn {
+    width: 100%;
+    justify-content: center;
+    padding-inline: 20px;
+  }
+
+  .cta__grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -57,7 +57,7 @@ const jsonLd = [
   {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "Вакансии BASolution",
+    name: "Вакансии Юридическое агентство по банкротству Солюшен",
     itemListElement: [
       {
         "@type": "ListItem",
@@ -71,7 +71,7 @@ const jsonLd = [
           employmentType: "FULL_TIME",
           hiringOrganization: {
             "@type": "Organization",
-            name: "BASolution",
+            name: "Юридическое агентство по банкротству Солюшен",
             sameAs: SITE_URL,
           },
           jobLocation: {
@@ -96,7 +96,7 @@ const jsonLd = [
           employmentType: "FULL_TIME",
           hiringOrganization: {
             "@type": "Organization",
-            name: "BASolution",
+            name: "Юридическое агентство по банкротству Солюшен",
             sameAs: SITE_URL,
           },
           jobLocation: {
@@ -121,7 +121,7 @@ const jsonLd = [
           employmentType: "FULL_TIME",
           hiringOrganization: {
             "@type": "Organization",
-            name: "BASolution",
+            name: "Юридическое агентство по банкротству Солюшен",
             sameAs: SITE_URL,
           },
           jobLocation: {

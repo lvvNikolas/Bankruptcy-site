@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 const SITE_URL = "https://basolution.ru";
 
 export const metadata: Metadata = {
-  title: "Контакты — BASolution",
+  title: "Контакты — Юридическое агентство по банкротству Солюшен",
   description:
     "Позвоните, напишите или приезжайте в офис. Бесплатная консультация по списанию долгов по 127-ФЗ. Москва, Пресненская набережная, д. 12.",
   openGraph: {
-    title: "Контакты — BASolution",
+    title: "Контакты — Юридическое агентство по банкротству Солюшен",
     description:
       "Бесплатная консультация по списанию долгов. Москва, Пресненская набережная, д. 12.",
     type: "website",
@@ -18,12 +18,12 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
-  name: "Контакты BASolution",
+  name: "Контакты Юридическое агентство по банкротству Солюшен",
   url: `${SITE_URL}/contacts/`,
-  description: "Контактная информация юридической компании BASolution по вопросам банкротства физических лиц",
+  description: "Контактная информация юридической компании Юридическое агентство по банкротству Солюшен по вопросам банкротства физических лиц",
   mainEntity: {
     "@type": "LegalService",
-    name: "BASolution",
+    name: "Юридическое агентство по банкротству Солюшен",
     url: SITE_URL,
     telephone: "+79162979645",
     email: "bankruptcyagencysolution@yandex.com",

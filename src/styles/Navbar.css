@@ -282,7 +282,7 @@
 
 /* ===== Респонсив ===== */
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .nav__burger {
     display: grid;
     justify-self: end;

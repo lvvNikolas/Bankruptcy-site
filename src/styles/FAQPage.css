@@ -191,7 +191,29 @@
 /* Отступ перед квизом */
 .faq-quiz { padding: clamp(20px, 4vw, 32px) 0; }
 
-/* Адаптив — одна колонка */
+/* Адаптив */
 @media (max-width: 960px) {
   .faq-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 600px) {
+  .faq-head {
+    padding: 18px 20px;
+    min-height: 64px;
+    gap: 10px;
+  }
+
+  .faq-body {
+    padding: 0 20px 18px;
+  }
+
+  .faq-col {
+    gap: 14px;
+  }
+}
+
+@media (max-width: 400px) {
+  .faq-q {
+    font-size: 15px;
+  }
 }

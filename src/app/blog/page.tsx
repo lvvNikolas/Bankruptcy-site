@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Полезные статьи о банкротстве физических лиц: как списать долги, последствия процедуры, пошаговые инструкции по 127-ФЗ.",
   openGraph: {
-    title: "Блог о банкротстве | BASolution",
+    title: "Блог о банкротстве | Юридическое агентство по банкротству Солюшен",
     description: "Полезные статьи о банкротстве физических лиц по 127-ФЗ.",
     type: "website",
     images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
@@ -32,7 +32,7 @@ export default function BlogPage() {
     {
       "@context": "https://schema.org",
       "@type": "Blog",
-      name: "Блог BASolution — банкротство физических лиц",
+      name: "Блог Юридическое агентство по банкротству Солюшен — банкротство физических лиц",
       url: `${SITE_URL}/blog/`,
       blogPost: BLOG_POSTS.map((post) => ({
         "@type": "BlogPosting",

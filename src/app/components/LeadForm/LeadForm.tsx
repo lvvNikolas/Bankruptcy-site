@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -70,6 +71,12 @@ async function readResponse(res: Response): Promise<ApiJson> {
   }
 }
 
+declare global {
+  interface Window {
+    ym?: (id: number, method: string, goal: string) => void;
+  }
+}
+
 export default function LeadForm({
   context = "landing",
   formId = "lead_default",
@@ -77,6 +84,7 @@ export default function LeadForm({
   onSuccess,
   actionUrl = "/lead.php",
 }: Props) {
+  const router = useRouter();
   const [done, setDone] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
@@ -131,6 +139,7 @@ export default function LeadForm({
 
     try {
       const res = await fetch(actionUrl, {
+
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -159,7 +168,9 @@ export default function LeadForm({
 
       reset();
       setDone(true);
+      try { window.ym?.(107006423, "reachGoal", "form_submitted"); } catch {}
       onSuccess?.();
+      router.push("/spasibo/" as never);
     } catch (err: unknown) {
       console.error("LeadForm error:", err);
       setServerError(getErrorMessage(err));

@@ -363,6 +363,8 @@
 .lp-earn__wrap {
   max-width: 680px;
   margin: 0 auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .lp-earn__table {

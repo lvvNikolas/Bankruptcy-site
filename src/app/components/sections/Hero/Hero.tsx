@@ -1,10 +1,52 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import HeroPromoForm from "@/app/components/LeadForm/HeroPromoForm";
 import "@styles/Hero.css";
 
+function useCountUp(target: number, duration: number, started: boolean) {
+  const [val, setVal] = useState(0);
+  useEffect(() => {
+    if (!started) return;
+    let rafId: number;
+    let startTs: number | null = null;
+    rafId = requestAnimationFrame(function tick(ts) {
+      if (startTs === null) startTs = ts;
+      const p = Math.min((ts - startTs) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      setVal(Math.round(ease * target));
+      if (p < 1) rafId = requestAnimationFrame(tick);
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [started, target, duration]);
+  return val;
+}
+
 export default function Hero() {
+  const trustRef = useRef<HTMLDivElement>(null);
+  const [started, setStarted] = useState(false);
+
+  useEffect(() => {
+    const el = trustRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStarted(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.5 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const c500 = useCountUp(500, 1400, started);
+  const c98  = useCountUp(98,  1200, started);
+  const c7   = useCountUp(7,   900,  started);
+
   return (
     <section id="hero" className="hero" aria-label="Главный блок">
       {/* Фон: видео (desktop) / картинка (mobile) */}
@@ -66,19 +108,19 @@ export default function Hero() {
               </a>
             </div>
 
-            <div className="hero__trust">
+            <div className="hero__trust" ref={trustRef}>
               <div className="hero__trust-item">
-                <span className="hero__trust-num">500+</span>
+                <span className="hero__trust-num">{started ? `${c500}+` : "500+"}</span>
                 <span className="hero__trust-label">клиентов</span>
               </div>
               <div className="hero__trust-sep" aria-hidden="true" />
               <div className="hero__trust-item">
-                <span className="hero__trust-num">98%</span>
+                <span className="hero__trust-num">{started ? `${c98}%` : "98%"}</span>
                 <span className="hero__trust-label">списали долги</span>
               </div>
               <div className="hero__trust-sep" aria-hidden="true" />
               <div className="hero__trust-item">
-                <span className="hero__trust-num">7 лет</span>
+                <span className="hero__trust-num">{started ? `${c7} лет` : "7 лет"}</span>
                 <span className="hero__trust-label">на рынке</span>
               </div>
             </div>

@@ -1,0 +1,107 @@
+/* =========================================================================
+   MobileCTA — sticky bottom panel, mobile only
+   ========================================================================= */
+
+.mcta {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mcta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    padding: 10px 16px 12px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    background: rgba(10, 18, 42, 0.97);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.3);
+    animation: mcta-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 2s;
+  }
+
+  .mcta__close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.35);
+    padding: 0;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .mcta__close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .mcta__phone {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+
+  .mcta__phone:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .mcta__btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 14px;
+    background: linear-gradient(135deg, #f6d879 0%, #d1a24c 100%);
+    color: #2a1f08;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(209, 162, 76, 0.45);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .mcta__btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(209, 162, 76, 0.3);
+  }
+}
+
+@keyframes mcta-in {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mcta {
+    animation: none !important;
+  }
+}

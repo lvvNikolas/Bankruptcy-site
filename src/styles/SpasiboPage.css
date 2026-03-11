@@ -1,0 +1,97 @@
+/* ===== Спасибо страница ===== */
+
+.spasibo {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  background: #fff;
+  padding: clamp(48px, 8vw, 100px) 0;
+}
+
+.spasibo__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.spasibo__icon {
+  font-size: 64px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.spasibo__title {
+  margin: 0 0 16px;
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 900;
+  color: #0e1525;
+  line-height: 1.15;
+}
+
+.spasibo__text {
+  margin: 0 0 24px;
+  color: #374151;
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.7;
+  max-width: 50ch;
+}
+
+.spasibo__sub {
+  margin: 0 0 16px;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.spasibo__links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 32px;
+}
+
+.spasibo__links a {
+  display: block;
+  padding: 14px 20px;
+  background: #f4f6fb;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  color: #0f1e3d;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.spasibo__links a:hover {
+  border-color: #d1a24c;
+  background: #fffbee;
+  color: #7a5500;
+}
+
+.spasibo__back {
+  font-size: 14px;
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.spasibo__back:hover {
+  color: #374151;
+}
+
+/* Gold divider */
+.spasibo__inner::before {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #f6d879, #d1a24c);
+  border-radius: 999px;
+  margin-bottom: 28px;
+}

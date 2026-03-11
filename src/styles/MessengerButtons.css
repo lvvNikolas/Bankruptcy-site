@@ -1,0 +1,75 @@
+/* ===== Messenger floating buttons ===== */
+
+.mess-btns {
+  position: fixed;
+  bottom: 160px; /* above ScrollTopButton */
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 900;
+}
+
+.mess-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.mess-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+.mess-btn:hover {
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+}
+
+.mess-btn--wa {
+  background: #25d366;
+}
+
+.mess-btn--wa:hover {
+  background: #1ebe5a;
+}
+
+.mess-btn--tg {
+  background: #2aabee;
+}
+
+.mess-btn--tg:hover {
+  background: #1a9dd8;
+}
+
+@media (max-width: 600px) {
+  .mess-btns {
+    bottom: 130px;
+    right: 16px;
+    gap: 8px;
+  }
+
+  .mess-btn {
+    width: 46px;
+    height: 46px;
+  }
+
+  .mess-btn svg {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mess-btn {
+    transition: none;
+  }
+}

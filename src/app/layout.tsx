@@ -14,6 +14,10 @@ import Footer from "@/app/components/sections/Footer/Footer";
 import FloatingCTA from "@/app/components/widgets/FloatingCTA/FloatingCTA";
 import ScrollTopButton from "@/app/components/widgets/ScrollTopButton/ScrollTopButton";
 import CookieBanner from "@/app/components/widgets/CookieBanner/CookieBanner";
+import MessengerButtons from "@/app/components/widgets/MessengerButtons/MessengerButtons";
+import ExitPopup from "@/app/components/widgets/ExitPopup/ExitPopup";
+import LiveStats from "@/app/components/widgets/LiveStats/LiveStats";
+import MobileCTA from "@/app/components/widgets/MobileCTA/MobileCTA";
 
 export const viewport = {
   width: "device-width",
@@ -21,7 +25,7 @@ export const viewport = {
 };
 
 const SITE_URL = "https://basolution.ru";
-const SITE_NAME = "BASolution";
+const SITE_NAME = "Юридическое агентство по банкротству Солюшен";
 
 // 👉 Заполни актуальные данные
 const PHONE = "+79162979645"; // например "+79162979645"
@@ -83,7 +87,7 @@ export const metadata: Metadata = {
         url: "/og-preview.jpg",
         width: 1200,
         height: 630,
-        alt: "BASolution — банкротство физических лиц",
+        alt: "Юридическое агентство по банкротству Солюшен — банкротство физических лиц",
       },
     ],
   },
@@ -127,7 +131,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   ];
 
   return (
-    <html lang="ru" className={manrope.variable}>
+    <html lang="ru" className={manrope.variable} data-scroll-behavior="smooth">
       <head>
         {/* Yandex.Metrika */}
         <script
@@ -156,8 +160,12 @@ ym(107006423,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webv
         <main id="main-content">{children}</main>
         <Footer />
         <FloatingCTA />
+        <MessengerButtons />
         <ScrollTopButton />
         <CookieBanner />
+        <ExitPopup />
+        <LiveStats />
+        <MobileCTA />
 
         {/* ✅ Schema.org */}
         <script

@@ -13,8 +13,8 @@ type Section = {
 };
 
 export const metadata: Metadata = {
-  title: "Карта сайта — BASolution",
-  description: "Быстрый доступ ко всем разделам сайта BASolution.",
+  title: "Карта сайта — Юридическое агентство по банкротству Солюшен",
+  description: "Быстрый доступ ко всем разделам сайта Юридическое агентство по банкротству Солюшен.",
 };
 
 const SECTIONS: Section[] = [
@@ -44,7 +44,7 @@ export default function SitemapPage() {
       <div className="container">
         <h1 className="sitemap__title">Карта сайта</h1>
         <p className="sitemap__desc">
-          Быстрый доступ ко всем страницам сайта BASolution.
+          Быстрый доступ ко всем страницам сайта Юридическое агентство по банкротству Солюшен.
         </p>
 
         <div className="sitemap__grid">

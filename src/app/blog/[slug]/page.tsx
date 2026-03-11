@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BLOG_POSTS } from "@/app/data/blog";
 import Quiz from "@/app/components/sections/Quiz/Quiz";
+import ReadingProgress from "@/app/components/widgets/ReadingProgress/ReadingProgress";
 import "@styles/BlogPostPage.css";
 
 const SITE_URL = "https://basolution.ru";
@@ -59,12 +60,12 @@ export default async function BlogPostPage({
       datePublished: post.dateIso,
       author: {
         "@type": "Organization",
-        name: "BASolution",
+        name: "Юридическое агентство по банкротству Солюшен",
         url: SITE_URL,
       },
       publisher: {
         "@type": "Organization",
-        name: "BASolution",
+        name: "Юридическое агентство по банкротству Солюшен",
         logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.png` },
       },
       mainEntityOfPage: {
@@ -76,6 +77,7 @@ export default async function BlogPostPage({
 
   return (
     <>
+      <ReadingProgress />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
