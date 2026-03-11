@@ -26,11 +26,20 @@ const SITE_NAME = "BASolution";
 // 👉 Заполни актуальные данные
 const PHONE = "+79162979645"; // например "+79162979645"
 const EMAIL = "bankruptcyagencysolution@yandex.com";
-const ADDRESS = {
-  addressCountry: "RU",
-  addressLocality: "Москва",
-  streetAddress: "Пресненская набережная, д. 12",
-};
+const ADDRESSES = [
+  {
+    "@type": "PostalAddress",
+    addressCountry: "RU",
+    addressLocality: "Москва",
+    streetAddress: "Пресненская набережная, д. 12",
+  },
+  {
+    "@type": "PostalAddress",
+    addressCountry: "RU",
+    addressLocality: "Ессентуки",
+    streetAddress: "ул. Кисловодская, 24А",
+  },
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -98,12 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       areaServed: "RU",
       telephone: PHONE,
       email: EMAIL,
-      address: {
-        "@type": "PostalAddress",
-        addressCountry: ADDRESS.addressCountry,
-        addressLocality: ADDRESS.addressLocality,
-        streetAddress: ADDRESS.streetAddress,
-      },
+      address: ADDRESSES,
       sameAs: [
         // сюда можно добавить соцсети, например Telegram
         // "https://t.me/your_username",

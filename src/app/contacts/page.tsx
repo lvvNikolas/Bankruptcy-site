@@ -74,14 +74,23 @@ export default function ContactsPage() {
             </a>
           </article>
 
-          {/* Офис */}
+          {/* Офис Москва */}
           <article className="contactsCard">
             <div className="contactsCard__icon contactsCard__icon--pin" />
-            <h2 className="contactsCard__title">Приезжайте в офис</h2>
+            <h2 className="contactsCard__title">Офис в Москве</h2>
             <p className="contactsCard__note">Личные консультации по записи</p>
-
             <div className="contactsCard__value">
               г. Москва, Пресненская набережная, д. 12
+            </div>
+          </article>
+
+          {/* Офис Ессентуки */}
+          <article className="contactsCard">
+            <div className="contactsCard__icon contactsCard__icon--pin" />
+            <h2 className="contactsCard__title">Офис в Ессентуках</h2>
+            <p className="contactsCard__note">Личные консультации по записи</p>
+            <div className="contactsCard__value">
+              г. Ессентуки, ул. Кисловодская, 24А
             </div>
           </article>
         </section>

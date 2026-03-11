@@ -170,9 +170,7 @@ export default function FAQPage() {
       </section>
 
       {/* Квиз */}
-      <section id="quiz" className="container faq-quiz">
-        <Quiz />
-      </section>
+      <Quiz />
     </>
   );
 }

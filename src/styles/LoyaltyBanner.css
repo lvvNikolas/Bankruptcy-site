@@ -1,0 +1,137 @@
+/* =========================================================================
+   LoyaltyBanner — прomo-секция на главной
+   ========================================================================= */
+
+.lb {
+  background: linear-gradient(135deg, #0d1b2e 0%, #162840 100%);
+  padding: clamp(48px, 6vw, 80px) 0;
+}
+
+.lb__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.lb__text {
+  flex: 1 1 340px;
+}
+
+.lb__eyebrow {
+  display: inline-block;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(230, 192, 91, 0.15);
+  border: 1px solid rgba(230, 192, 91, 0.4);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #d4a017;
+  margin: 0 0 16px;
+}
+
+.lb__title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: #fff;
+  margin: 0 0 14px;
+}
+
+.lb__accent {
+  color: #e6c05b;
+}
+
+.lb__sub {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.lb__right {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 28px;
+}
+
+.lb__stats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.lb__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.lb__stat-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #e6c05b;
+  line-height: 1;
+}
+
+.lb__stat-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.lb__stat-divider {
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.lb__btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 28px;
+  background: #e6c05b;
+  color: #0d1b2e;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.lb__btn:hover {
+  background: #f0ce70;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .lb__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lb__right {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .lb__stats {
+    gap: 16px;
+  }
+
+  .lb__btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

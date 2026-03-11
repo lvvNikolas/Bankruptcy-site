@@ -118,9 +118,7 @@ export default async function BlogPostPage({
         <Link href={"/blog/" as Route} className="post-back__link">← Все статьи</Link>
       </div>
 
-      <section className="container post-quiz">
-        <Quiz />
-      </section>
+      <Quiz />
     </>
   );
 }
