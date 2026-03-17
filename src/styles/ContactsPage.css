@@ -221,16 +221,16 @@ a.contactsCard__value:hover {
   font-weight: 800;
   font-size: 0.88rem;
   letter-spacing: 0.01em;
-  color: #ffffff;
-  background: linear-gradient(160deg, #2b6ee8 0%, #1d4ed8 100%);
-  box-shadow: 0 8px 24px rgba(29, 78, 216, 0.3);
+  color: #2a1f08;
+  background: linear-gradient(160deg, #f6d879 0%, #e6c05b 100%);
+  box-shadow: 0 8px 24px rgba(230, 192, 91, 0.3);
   transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 .contactsCard__btn:hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
-  box-shadow: 0 14px 36px rgba(29, 78, 216, 0.42);
+  box-shadow: 0 14px 36px rgba(230, 192, 91, 0.42);
 }
 
 .contactsCard__btn:active {
