@@ -196,17 +196,17 @@
   transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Primary — gold */
+/* Primary — blue */
 .hero__btn:not(.hero__btn--ghost) {
-  color: #2a1f08;
-  background: linear-gradient(160deg, var(--gold-1) 0%, var(--gold-2) 100%);
-  box-shadow: 0 10px 30px rgba(230, 192, 91, 0.32), 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #ffffff;
+  background: linear-gradient(160deg, #2b6ee8 0%, #1d4ed8 100%);
+  box-shadow: 0 10px 30px rgba(29, 78, 216, 0.32), 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hero__btn:not(.hero__btn--ghost):hover {
   filter: brightness(1.05);
   transform: translateY(-1px);
-  box-shadow: 0 16px 40px rgba(230, 192, 91, 0.44);
+  box-shadow: 0 16px 40px rgba(29, 78, 216, 0.44);
 }
 
 /* Ghost — white transparent */

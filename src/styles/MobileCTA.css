@@ -78,20 +78,20 @@
     align-items: center;
     justify-content: center;
     padding: 12px 14px;
-    background: linear-gradient(135deg, #f6d879 0%, #d1a24c 100%);
-    color: #2a1f08;
+    background: linear-gradient(135deg, #2b6ee8 0%, #1d4ed8 100%);
+    color: #ffffff;
     font-size: 14px;
     font-weight: 800;
     text-decoration: none;
     border-radius: 12px;
     text-align: center;
-    box-shadow: 0 4px 16px rgba(209, 162, 76, 0.45);
+    box-shadow: 0 4px 16px rgba(29, 78, 216, 0.45);
     transition: transform 0.15s, box-shadow 0.15s;
   }
 
   .mcta__btn:active {
     transform: scale(0.97);
-    box-shadow: 0 2px 8px rgba(209, 162, 76, 0.3);
+    box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
   }
 }
 

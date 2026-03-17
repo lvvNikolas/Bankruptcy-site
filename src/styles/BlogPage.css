@@ -284,6 +284,10 @@
 
 .blog-card[data-category="Инструкция"] { --card-accent: #16a085; }
 .blog-card[data-category="Мифы"]       { --card-accent: #e07c2a; }
+.blog-card[data-category="Основы"]     { --card-accent: #2563eb; }
+.blog-card[data-category="Долги"]      { --card-accent: #dc2626; }
+.blog-card[data-category="Финансы"]    { --card-accent: #16a34a; }
+.blog-card[data-category="Имущество"]  { --card-accent: #7c3aed; }
 
 .blog-card__header {
   display: flex;

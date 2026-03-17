@@ -103,7 +103,7 @@
 }
 
 /* Мобильная версия: скрываем */
-@media (max-width: 480px){
+@media (max-width: 768px){
   .floating-cta-wrap{
     display: none;
   }
