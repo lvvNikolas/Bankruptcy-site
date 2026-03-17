@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import LeadForm from "@components/LeadForm/LeadForm";
+import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/CasesSection.css";
 import { CASES } from "@data/cases";
 

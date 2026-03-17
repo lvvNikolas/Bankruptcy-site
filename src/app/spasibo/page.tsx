@@ -22,13 +22,13 @@ export default function SpasiboPage() {
           </p>
           <p className="spasibo__sub">Пока ждёте — читайте полезные статьи:</p>
           <div className="spasibo__links">
-            <Link href="/blog/chto-takoe-bankrotstvo-fizicheskih-lic/">
+            <Link href="/blog/chto-takoe-bankrotstvo-fizicheskih-lic">
               Что такое банкротство физических лиц
             </Link>
-            <Link href="/blog/posledstviya-bankrotstva-mify-i-realnost/">
+            <Link href="/blog/posledstviya-bankrotstva-mify-i-realnost">
               Последствия банкротства: мифы и реальность
             </Link>
-            <Link href="/faq/">
+            <Link href="/faq">
               Частые вопросы и ответы
             </Link>
           </div>

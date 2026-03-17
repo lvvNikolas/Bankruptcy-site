@@ -13,6 +13,7 @@ type Section = {
 };
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/sitemap" },
   title: "Карта сайта — Юридическое агентство по банкротству Солюшен",
   description: "Быстрый доступ ко всем разделам сайта Юридическое агентство по банкротству Солюшен.",
 };
@@ -32,8 +33,8 @@ const SECTIONS: Section[] = [
   {
     title: "Полезная информация",
     links: [
-      { href: "/politika-konfidentsialnosti" as Route, label: "Политика конфиденциальности" },
-      { href: "/policy" as Route, label: "Политика обработки персональных данных" },
+      { href: "/otzyvy" as Route, label: "Отзывы клиентов" },
+      { href: "/politika-konfidentsialnosti" as Route, label: "Политика обработки персональных данных" },
     ],
   },
 ];

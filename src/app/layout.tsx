@@ -37,12 +37,6 @@ const ADDRESSES = [
     addressLocality: "Москва",
     streetAddress: "Пресненская набережная, д. 12",
   },
-  {
-    "@type": "PostalAddress",
-    addressCountry: "RU",
-    addressLocality: "Ессентуки",
-    streetAddress: "ул. Кисловодская, 24А",
-  },
 ];
 
 export const metadata: Metadata = {
@@ -62,10 +56,6 @@ export const metadata: Metadata = {
     "127-ФЗ",
     "юрист по банкротству",
     "финансовая защита",
-    "банкротство Ессентуки",
-    "списание долгов Ессентуки",
-    "банкротство Кавказские Минеральные Воды",
-    "юрист по банкротству Ессентуки",
     "банкротство Москва",
   ],
 

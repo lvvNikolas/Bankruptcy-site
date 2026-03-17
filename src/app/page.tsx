@@ -11,6 +11,7 @@ import ReviewsSection from "@/app/components/sections/ReviewsSection/ReviewsSect
 import CalcPreview from "@/app/components/sections/CalcPreview/CalcPreview";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/" },
   title: {
     absolute: "Юридическое агентство по банкротству Солюшен — банкротство физических лиц по 127-ФЗ",
   },

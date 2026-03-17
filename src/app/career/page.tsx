@@ -3,6 +3,7 @@ import Link from "next/link";
 import "@styles/CareerPage.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/career" },
   title: "Карьера — открытые вакансии",
   description:
     "Открытые вакансии компании: юристы, арбитражные управляющие, помощники. Присоединяйтесь к профессиональной команде.",

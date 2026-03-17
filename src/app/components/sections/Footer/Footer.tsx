@@ -60,6 +60,9 @@ export default function Footer() {
                 <Link href={{ pathname: "/cases" }}>Выигранные дела</Link>
               </li>
               <li>
+                <Link href={{ pathname: "/otzyvy" }}>Отзывы клиентов</Link>
+              </li>
+              <li>
                 <Link href={{ pathname: "/faq" }}>Вопросы и ответы</Link>
               </li>
               <li>
@@ -140,25 +143,13 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="footer__contactItem">
-              <span className="footer__ico" aria-hidden="true">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7Zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5Z" />
-                </svg>
-              </span>
-              <div>
-                <div className="footer__contactTitle">Приезжайте, обсудим</div>
-                <div className="footer__address">г. Ессентуки, ул. Кисловодская, 24А</div>
-              </div>
-            </div>
           </address>
         </div>
 
         {/* Нижняя полоса */}
         <div className="footer__bottom">
           <nav className="footer__legal" aria-label="Юридическая информация">
-            <Link href={{ pathname: "/politika-konfidentsialnosti" }}>Политика конфиденциальности</Link>
-            <Link href={{ pathname: "/policy" }}>Политика обработки персональных данных</Link>
+            <Link href={{ pathname: "/politika-konfidentsialnosti" }}>Политика обработки персональных данных</Link>
             <Link href={{ pathname: "/sitemap" }}>Карта сайта</Link>
             {/* <Link href={{ pathname: "/rekvizity" }}>Реквизиты</Link>
             <Link href={{ pathname: "/oferta" }}>Оферта</Link> */}

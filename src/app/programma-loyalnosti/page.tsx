@@ -4,6 +4,7 @@ import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/LoyaltyPage.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/programma-loyalnosti" },
   title: "Программа лояльности — 20 000 ₽ за приведённого клиента",
   description:
     "Приведите знакомого с долгами — получите 20 000 ₽ после заключения договора. Простая партнёрская программа без лимитов и скрытых условий.",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import LeadForm from "@components/LeadForm/LeadForm";
+import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/FloatingCTA.css";
 
 /**
@@ -49,12 +49,32 @@ export default function FloatingCTA() {
     return () => window.removeEventListener("cta_open_request", openByEvent);
   }, []);
 
-  // Escape для закрытия модалки
+  // Escape + focus trap
   useEffect(() => {
     if (!opened) return;
+
+    const modal = document.getElementById("lead-modal");
+    if (!modal) return;
+
+    const focusable = Array.from(
+      modal.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+    focusable[0]?.focus();
+
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpened(false);
+      if (e.key === "Escape") { setOpened(false); return; }
+      if (e.key !== "Tab" || focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
     };
+
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [opened]);

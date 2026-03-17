@@ -2,7 +2,5 @@ User-agent: *
 Allow: /
 
 Disallow: /spasibo/
-Disallow: /policy/
-Disallow: /politika-konfidentsialnosti/
 
 Sitemap: https://basolution.ru/sitemap.xml

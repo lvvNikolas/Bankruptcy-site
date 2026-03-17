@@ -6,6 +6,7 @@ import "@styles/BlogPage.css";
 const SITE_URL = "https://basolution.ru";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog" },
   title: "Блог",
   description:
     "Полезные статьи о банкротстве физических лиц: как списать долги, последствия процедуры, пошаговые инструкции по 127-ФЗ.",

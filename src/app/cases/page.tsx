@@ -5,6 +5,7 @@ import "@styles/CasesPage.css";
 
 /** SEO (страница — server component, без `use client`) */
 export const metadata: Metadata = {
+  alternates: { canonical: "/cases" },
   title: "Выигранные дела",
   description:
     "Реальные успешно завершённые дела по списанию долгов и защите интересов клиентов.",

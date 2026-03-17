@@ -5,6 +5,7 @@ import "@styles/FAQPage.css";
 import Quiz from "@/app/components/sections/Quiz/Quiz";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/faq" },
   title: "Вопросы и ответы",
   description:
     "Собрали ключевые ответы: безопасность процедуры, имущественные риски, последствия и мифы — коротко и по делу.",

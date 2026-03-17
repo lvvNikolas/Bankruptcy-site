@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 const SITE_URL = "https://basolution.ru";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/contacts" },
   title: "Контакты — Юридическое агентство по банкротству Солюшен",
   description:
     "Позвоните, напишите или приезжайте в офис. Бесплатная консультация по списанию долгов по 127-ФЗ. Москва, Пресненская набережная, д. 12.",

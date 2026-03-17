@@ -10,7 +10,7 @@ type Slide =
 const SLIDES: Slide[] = [
   { type: "counter", count: 43 },
   { type: "case", city: "Москва",          name: "Александр К.",  amount: "1 200 000 ₽", ago: "2 часа назад"  },
-  { type: "case", city: "Ессентуки",       name: "Светлана М.",   amount: "680 000 ₽",   ago: "5 часов назад" },
+  { type: "case", city: "Воронеж",          name: "Светлана М.",   amount: "680 000 ₽",   ago: "5 часов назад" },
   { type: "counter", count: 43 },
   { type: "case", city: "Краснодар",       name: "Дмитрий Р.",    amount: "2 100 000 ₽", ago: "вчера"         },
   { type: "case", city: "Ставрополь",      name: "Наталья В.",    amount: "950 000 ₽",   ago: "вчера"         },

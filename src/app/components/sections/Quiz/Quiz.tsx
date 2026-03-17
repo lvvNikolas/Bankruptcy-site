@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import Image from "next/image";
-import LeadForm from "@components/LeadForm/LeadForm";
+import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/Quiz.css";
 
 type Option = { id: string; label: string };
