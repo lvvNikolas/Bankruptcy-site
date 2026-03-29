@@ -1,12 +1,18 @@
-// src/app/components/sections/Footer/Footer.tsx
-"use client";
-
 import Link from "next/link";
 import "@styles/Footer.css";
+import {
+  PHONE_HREF,
+  PHONE_DISPLAY,
+  EMAIL,
+  EMAIL_HREF,
+  ADDRESS,
+  WORKING_HOURS,
+  TELEGRAM_BOT,
+} from "@/config";
+
+const YEAR = new Date().getFullYear();
 
 export default function Footer() {
-  const year = new Date().getFullYear();
-
   return (
     <footer className="footer" role="contentinfo">
       <div className="container">
@@ -22,7 +28,7 @@ export default function Footer() {
 
             <a
               className="footer__tgBtn"
-              href="https://t.me/ba_solution"
+              href={TELEGRAM_BOT}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -49,28 +55,16 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Навигация 1 */}
+          {/* Навигация */}
           <nav className="footer__col" aria-label="Навигация">
             <div className="footer__heading">Навигация</div>
             <ul className="footer__list">
-              <li>
-                <Link href={{ pathname: "/" }}>Главная</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/cases" }}>Выигранные дела</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/otzyvy" }}>Отзывы клиентов</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/faq" }}>Вопросы и ответы</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/career" }}>Карьера</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/programma-loyalnosti" }}>Программа лояльности</Link>
-              </li>
+              <li><Link href="/">Главная</Link></li>
+              <li><Link href="/cases">Выигранные дела</Link></li>
+              <li><Link href="/blog">Блог</Link></li>
+              <li><Link href="/otzyvy">Отзывы клиентов</Link></li>
+              <li><Link href="/faq">Вопросы и ответы</Link></li>
+              <li><Link href="/career">Карьера</Link></li>
             </ul>
           </nav>
 
@@ -78,18 +72,11 @@ export default function Footer() {
           <nav className="footer__col" aria-label="Разделы">
             <div className="footer__heading">Разделы</div>
             <ul className="footer__list">
-              <li>
-                <Link href={{ pathname: "/contacts" }}>Контакты</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/blog" }}>Блог</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/programma-loyalnosti" }}>Программа лояльности</Link>
-              </li>
-              <li>
-                <Link href={{ pathname: "/sitemap" }}>Карта сайта</Link>
-              </li>
+              <li><Link href="/contacts">Контакты</Link></li>
+              <li><Link href="/programma-loyalnosti">Программа лояльности</Link></li>
+              <li><Link href="/calculator">Калькулятор</Link></li>
+              <li><Link href="/sitemap">Карта сайта</Link></li>
+              <li><Link href="/politika-konfidentsialnosti">Политика конфиденциальности</Link></li>
             </ul>
           </nav>
 
@@ -104,16 +91,15 @@ export default function Footer() {
                   />
                 </svg>
               </span>
-
               <div>
                 <div className="footer__phoneRow">
                   <span className="footer__titleText">Звоните, поможем</span>
                   <span className="footer__badgeOnline">На связи</span>
-                  <a className="footer__link footer__phone" href="tel:+79162979645">
-                    +7 (916) 297-96-45
+                  <a className="footer__link footer__phone" href={PHONE_HREF}>
+                    {PHONE_DISPLAY}
                   </a>
                 </div>
-                <div className="footer__meta">Ежедневно с 9:00 до 21:00</div>
+                <div className="footer__meta">{WORKING_HOURS}</div>
               </div>
             </div>
 
@@ -125,8 +111,8 @@ export default function Footer() {
               </span>
               <div>
                 <div className="footer__contactTitle">Пишите, ответим</div>
-                <a className="footer__link" href="mailto:bankruptcyagencysolution@yandex.com">
-                  bankruptcyagencysolution@yandex.com
+                <a className="footer__link" href={EMAIL_HREF}>
+                  {EMAIL}
                 </a>
               </div>
             </div>
@@ -139,24 +125,21 @@ export default function Footer() {
               </span>
               <div>
                 <div className="footer__contactTitle">Приезжайте, обсудим</div>
-                <div className="footer__address">г. Москва, Пресненская набережная, д. 12-17</div>
+                <div className="footer__address">{ADDRESS}</div>
               </div>
             </div>
-
           </address>
         </div>
 
         {/* Нижняя полоса */}
         <div className="footer__bottom">
           <nav className="footer__legal" aria-label="Юридическая информация">
-            <Link href={{ pathname: "/politika-konfidentsialnosti" }}>Политика обработки персональных данных</Link>
-            <Link href={{ pathname: "/sitemap" }}>Карта сайта</Link>
-            {/* <Link href={{ pathname: "/rekvizity" }}>Реквизиты</Link>
-            <Link href={{ pathname: "/oferta" }}>Оферта</Link> */}
+            <Link href="/politika-konfidentsialnosti">Политика обработки персональных данных</Link>
+            <Link href="/sitemap">Карта сайта</Link>
           </nav>
 
           <div className="footer__copy">
-            © Юридическое агентство по банкротству Солюшен, 2019–{year}. Все права защищены.
+            © Юридическое агентство по банкротству Солюшен, 2019–{YEAR}. Все права защищены.
           </div>
         </div>
       </div>

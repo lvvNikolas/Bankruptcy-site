@@ -253,36 +253,10 @@
    На мобилке фиксируем снизу по центру над возможными CTA-барами
    ========================================================================= */
 
-@media (max-width: 640px) {
+/* На мобилке LiveStats скрываем — низ и так загружен */
+@media (max-width: 768px) {
   .ls {
-    /* Центрируем по горизонтали */
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    bottom: 16px;
-    width: calc(100vw - 32px);
-    max-width: 320px;
-    border-radius: 14px;
-  }
-
-  /* Переопределяем анимацию для мобилки (без горизонтального смещения) */
-  .ls {
-    animation: ls-in-mobile 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-
-  .ls__big-num {
-    font-size: 34px;
-  }
-
-  .ls__slide {
-    padding: 12px 12px 8px;
-  }
-}
-
-/* На очень маленьких экранах — компактнее */
-@media (max-width: 380px) {
-  .ls {
-    max-width: 290px;
+    display: none;
   }
 }
 

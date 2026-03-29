@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@styles/LeadForm.css";
+import { PHONE_HREF, PHONE_DISPLAY } from "@/config";
 
 /* =========================
    VALIDATION
@@ -210,7 +211,7 @@ export default function LeadForm({
 
         <p className="leadform-thanksHint">
           Хотите быстрее? Позвоните:&nbsp;
-          <a href="tel:+79162979645">+7&nbsp;(916)&nbsp;297-96-45</a>
+          <a href={PHONE_HREF}>{PHONE_DISPLAY}</a>
         </p>
 
         <button

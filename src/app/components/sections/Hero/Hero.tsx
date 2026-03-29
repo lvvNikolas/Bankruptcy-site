@@ -59,6 +59,7 @@ export default function Hero() {
           loop
           playsInline
           preload="metadata"
+          poster="/media/femida.png"
         />
         <div className="hero__mobileBg">
           <Image

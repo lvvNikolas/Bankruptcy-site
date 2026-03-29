@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "@styles/globals.css";
+import {
+  SITE_URL,
+  SITE_NAME,
+  PHONE_RAW,
+  EMAIL,
+  METRIKA_ID,
+} from "@/config";
 
 const manrope = Manrope({
   subsets: ["latin", "cyrillic"],
@@ -18,18 +25,14 @@ import MessengerButtons from "@/app/components/widgets/MessengerButtons/Messenge
 import ExitPopup from "@/app/components/widgets/ExitPopup/ExitPopup";
 import LiveStats from "@/app/components/widgets/LiveStats/LiveStats";
 import MobileCTA from "@/app/components/widgets/MobileCTA/MobileCTA";
+import GoalTracker from "@/app/components/widgets/GoalTracker/GoalTracker";
 
 export const viewport = {
   width: "device-width",
   initialScale: 1,
 };
 
-const SITE_URL = "https://basolution.ru";
-const SITE_NAME = "Юридическое агентство по банкротству Солюшен";
-
-// 👉 Заполни актуальные данные
-const PHONE = "+79162979645"; // например "+79162979645"
-const EMAIL = "bankruptcyagencysolution@yandex.com";
+const PHONE = PHONE_RAW;
 const ADDRESSES = [
   {
     "@type": "PostalAddress",
@@ -107,9 +110,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       telephone: PHONE,
       email: EMAIL,
       address: ADDRESSES,
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          telephone: PHONE,
+          contactType: "customer service",
+          areaServed: "RU",
+          availableLanguage: "Russian",
+          hoursAvailable: {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+            opens: "09:00",
+            closes: "21:00",
+          },
+        },
+      ],
       sameAs: [
-        // сюда можно добавить соцсети, например Telegram
-        // "https://t.me/your_username",
+        "https://t.me/ba_solution",
       ],
     },
     {
@@ -121,7 +138,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   ];
 
   return (
-    <html lang="ru" className={manrope.variable} data-scroll-behavior="smooth">
+    <html lang="ru" className={manrope.variable}>
       <head>
         {/* Yandex.Metrika */}
         <script
@@ -131,14 +148,14 @@ m[i].l=1*new Date();
 for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
 (window,document,"script","https://mc.yandex.ru/metrika/tag.js","ym");
-ym(107006423,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});`,
+ym(${METRIKA_ID},"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});`,
           }}
         />
         <noscript>
           <div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="https://mc.yandex.ru/watch/107006423"
+              src={`https://mc.yandex.ru/watch/${METRIKA_ID}`}
               style={{ position: "absolute", left: "-9999px" }}
               alt=""
             />
@@ -146,8 +163,9 @@ ym(107006423,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webv
         </noscript>
       </head>
       <body>
+        <a href="#main-content" className="skip-to-content">Перейти к содержимому</a>
         <Navbar />
-        <main id="main-content">{children}</main>
+        <main id="main-content" style={{ paddingTop: "var(--nav-h, 68px)" }}>{children}</main>
         <Footer />
         <FloatingCTA />
         <MessengerButtons />
@@ -156,6 +174,7 @@ ym(107006423,"init",{clickmap:true,trackLinks:true,accurateTrackBounce:true,webv
         <ExitPopup />
         <LiveStats />
         <MobileCTA />
+        <GoalTracker />
 
         {/* ✅ Schema.org */}
         <script

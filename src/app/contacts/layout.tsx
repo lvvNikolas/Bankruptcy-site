@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-
-const SITE_URL = "https://basolution.ru";
+import { SITE_URL, PHONE_RAW, EMAIL } from "@/config";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/contacts" },
@@ -26,8 +25,8 @@ const jsonLd = {
     "@type": "LegalService",
     name: "Юридическое агентство по банкротству Солюшен",
     url: SITE_URL,
-    telephone: "+79162979645",
-    email: "bankruptcyagencysolution@yandex.com",
+    telephone: PHONE_RAW,
+    email: EMAIL,
     address: {
       "@type": "PostalAddress",
       streetAddress: "Пресненская набережная, д. 12",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { METRIKA_ID } from "@/config";
 
 declare global {
   interface Window {
@@ -11,7 +12,7 @@ declare global {
 export default function SpasiboTracker() {
   useEffect(() => {
     try {
-      window.ym?.(107006423, "reachGoal", "form_submitted");
+      window.ym?.(METRIKA_ID, "reachGoal", "form_submitted");
     } catch {}
   }, []);
   return null;

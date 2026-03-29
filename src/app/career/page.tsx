@@ -1,12 +1,32 @@
 import type { Metadata, Route } from "next";
 import Link from "next/link";
 import "@styles/CareerPage.css";
+import { SITE_URL } from "@/config";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/career" },
-  title: "Карьера — открытые вакансии",
+  title: "Карьера — вакансии в юридической компании",
   description:
-    "Открытые вакансии компании: юристы, арбитражные управляющие, помощники. Присоединяйтесь к профессиональной команде.",
+    "Открытые вакансии юридической компании по банкротству: юристы, арбитражные управляющие, помощники. Работа в Москве и удалённо.",
+  keywords: [
+    "вакансии юрист банкротство",
+    "арбитражный управляющий вакансия",
+    "работа в юридической компании Москва",
+    "юрист по банкротству вакансия",
+  ],
+  openGraph: {
+    title: "Карьера — открытые вакансии | Солюшен",
+    description:
+      "Открытые вакансии юридической компании по банкротству. Присоединяйтесь к профессиональной команде.",
+    type: "website",
+    images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Вакансии в юридической компании Солюшен",
+    description: "Юристы по банкротству, арбитражные управляющие, помощники — актуальные вакансии.",
+    images: ["/og-preview.jpg"],
+  },
 };
 
 type Vacancy = {
@@ -43,8 +63,6 @@ const VACANCIES: Vacancy[] = [
     date: "09.01.2023",
   },
 ];
-
-const SITE_URL = "https://basolution.ru";
 
 const jsonLd = [
   {

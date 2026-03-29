@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import "@styles/LeadForm.css";
+import { METRIKA_ID, PHONE_HREF, PHONE_DISPLAY } from "@/config";
 
 /* =========================
    VALIDATION
@@ -168,7 +169,7 @@ export default function LeadForm({
 
       reset();
       setDone(true);
-      try { window.ym?.(107006423, "reachGoal", "form_submitted"); } catch {}
+      try { window.ym?.(METRIKA_ID, "reachGoal", "form_submitted"); } catch {}
       onSuccess?.();
       router.push("/spasibo/" as never);
     } catch (err: unknown) {

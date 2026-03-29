@@ -538,3 +538,21 @@ hr {
     box-shadow: 0 0 0 0 rgba(209, 162, 76, 0);
   }
 }
+
+/* Skip-to-content (accessibility) */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--brand, #d1a24c);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 0 0 8px 8px;
+  z-index: 9999;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-to-content:focus {
+  top: 0;
+}

@@ -1,12 +1,15 @@
 "use client";
 
 import "@styles/MessengerButtons.css";
+import { WHATSAPP_HREF, PHONE_RAW } from "@/config";
+
+const TELEGRAM_PHONE_HREF = `https://t.me/+${PHONE_RAW.replace("+", "")}`;
 
 export default function MessengerButtons() {
   return (
     <div className="mess-btns" aria-label="Связаться в мессенджере">
       <a
-        href="https://wa.me/79162979645"
+        href={WHATSAPP_HREF}
         className="mess-btn mess-btn--wa"
         target="_blank"
         rel="noreferrer noopener"
@@ -18,7 +21,7 @@ export default function MessengerButtons() {
         </svg>
       </a>
       <a
-        href="https://t.me/+79162979645"
+        href={TELEGRAM_PHONE_HREF}
         className="mess-btn mess-btn--tg"
         target="_blank"
         rel="noreferrer noopener"

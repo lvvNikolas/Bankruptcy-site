@@ -418,3 +418,20 @@
     gap: 12px;
   }
 }
+/* ===== Search result notice ===== */
+.blog-search-result {
+  margin-bottom: 28px;
+  padding: 14px 20px;
+  background: var(--surface-2, #f7f8fa);
+  border-left: 3px solid var(--brand, #d1a24c);
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--muted, #64748b);
+}
+
+.blog-search-result a {
+  color: var(--brand, #d1a24c);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

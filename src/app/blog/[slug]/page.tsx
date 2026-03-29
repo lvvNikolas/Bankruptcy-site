@@ -5,8 +5,7 @@ import { BLOG_POSTS } from "@/app/data/blog";
 import Quiz from "@/app/components/sections/Quiz/Quiz";
 import ReadingProgress from "@/app/components/widgets/ReadingProgress/ReadingProgress";
 import "@styles/BlogPostPage.css";
-
-const SITE_URL = "https://basolution.ru";
+import { SITE_URL } from "@/config";
 
 export function generateStaticParams() {
   return BLOG_POSTS.map((post) => ({ slug: post.slug }));
@@ -24,12 +23,19 @@ export async function generateMetadata({
     alternates: { canonical: `/blog/${post.slug}` },
     title: post.title,
     description: post.description,
+    keywords: [post.category, "банкротство физических лиц", "127-ФЗ", "списание долгов"],
     openGraph: {
       title: post.title,
       description: post.description,
       type: "article",
       publishedTime: post.dateIso,
       images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: ["/og-preview.jpg"],
     },
   };
 }
@@ -58,7 +64,11 @@ export default async function BlogPostPage({
       "@type": "BlogPosting",
       headline: post.title,
       description: post.description,
+      url: `${SITE_URL}/blog/${post.slug}/`,
       datePublished: post.dateIso,
+      dateModified: post.dateIso,
+      image: `${SITE_URL}/og-preview.jpg`,
+      inLanguage: "ru",
       author: {
         "@type": "Organization",
         name: "Юридическое агентство по банкротству Солюшен",

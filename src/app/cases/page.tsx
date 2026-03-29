@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import "@styles/CasesPage.css";
+import { SITE_URL } from "@/config";
 
 /** SEO (страница — server component, без `use client`) */
 export const metadata: Metadata = {
@@ -9,6 +10,12 @@ export const metadata: Metadata = {
   title: "Выигранные дела",
   description:
     "Реальные успешно завершённые дела по списанию долгов и защите интересов клиентов.",
+  keywords: [
+    "дела о банкротстве",
+    "успешное банкротство примеры",
+    "списание долгов кейсы",
+    "банкротство физических лиц результаты",
+  ],
   openGraph: {
     title: "Выигранные дела | Юридическое агентство по банкротству Солюшен",
     description:
@@ -16,9 +23,13 @@ export const metadata: Metadata = {
     type: "website",
     images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Выигранные дела по банкротству",
+    description: "Реальные кейсы успешного списания долгов. Более 500 завершённых дел.",
+    images: ["/og-preview.jpg"],
+  },
 };
-
-const SITE_URL = "https://basolution.ru";
 
 const jsonLd = [
   {
@@ -94,7 +105,7 @@ export default function CasesPage() {
       </header>
 
       {/* Секция кейсов */}
-      <main>
+      <div>
         <section id="cases-list" className="container cases-section">
           <CasesSection />
         </section>
@@ -103,7 +114,7 @@ export default function CasesPage() {
         <section id="quiz" className="container quiz-section">
           <Quiz />
         </section>
-      </main>
+      </div>
     </>
   );
 }

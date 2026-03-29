@@ -50,21 +50,10 @@
   background: #1a9dd8;
 }
 
-@media (max-width: 600px) {
+/* На мобилке мессенджеры встроены в MobileCTA-бар */
+@media (max-width: 768px) {
   .mess-btns {
-    bottom: 130px;
-    right: 16px;
-    gap: 8px;
-  }
-
-  .mess-btn {
-    width: 46px;
-    height: 46px;
-  }
-
-  .mess-btn svg {
-    width: 22px;
-    height: 22px;
+    display: none;
   }
 }
 

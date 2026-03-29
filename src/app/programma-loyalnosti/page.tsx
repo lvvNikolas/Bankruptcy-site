@@ -2,21 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/LoyaltyPage.css";
+import { SITE_URL } from "@/config";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/programma-loyalnosti" },
   title: "Программа лояльности — 20 000 ₽ за приведённого клиента",
   description:
     "Приведите знакомого с долгами — получите 20 000 ₽ после заключения договора. Простая партнёрская программа без лимитов и скрытых условий.",
+  keywords: [
+    "программа лояльности банкротство",
+    "реферальная программа банкротство",
+    "привести клиента вознаграждение",
+    "партнёрская программа юридическая",
+  ],
   openGraph: {
-    title: "Программа лояльности — 20 000 ₽ за клиента | Юридическое агентство по банкротству Солюшен",
+    title: "Программа лояльности — 20 000 ₽ за клиента | Солюшен",
     description:
       "Порекомендуйте нас знакомому с долгами и получите 20 000 ₽ вознаграждения. Без сложных схем — только честное партнёрство.",
     type: "website",
+    images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Программа лояльности — 20 000 ₽ за приведённого клиента",
+    description: "Рекомендуйте нас и получайте 20 000 ₽ за каждого клиента без лимитов.",
+    images: ["/og-preview.jpg"],
   },
 };
-
-const SITE_URL = "https://basolution.ru";
 
 const jsonLd = {
   "@context": "https://schema.org",

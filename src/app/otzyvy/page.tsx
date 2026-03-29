@@ -2,19 +2,31 @@ import type { Metadata } from "next";
 import ReviewsSection from "@/app/components/sections/ReviewsSection/ReviewsSection";
 import { REVIEWS } from "@/app/data/reviews";
 
-const SITE_URL = "https://basolution.ru";
+import { SITE_URL } from "@/config";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/otzyvy" },
   title: "Отзывы клиентов",
   description:
     "Реальные отзывы клиентов о банкротстве физических лиц в Юридическом агентстве по банкротству Солюшен. Более 500 успешных дел по всей России.",
+  keywords: [
+    "отзывы о банкротстве",
+    "отзывы о списании долгов",
+    "отзывы клиентов банкротство Москва",
+    "банкротство физических лиц отзывы реальные",
+  ],
   openGraph: {
     title: "Отзывы клиентов | Юридическое агентство по банкротству Солюшен",
     description:
       "Реальные отзывы о банкротстве физических лиц. Более 500 успешных дел, оценка 4.9 из 5.",
     type: "website",
     images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Отзывы клиентов о банкротстве",
+    description: "Реальные отзывы. Более 500 успешных дел, рейтинг Яндекс 4.9 из 5.",
+    images: ["/og-preview.jpg"],
   },
 };
 

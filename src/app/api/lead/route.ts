@@ -4,6 +4,26 @@ import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
+/* ===== RATE LIMITER (in-memory, per IP) ===== */
+const RATE_LIMIT_MAX = 5;        // максимум запросов
+const RATE_LIMIT_WINDOW_MS = 60_000; // за 60 секунд
+
+const ipMap = new Map<string, { count: number; resetAt: number }>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipMap.get(ip);
+
+  if (!entry || now > entry.resetAt) {
+    ipMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+
+  entry.count += 1;
+  if (entry.count > RATE_LIMIT_MAX) return true;
+  return false;
+}
+
 type ExtraData = Record<string, unknown>;
 type QuizRow = [string, string];
 
@@ -317,6 +337,16 @@ const transporter =
 
 export async function POST(req: Request) {
   try {
+    // Rate limiting
+    const forwarded = req.headers.get("x-forwarded-for");
+    const ip = forwarded ? forwarded.split(",")[0].trim() : "unknown";
+    if (isRateLimited(ip)) {
+      return NextResponse.json(
+        { error: "Слишком много запросов. Попробуйте через минуту." },
+        { status: 429 }
+      );
+    }
+
     const miss = missingEnv();
     if (miss.length) {
       return NextResponse.json(

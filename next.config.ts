@@ -21,10 +21,6 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
-
-  sassOptions: {
-    silenceDeprecations: ["legacy-js-api"],
-  },
 };
 
 export default nextConfig;

@@ -1,22 +1,8 @@
-"use client";
-
-import Head from "next/head";
 import "@styles/FAQ.css";
 
-type Props = { withHead?: boolean };
-
-export default function FAQ({ withHead = true }: Props) {
+export default function FAQ() {
   return (
     <section id="faq" className="faq section" aria-labelledby="faq-title">
-      {withHead && (
-        <Head>
-          <title>FAQ по банкротству физических лиц</title>
-          <meta
-            name="description"
-            content="Ответы на частые вопросы: имущество, ограничения, сроки, последствия и возможности после банкротства."
-          />
-        </Head>
-      )}
 
       <div className="container">
         <header className="faq__head">

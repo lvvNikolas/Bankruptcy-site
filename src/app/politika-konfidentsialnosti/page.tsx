@@ -1,6 +1,7 @@
 // src/app/politika-konfidentsialnosti/page.tsx
 import type { Metadata } from "next";
 import "@styles/Legal.css";
+import { SITE_URL, SITE_NAME as OPERATOR_NAME, EMAIL as CONTACT_EMAIL } from "@/config";
 
 export const metadata: Metadata = {
   title: "Политика конфиденциальности и обработки персональных данных",
@@ -9,9 +10,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const OPERATOR_NAME = "Юридическое агентство по банкротству Солюшен";
-const SITE_URL = "https://basolution.ru";
-const CONTACT_EMAIL = "bankruptcyagencysolution@yandex.com";
 const CITY = "Москва";
 const DATE = "10.01.2025";
 

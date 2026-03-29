@@ -25,6 +25,8 @@
   overflow: hidden;
   isolation: isolate;
   padding-block: 100px 80px;
+  /* Уходим под прозрачный фиксированный нав */
+  margin-top: calc(-1 * var(--nav-h, 68px));
 }
 
 .hero .container {

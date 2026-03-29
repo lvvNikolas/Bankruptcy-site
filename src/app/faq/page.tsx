@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import "@styles/FAQPage.css";
+import { SITE_URL } from "@/config";
 
 import Quiz from "@/app/components/sections/Quiz/Quiz";
 
@@ -9,11 +10,25 @@ export const metadata: Metadata = {
   title: "Вопросы и ответы",
   description:
     "Собрали ключевые ответы: безопасность процедуры, имущественные риски, последствия и мифы — коротко и по делу.",
+  keywords: [
+    "вопросы о банкротстве",
+    "банкротство физических лиц вопросы и ответы",
+    "последствия банкротства",
+    "банкротство мифы",
+    "127-ФЗ вопросы",
+  ],
   openGraph: {
-    title: "Вопросы и ответы",
+    title: "Вопросы и ответы о банкротстве | Солюшен",
     description:
       "Собрали ключевые ответы: безопасность процедуры, имущественные риски, последствия и мифы — коротко и по делу.",
     type: "website",
+    images: [{ url: "/og-preview.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Вопросы и ответы о банкротстве",
+    description: "Безопасность процедуры, риски, последствия и мифы — коротко и по делу.",
+    images: ["/og-preview.jpg"],
   },
 };
 
@@ -58,8 +73,6 @@ const FAQ_ITEMS: FAQ[] = [
     a: `Нет. Это критерий обязательного банкротства. Добровольно можно подать и при меньшей сумме, если очевидна невозможность исполнять обязательства.`,
   },
 ];
-
-const SITE_URL = "https://basolution.ru";
 
 function toPlainText(s: string) {
   // чтобы schema была аккуратной: без лишних переносов/двойных пробелов

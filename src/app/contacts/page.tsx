@@ -3,6 +3,13 @@
 import { useEffect, useState } from "react";
 import "@styles/ContactsPage.css";
 import LeadForm from "@/app/components/LeadForm/LeadForm";
+import {
+  PHONE_HREF,
+  PHONE_DISPLAY,
+  EMAIL,
+  EMAIL_HREF,
+  ADDRESS,
+} from "@/config";
 
 export default function ContactsPage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,8 +53,8 @@ export default function ContactsPage() {
               Бесплатная консультация по телефону
             </p>
 
-            <a className="contactsCard__value" href="tel:+79162979645">
-              +7&nbsp;(916)&nbsp;297-96-45
+            <a className="contactsCard__value" href={PHONE_HREF}>
+              {PHONE_DISPLAY.replace(/ /g, "\u00a0")}
             </a>
 
             {/* КНОПКА — открывает форму */}
@@ -68,9 +75,9 @@ export default function ContactsPage() {
 
             <a
               className="contactsCard__value"
-              href="mailto:bankruptcyagencysolution@yandex.com"
+              href={EMAIL_HREF}
             >
-              bankruptcyagencysolution@yandex.com
+              {EMAIL}
             </a>
           </article>
 
@@ -80,7 +87,7 @@ export default function ContactsPage() {
             <h2 className="contactsCard__title">Офис в Москве</h2>
             <p className="contactsCard__note">Личные консультации по записи</p>
             <div className="contactsCard__value">
-              г. Москва, Пресненская набережная, д. 12
+              {ADDRESS}
             </div>
           </article>
 
