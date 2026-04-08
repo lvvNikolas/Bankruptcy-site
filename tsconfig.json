@@ -19,34 +19,33 @@
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ],
       "@app/*": [
-        "src/app/*"
+        "./src/app/*"
       ],
       "@components/*": [
-        "src/app/components/*"
+        "./src/app/components/*"
       ],
       "@sections/*": [
-        "src/app/components/sections/*"
+        "./src/app/components/sections/*"
       ],
       "@widgets/*": [
-        "src/app/components/widgets/*"
+        "./src/app/components/widgets/*"
       ],
       "@styles/*": [
-        "src/styles/*"
+        "./src/styles/*"
       ],
       "@data/*": [
-        "src/app/data/*"
+        "./src/app/data/*"
       ],
       "@features/*": [
-        "src/features/*"
+        "./src/features/*"
       ],
       "@shared/*": [
-        "src/shared/*"
+        "./src/shared/*"
       ]
     },
     "plugins": [

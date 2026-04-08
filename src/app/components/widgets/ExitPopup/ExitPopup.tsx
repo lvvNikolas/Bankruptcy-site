@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/ExitPopup.css";
+import { EXIT_POPUP_DELAY_MS } from "@/config";
 
 export default function ExitPopup() {
   const [visible, setVisible] = useState(false);
@@ -23,7 +24,8 @@ export default function ExitPopup() {
       if (e.clientY < 10) show();
     };
 
-    const timer = setTimeout(show, 40000);
+    // Принудительный показ если пользователь не покинул страницу мышью
+    const timer = setTimeout(show, EXIT_POPUP_DELAY_MS);
 
     document.addEventListener("mouseleave", onMouseLeave);
     return () => {

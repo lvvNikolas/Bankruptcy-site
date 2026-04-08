@@ -2,8 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import HeroPromoForm from "@/app/components/LeadForm/HeroPromoForm";
+import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/Hero.css";
+import {
+  HERO_INTERSECTION_THRESHOLD,
+  HERO_COUNT_DURATIONS,
+} from "@/config";
 
 function useCountUp(target: number, duration: number, started: boolean) {
   const [val, setVal] = useState(0);
@@ -37,15 +41,17 @@ export default function Hero() {
           obs.disconnect();
         }
       },
-      { threshold: 0.5 }
+      // Порог из конфига — секция должна быть видима хотя бы наполовину
+      { threshold: HERO_INTERSECTION_THRESHOLD }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
-  const c500 = useCountUp(500, 1400, started);
-  const c98  = useCountUp(98,  1200, started);
-  const c7   = useCountUp(7,   900,  started);
+  // Длительности из конфига — разные значения создают эффект неодновременного завершения
+  const c500 = useCountUp(500, HERO_COUNT_DURATIONS.clients, started);
+  const c98  = useCountUp(98,  HERO_COUNT_DURATIONS.success, started);
+  const c7   = useCountUp(7,   HERO_COUNT_DURATIONS.years,   started);
 
   return (
     <section id="hero" className="hero" aria-label="Главный блок">
@@ -138,7 +144,12 @@ export default function Hero() {
                 <p className="hero__cardSub">Ответим в течение 10 минут</p>
               </div>
 
-              <HeroPromoForm />
+              {/* redirectOnSuccess=true: после отправки переходим на /spasibo/ для конверсионного трекинга */}
+              <LeadForm
+                context="hero_main"
+                formId="hero_main_form"
+                redirectOnSuccess={true}
+              />
 
               <div className="hero__secure">
                 <svg viewBox="0 0 24 24" aria-hidden="true" width="13" height="13" fill="currentColor">

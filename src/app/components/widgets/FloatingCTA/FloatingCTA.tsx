@@ -3,15 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import LeadForm from "@/app/components/LeadForm/LeadForm";
 import "@styles/FloatingCTA.css";
+import { FLOATING_CTA_SCROLL_PX, FLOATING_CTA_IDLE_MS } from "@/config";
 
 /**
  * FloatingCTA — плавающая кнопка «Заявка» с модальной формой.
  * Показывается:
- *   1) при скролле вниз на SCROLL_THRESHOLD пикселей
- *   2) или через INACTIVITY_TIMEOUT мс бездействия
+ *   1) при скролле вниз на FLOATING_CTA_SCROLL_PX пикселей
+ *   2) или через FLOATING_CTA_IDLE_MS мс бездействия пользователя
  */
-const SCROLL_THRESHOLD = 200;    // px
-const INACTIVITY_TIMEOUT = 5000; // ms
 
 export default function FloatingCTA() {
   const [visible, setVisible] = useState(false);
@@ -23,17 +22,19 @@ export default function FloatingCTA() {
   // Показ по скроллу или таймауту
   useEffect(() => {
     const onScroll = () => {
-      if (window.scrollY > SCROLL_THRESHOLD) {
+      // Показываем кнопку как только пользователь проскроллил достаточно
+      if (window.scrollY > FLOATING_CTA_SCROLL_PX) {
         scrolled.current = true;
         setVisible(true);
       }
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+    // Если скролла нет — показываем по таймауту бездействия
     if (!scrolled.current) {
       timerRef.current = window.setTimeout(() => {
         if (!scrolled.current) setVisible(true);
-      }, INACTIVITY_TIMEOUT);
+      }, FLOATING_CTA_IDLE_MS);
     }
 
     return () => {
