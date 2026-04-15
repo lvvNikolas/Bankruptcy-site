@@ -33,6 +33,9 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
 
+  // Пакеты которые должны оставаться на сервере (не бандлиться Turbopack)
+  serverExternalPackages: ["nodemailer"],
+
   async headers() {
     return [
       {

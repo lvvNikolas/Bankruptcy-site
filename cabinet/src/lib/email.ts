@@ -1,17 +1,20 @@
-import nodemailer from "nodemailer";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const nodemailer = require("nodemailer") as typeof import("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true,
-  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-});
+function getTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: true,
+    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  });
+}
 
 export async function sendStatusChangeEmail(opts: {
   to: string; name: string | null; status: string; caseTitle: string; cabinetUrl: string;
 }) {
   const name = opts.name ?? opts.to;
-  await transporter.sendMail({
+  await getTransporter().sendMail({
     from: `"Банкротство Солюшен" <${process.env.SMTP_FROM}>`,
     to: opts.to,
     subject: `Статус вашего дела изменён — ${opts.status}`,
@@ -40,7 +43,7 @@ export async function sendWelcomeEmail(opts: {
   to: string; name: string | null; password: string; cabinetUrl: string;
 }) {
   const name = opts.name ?? opts.to;
-  await transporter.sendMail({
+  await getTransporter().sendMail({
     from: `"Банкротство Солюшен" <${process.env.SMTP_FROM}>`,
     to: opts.to,
     subject: `Добро пожаловать в личный кабинет — Банкротство Солюшен`,
@@ -75,7 +78,7 @@ export async function sendUpdateEmail(opts: {
   to: string; name: string | null; text: string; caseTitle: string; cabinetUrl: string;
 }) {
   const name = opts.name ?? opts.to;
-  await transporter.sendMail({
+  await getTransporter().sendMail({
     from: `"Банкротство Солюшен" <${process.env.SMTP_FROM}>`,
     to: opts.to,
     subject: `Новое обновление по вашему делу`,
