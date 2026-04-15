@@ -127,6 +127,29 @@
   justify-self: end;
 }
 
+/* ===== Кнопка личного кабинета ===== */
+
+.nav__cabinetBtn {
+  display: flex;
+  align-items: center;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--nav-text);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+}
+
+.nav__cabinetBtn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
 /* ===== Кнопка поиска ===== */
 
 .nav__searchBtn {
@@ -428,6 +451,29 @@
 
 /* CTA телефон */
 
+.nav__mCabinet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 28px;
+  padding: 14px 32px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  color: #f9fafb;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  animation: navItemIn 0.35s ease both;
+  animation-delay: calc(7 * 60ms + 80ms);
+  transition: background 0.15s, transform 0.1s;
+}
+
+.nav__mCabinet:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateY(-1px);
+}
+
 .nav__mCta {
   display: inline-flex;
   align-items: center;
@@ -467,6 +513,10 @@
 
   .nav__searchBtn {
     padding: 8px 10px;
+  }
+
+  .nav__cabinetBtn {
+    display: none;
   }
 }
 

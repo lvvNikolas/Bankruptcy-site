@@ -1,137 +1,135 @@
 "use client";
 
-// Страница создания нового клиента администратором
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
+const FIELDS = [
+  { id: "name",     label: "Полное имя",      type: "text",     placeholder: "Иванов Иван Иванович", required: true },
+  { id: "email",    label: "Email",            type: "email",    placeholder: "client@email.com",     required: true },
+  { id: "phone",    label: "Телефон",          type: "tel",      placeholder: "+7 (___) ___-__-__",  required: false },
+  { id: "password", label: "Пароль для входа", type: "password", placeholder: "Минимум 6 символов",  required: true, minLength: 6 },
+] as const;
+
+type FieldId = typeof FIELDS[number]["id"];
+
 export default function NewClientPage() {
   const router = useRouter();
+  const [values, setValues]   = useState<Record<FieldId, string>>({ name: "", email: "", phone: "", password: "" });
+  const [error,  setError]    = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  const [name,     setName]     = useState("");
-  const [email,    setEmail]    = useState("");
-  const [phone,    setPhone]    = useState("");
-  const [password, setPassword] = useState("");
-  const [error,    setError]    = useState<string | null>(null);
-  const [loading,  setLoading]  = useState(false);
+  const set = (id: FieldId) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setValues(prev => ({ ...prev, [id]: e.target.value }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    const res = await fetch("/api/admin/clients", {
+    const res  = await fetch("/api/admin/clients", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone, password }),
+      body: JSON.stringify(values),
     });
-
     const json = await res.json();
     setLoading(false);
 
-    if (!res.ok) {
-      setError(json.error ?? "Ошибка создания клиента");
-      return;
-    }
-
-    // Переходим на страницу созданного клиента
+    if (!res.ok) { setError(json.error ?? "Ошибка создания клиента"); return; }
     router.push(`/admin/clients/${json.id}`);
   };
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-      {/* Шапка */}
+
+      {/* Header */}
       <header style={{
         background: "var(--surface)",
         borderBottom: "1px solid var(--border)",
-        padding: ".9rem 1.5rem",
+        padding: "0 1.5rem",
+        height: 52,
         display: "flex",
         alignItems: "center",
-        gap: "1rem",
+        gap: ".375rem",
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
       }}>
-        <Link href="/admin" style={{ color: "var(--text-muted)", fontSize: ".85rem" }}>
-          ← Все клиенты
+        <Link href="/admin" style={{
+          fontSize: ".8125rem",
+          color: "var(--text-muted)",
+          display: "inline-flex", alignItems: "center", gap: ".25rem",
+          padding: ".25rem .5rem",
+          borderRadius: "var(--radius-sm)",
+          transition: "color .15s ease",
+        }}>
+          ← Клиенты
         </Link>
-        <div style={{ fontWeight: 700 }}>Новый клиент</div>
+        <span style={{ color: "var(--border)" }}>/</span>
+        <span style={{ fontWeight: 500, fontSize: ".875rem", color: "var(--text)" }}>Новый клиент</span>
       </header>
 
-      <main style={{ maxWidth: 480, margin: "2rem auto", padding: "0 1rem" }}>
-        <div className="card">
-          <h2 style={{ fontWeight: 700, marginBottom: "1.5rem" }}>Данные клиента</h2>
+      <main style={{ maxWidth: 480, margin: "2.5rem auto", padding: "0 1.5rem" }}>
 
+        <div style={{ marginBottom: "1.5rem" }}>
+          <h1 style={{ fontWeight: 700, fontSize: "1.125rem", letterSpacing: "-.02em", color: "var(--text)", marginBottom: ".25rem" }}>
+            Добавить клиента
+          </h1>
+          <p style={{ color: "var(--text-muted)", fontSize: ".875rem" }}>
+            Клиент получит доступ в личный кабинет по указанным данным
+          </p>
+        </div>
+
+        <div className="card" style={{ padding: "1.75rem" }}>
           <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <div className="field">
-              <label className="label" htmlFor="name">Имя</label>
-              <input
-                id="name"
-                className="input"
-                placeholder="Иванов Иван Иванович"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
 
-            <div className="field">
-              <label className="label" htmlFor="email">Email</label>
-              <input
-                id="email"
-                className="input"
-                type="email"
-                placeholder="client@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="field">
-              <label className="label" htmlFor="phone">Телефон</label>
-              <input
-                id="phone"
-                className="input"
-                type="tel"
-                placeholder="+7XXXXXXXXXX"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            </div>
-
-            <div className="field">
-              <label className="label" htmlFor="password">Пароль для входа</label>
-              <input
-                id="password"
-                className="input"
-                type="password"
-                placeholder="Минимум 6 символов"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={6}
-              />
-              <span style={{ fontSize: ".78rem", color: "var(--text-muted)" }}>
-                Клиент получит этот пароль и сможет войти в кабинет
-              </span>
-            </div>
+            {FIELDS.map(f => (
+              <div className="field" key={f.id}>
+                <label className="label" htmlFor={f.id}>{f.label}</label>
+                <input
+                  id={f.id}
+                  className="input"
+                  type={f.type}
+                  placeholder={f.placeholder}
+                  required={f.required}
+                  minLength={"minLength" in f ? f.minLength : undefined}
+                  value={values[f.id]}
+                  onChange={set(f.id)}
+                />
+                {f.id === "password" && (
+                  <span style={{ fontSize: ".75rem", color: "var(--text-light)", marginTop: ".125rem" }}>
+                    Клиент сможет войти в кабинет по этому паролю
+                  </span>
+                )}
+              </div>
+            ))}
 
             {error && (
               <div style={{
-                padding: ".6rem .85rem",
-                background: "#fef2f2",
+                padding: ".625rem .875rem",
+                background: "var(--danger-bg)",
                 border: "1px solid #fecaca",
-                borderRadius: "var(--radius)",
+                borderRadius: "var(--radius-sm)",
                 color: "var(--danger)",
-                fontSize: ".875rem",
+                fontSize: ".8125rem",
+                fontWeight: 500,
               }} role="alert">
                 {error}
               </div>
             )}
 
-            <div style={{ display: "flex", gap: ".75rem", marginTop: ".5rem" }}>
-              <button className="btn btn-primary" type="submit" disabled={loading}>
+            <div style={{ display: "flex", gap: ".625rem", marginTop: ".25rem" }}>
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={loading}
+                style={{ flex: 1, fontWeight: 600 }}
+              >
                 {loading ? "Создаём…" : "Создать клиента"}
               </button>
-              <Link href="/admin" className="btn btn-ghost">Отмена</Link>
+              <Link href="/admin" className="btn btn-ghost">
+                Отмена
+              </Link>
             </div>
           </form>
         </div>

@@ -1,19 +1,34 @@
-// Страница клиента в панели администратора
-// Позволяет: менять статус дела, добавлять обновления, видеть документы
 import { redirect, notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { CaseStatus } from "@prisma/client";
+import { sendStatusChangeEmail, sendUpdateEmail } from "@/lib/email";
+import { UploadForm } from "./UploadForm";
 
-const STATUS_LABELS: Record<CaseStatus, string> = {
-  DOCUMENTS: "Сбор документов",
-  FILED:     "Заявление подано",
-  COURT:     "Судебное заседание",
-  HEARING:   "Слушание дела",
-  DECISION:  "Решение суда",
-  CLOSED:    "Дело закрыто",
+const STATUS_ORDER: CaseStatus[] = ["DOCUMENTS","FILED","COURT","HEARING","DECISION","CLOSED"];
+
+const STATUS_META: Record<CaseStatus, { label: string; desc: string }> = {
+  DOCUMENTS: { label: "Сбор документов",  desc: "Подготовка пакета документов" },
+  FILED:     { label: "Заявление подано", desc: "Заявление направлено в арбитражный суд" },
+  COURT:     { label: "Суд назначен",     desc: "Первое заседание назначено" },
+  HEARING:   { label: "Слушание дела",    desc: "Рассмотрение дела в суде" },
+  DECISION:  { label: "Решение суда",     desc: "Решение о признании банкротом вынесено" },
+  CLOSED:    { label: "Дело закрыто",     desc: "Долги списаны" },
 };
+
+const STATUS_DOT: Record<CaseStatus, string> = {
+  DOCUMENTS: "#9ca3af",
+  FILED:     "#f59e0b",
+  COURT:     "#f59e0b",
+  HEARING:   "#3b82f6",
+  DECISION:  "#3b82f6",
+  CLOSED:    "#16a34a",
+};
+
+function formatMoney(n: number) {
+  return new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", maximumFractionDigits: 0 }).format(n);
+}
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -23,7 +38,6 @@ export default async function ClientDetailPage({ params }: Props) {
 
   const { id } = await params;
 
-  // Загружаем клиента со всеми делами, обновлениями и документами
   const client = await db.user.findUnique({
     where: { id },
     include: {
@@ -40,148 +54,460 @@ export default async function ClientDetailPage({ params }: Props) {
   if (!client || client.role !== "CLIENT") notFound();
 
   const currentCase = client.cases[0] ?? null;
+  const currentStep = currentCase ? STATUS_ORDER.indexOf(currentCase.status) : -1;
+
+  const clientInitials = (client.name ?? client.email).slice(0, 2).toUpperCase();
+  const cabinetUrl = `${process.env.AUTH_URL}/dashboard`;
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-      {/* Шапка */}
+
+      {/* ── Header ── */}
       <header style={{
         background: "var(--surface)",
         borderBottom: "1px solid var(--border)",
-        padding: ".9rem 1.5rem",
+        padding: "0 1.5rem",
+        height: 52,
         display: "flex",
         alignItems: "center",
-        gap: "1rem",
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
       }}>
-        <Link href="/admin" style={{ color: "var(--text-muted)", fontSize: ".85rem" }}>
-          ← Все клиенты
-        </Link>
-        <div style={{ fontWeight: 700 }}>{client.name ?? client.email}</div>
+        <div style={{ display: "flex", alignItems: "center", gap: ".375rem" }}>
+          <Link href="/admin" className="back-link" style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: ".25rem",
+            fontSize: ".8125rem",
+            color: "var(--text-muted)",
+            padding: ".25rem .5rem",
+            borderRadius: "var(--radius-sm)",
+          }}>
+            ← Клиенты
+          </Link>
+          <span style={{ color: "var(--border)" }}>/</span>
+          <span style={{ fontWeight: 500, fontSize: ".875rem", color: "var(--text)" }}>
+            {client.name ?? client.email}
+          </span>
+        </div>
       </header>
 
-      <main style={{ maxWidth: 800, margin: "0 auto", padding: "2rem 1rem" }}>
-        {/* Контакты клиента */}
-        <div className="card" style={{ marginBottom: "1.25rem" }}>
-          <h2 style={{ fontWeight: 700, marginBottom: ".75rem" }}>Данные клиента</h2>
-          <div style={{ display: "grid", gap: ".4rem", fontSize: ".9rem" }}>
-            <div><b>Email:</b> {client.email}</div>
-            <div><b>Телефон:</b> {client.phone ?? "—"}</div>
-            <div><b>Клиент с:</b> {new Date(client.createdAt).toLocaleDateString("ru-RU")}</div>
+      <main style={{ maxWidth: 860, margin: "0 auto", padding: "2rem 1.5rem" }}>
+
+        {/* ── Client info + debt ── */}
+        <div className="client-detail-top" style={{
+          display: "grid",
+          gridTemplateColumns: currentCase?.debtAmount != null ? "1fr 1fr" : "1fr",
+          gap: "1rem",
+          marginBottom: "1.25rem",
+        }}>
+
+          {/* Client card */}
+          <div className="card" style={{ padding: "1.5rem" }}>
+            <p className="section-label">Клиент</p>
+            <div style={{ display: "flex", alignItems: "center", gap: ".875rem", marginBottom: "1.25rem" }}>
+              <div style={{
+                width: 40, height: 40, borderRadius: "50%",
+                background: "#2563eb",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                fontWeight: 600, fontSize: ".8125rem", color: "#fff",
+                flexShrink: 0,
+              }}>
+                {clientInitials}
+              </div>
+              <div>
+                <div style={{ fontWeight: 600, fontSize: "1rem", color: "var(--text)" }}>
+                  {client.name ?? "—"}
+                </div>
+                <div style={{ fontSize: ".8125rem", color: "var(--text-muted)" }}>
+                  Клиент с {new Date(client.createdAt).toLocaleDateString("ru-RU", {
+                    day: "numeric", month: "long", year: "numeric",
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
+              <div style={{
+                display: "flex", alignItems: "center", gap: ".625rem",
+                padding: ".5rem .75rem",
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-sm)",
+                fontSize: ".875rem",
+              }}>
+                <span style={{ color: "var(--text-muted)", fontSize: ".8125rem" }}>@</span>
+                <span style={{ color: "var(--text-2)" }}>{client.email}</span>
+              </div>
+              <div style={{
+                display: "flex", alignItems: "center", gap: ".625rem",
+                padding: ".5rem .75rem",
+                background: "var(--bg)",
+                border: "1px solid var(--border)",
+                borderRadius: "var(--radius-sm)",
+                fontSize: ".875rem",
+              }}>
+                <span style={{ color: "var(--text-muted)", fontSize: ".8125rem" }}>т</span>
+                <span style={{ color: client.phone ? "var(--text-2)" : "var(--text-light)" }}>
+                  {client.phone ?? "Телефон не указан"}
+                </span>
+              </div>
+            </div>
           </div>
+
+          {/* Debt card */}
+          {currentCase?.debtAmount != null && (
+            <div style={{
+              borderRadius: "var(--radius)",
+              background: "#111827",
+              padding: "1.5rem",
+              color: "#fff",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}>
+              <div>
+                <p style={{
+                  fontSize: ".6875rem", fontWeight: 600,
+                  color: "#6b7280",
+                  textTransform: "uppercase", letterSpacing: ".08em",
+                  marginBottom: ".625rem",
+                }}>
+                  Размер долга
+                </p>
+                <div style={{ fontSize: "2rem", fontWeight: 700, lineHeight: 1.1, letterSpacing: "-.03em", color: "#fff" }}>
+                  {formatMoney(currentCase.debtAmount)}
+                </div>
+                <div style={{ fontSize: ".8125rem", color: "#6b7280", marginTop: ".375rem" }}>
+                  подлежит списанию
+                </div>
+              </div>
+
+              <div style={{
+                marginTop: "1.5rem",
+                display: "inline-flex", alignItems: "center", gap: ".5rem",
+                padding: ".375rem .75rem",
+                background: "rgba(255,255,255,.08)",
+                border: "1px solid rgba(255,255,255,.1)",
+                borderRadius: "var(--radius-sm)",
+                fontSize: ".8125rem",
+                fontWeight: 500,
+                alignSelf: "flex-start",
+              }}>
+                <span style={{
+                  width: 6, height: 6, borderRadius: "50%",
+                  background: STATUS_DOT[currentCase.status],
+                  flexShrink: 0, display: "inline-block",
+                }} />
+                {STATUS_META[currentCase.status].label}
+              </div>
+            </div>
+          )}
         </div>
 
+        {/* ── No case state — Feature 4: detailed create form ── */}
         {!currentCase ? (
-          // Дело ещё не создано
-          <div className="card" style={{ textAlign: "center", padding: "2rem" }}>
-            <p style={{ color: "var(--text-muted)", marginBottom: "1rem" }}>
-              У клиента нет дела
-            </p>
-            {/* Server Action — создать дело */}
-            <form action={async () => {
+          <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
+            <p className="section-label">Создать дело</p>
+            <form action={async (formData: FormData) => {
               "use server";
+              const title = (formData.get("title") as string).trim()
+                || `Банкротство — ${client.name ?? client.email}`;
+              const rawDebt = formData.get("debtAmount") as string;
+              const debtAmount = rawDebt ? parseFloat(rawDebt.replace(/\s/g, "")) : null;
+              const status = (formData.get("status") as CaseStatus) || "DOCUMENTS";
               await db.case.create({
-                data: {
-                  clientId: id,
-                  title:    `Банкротство — ${client.name ?? client.email}`,
-                  status:   "DOCUMENTS",
-                },
+                data: { clientId: id, title, status, debtAmount },
               });
               redirect(`/admin/clients/${id}`);
             }}>
-              <button className="btn btn-primary" type="submit">
-                Создать дело
-              </button>
+              <div className="case-form-grid" style={{
+                display: "grid",
+                gridTemplateColumns: "2fr 1fr 1fr auto",
+                gap: ".75rem",
+                alignItems: "end",
+              }}>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label className="label" htmlFor="caseTitle">Название дела</label>
+                  <input
+                    id="caseTitle"
+                    name="title"
+                    type="text"
+                    className="input"
+                    placeholder={`Банкротство — ${client.name ?? client.email}`}
+                  />
+                </div>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label className="label" htmlFor="caseDebt">Долг, ₽</label>
+                  <input
+                    id="caseDebt"
+                    name="debtAmount"
+                    type="number"
+                    min="0"
+                    step="1000"
+                    className="input"
+                    placeholder="1 500 000"
+                  />
+                </div>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label className="label" htmlFor="caseStatus">Статус</label>
+                  <select id="caseStatus" name="status" defaultValue="DOCUMENTS" className="input">
+                    {(Object.keys(STATUS_META) as CaseStatus[]).map((s) => (
+                      <option key={s} value={s}>{STATUS_META[s].label}</option>
+                    ))}
+                  </select>
+                </div>
+                <button className="btn btn-primary" type="submit" style={{ whiteSpace: "nowrap" }}>
+                  Создать дело
+                </button>
+              </div>
             </form>
           </div>
         ) : (
           <>
-            {/* Статус дела */}
-            <div className="card" style={{ marginBottom: "1.25rem" }}>
-              <h3 style={{ fontWeight: 700, marginBottom: "1rem" }}>
-                {currentCase.title}
-              </h3>
+            {/* ── Case management ── */}
+            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+              <p className="section-label">Управление делом</p>
 
-              {/* Форма смены статуса */}
+              {/* Stepper */}
+              <div className="stepper-wrap" style={{ display: "flex", alignItems: "center", marginBottom: "1.75rem", overflowX: "auto", paddingBottom: ".25rem" }}>
+                {STATUS_ORDER.map((s, i) => {
+                  const done    = i < currentStep;
+                  const current = i === currentStep;
+                  const meta    = STATUS_META[s];
+                  return (
+                    <div key={s} style={{ display: "flex", alignItems: "center", flex: i < STATUS_ORDER.length - 1 ? "1" : "0 0 auto" }}>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: ".375rem", minWidth: 72 }}>
+                        <div style={{
+                          width: 28, height: 28, borderRadius: "50%",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontWeight: 600, fontSize: ".6875rem",
+                          background: done    ? "#16a34a"
+                                    : current ? "#2563eb"
+                                    : "var(--bg)",
+                          color: done || current ? "#fff" : "var(--text-light)",
+                          border: done || current ? "none" : "1.5px solid var(--border)",
+                          flexShrink: 0,
+                        }}>
+                          {done ? "✓" : i + 1}
+                        </div>
+                        <span style={{
+                          fontSize: ".625rem", fontWeight: 500, textAlign: "center", lineHeight: 1.3,
+                          color: done    ? "#16a34a"
+                               : current ? "#2563eb"
+                               : "var(--text-light)",
+                          whiteSpace: "nowrap",
+                        }}>
+                          {meta.label}
+                        </span>
+                      </div>
+
+                      {i < STATUS_ORDER.length - 1 && (
+                        <div style={{
+                          flex: 1,
+                          height: 1.5,
+                          background: done ? "#16a34a" : "var(--border)",
+                          margin: "0 .25rem",
+                          marginTop: "-1rem",
+                        }} />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Update status/debt form */}
               <form action={async (formData: FormData) => {
                 "use server";
-                const status = formData.get("status") as CaseStatus;
-                await db.case.update({
-                  where: { id: currentCase.id },
-                  data:  { status },
-                });
+                const status   = formData.get("status") as CaseStatus;
+                const rawDebt  = formData.get("debtAmount") as string;
+                const debtAmount = rawDebt ? parseFloat(rawDebt.replace(/\s/g, "")) : null;
+                await db.case.update({ where: { id: currentCase.id }, data: { status, debtAmount } });
+
+                // Feature 1: email on status change
+                if (status !== currentCase.status) {
+                  try {
+                    await sendStatusChangeEmail({
+                      to: client.email,
+                      name: client.name,
+                      status: STATUS_META[status].label,
+                      caseTitle: currentCase.title,
+                      cabinetUrl,
+                    });
+                  } catch (err) {
+                    console.error("Email send failed (status change):", err);
+                  }
+                }
+
                 redirect(`/admin/clients/${id}`);
-              }} style={{ display: "flex", gap: ".75rem", alignItems: "center", flexWrap: "wrap" }}>
-                <select
-                  name="status"
-                  defaultValue={currentCase.status}
-                  className="input"
-                  style={{ flex: "1 1 200px" }}
-                >
-                  {(Object.keys(STATUS_LABELS) as CaseStatus[]).map((s) => (
-                    <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-                  ))}
-                </select>
-                <button className="btn btn-primary" type="submit">
-                  Сохранить статус
-                </button>
+              }}>
+                <div style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr auto",
+                  gap: ".75rem",
+                  alignItems: "end",
+                  padding: "1rem",
+                  background: "var(--bg)",
+                  borderRadius: "var(--radius-sm)",
+                  border: "1px solid var(--border)",
+                }}>
+                  <div className="field" style={{ marginBottom: 0 }}>
+                    <label className="label" htmlFor="status">Статус</label>
+                    <select id="status" name="status" defaultValue={currentCase.status} className="input">
+                      {(Object.keys(STATUS_META) as CaseStatus[]).map((s) => (
+                        <option key={s} value={s}>{STATUS_META[s].label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field" style={{ marginBottom: 0 }}>
+                    <label className="label" htmlFor="debtAmount">Размер долга, ₽</label>
+                    <input
+                      id="debtAmount"
+                      name="debtAmount"
+                      type="number"
+                      min="0"
+                      step="1000"
+                      className="input"
+                      placeholder="1 500 000"
+                      defaultValue={currentCase.debtAmount ?? ""}
+                    />
+                  </div>
+                  <button className="btn btn-primary" type="submit" style={{ whiteSpace: "nowrap" }}>
+                    Сохранить
+                  </button>
+                </div>
               </form>
             </div>
 
-            {/* Добавить обновление */}
-            <div className="card" style={{ marginBottom: "1.25rem" }}>
-              <h3 style={{ fontWeight: 700, marginBottom: "1rem" }}>Добавить обновление</h3>
-
+            {/* ── New update ── */}
+            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+              <p className="section-label">Новое обновление</p>
               <form action={async (formData: FormData) => {
                 "use server";
                 const text     = (formData.get("text") as string).trim();
                 const isPublic = formData.get("isPublic") === "on";
                 if (!text) return;
-                await db.caseUpdate.create({
-                  data: { caseId: currentCase.id, text, isPublic },
-                });
+                await db.caseUpdate.create({ data: { caseId: currentCase.id, text, isPublic } });
+
+                // Feature 1: email on public update
+                if (isPublic) {
+                  try {
+                    await sendUpdateEmail({
+                      to: client.email,
+                      name: client.name,
+                      text,
+                      caseTitle: currentCase.title,
+                      cabinetUrl,
+                    });
+                  } catch (err) {
+                    console.error("Email send failed (update):", err);
+                  }
+                }
+
                 redirect(`/admin/clients/${id}`);
-              }} style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
-                <textarea
-                  name="text"
-                  className="input"
-                  placeholder="Текст обновления для клиента…"
-                  rows={3}
-                  required
-                  style={{ resize: "vertical" }}
-                />
-                <label style={{ display: "flex", alignItems: "center", gap: ".5rem", fontSize: ".875rem" }}>
-                  <input type="checkbox" name="isPublic" defaultChecked />
-                  Показывать клиенту
-                </label>
-                <button className="btn btn-primary" type="submit" style={{ alignSelf: "flex-start" }}>
-                  Добавить
-                </button>
+              }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: ".75rem" }}>
+                  <textarea
+                    name="text"
+                    className="input"
+                    placeholder="Напишите обновление для клиента — он увидит его в личном кабинете…"
+                    rows={3}
+                    required
+                    style={{ resize: "vertical", lineHeight: 1.6 }}
+                  />
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <label style={{
+                      display: "flex", alignItems: "center", gap: ".5rem",
+                      fontSize: ".875rem", cursor: "pointer", color: "var(--text-2)",
+                      userSelect: "none",
+                    }}>
+                      <input type="checkbox" name="isPublic" defaultChecked style={{ accentColor: "var(--primary)" }} />
+                      Показывать клиенту
+                    </label>
+                    <button className="btn btn-primary" type="submit" style={{ fontSize: ".8125rem" }}>
+                      Отправить
+                    </button>
+                  </div>
+                </div>
               </form>
             </div>
 
-            {/* История обновлений */}
+            {/* ── Updates timeline ── */}
             {currentCase.updates.length > 0 && (
-              <div className="card">
-                <h3 style={{ fontWeight: 700, marginBottom: "1rem" }}>История обновлений</h3>
-                <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: ".85rem" }}>
-                  {currentCase.updates.map((u) => (
-                    <li key={u.id} style={{
-                      paddingLeft: "1rem",
-                      borderLeft: `3px solid ${u.isPublic ? "var(--primary)" : "var(--border)"}`,
-                    }}>
-                      <div style={{ fontSize: ".78rem", color: "var(--text-muted)", marginBottom: ".15rem" }}>
-                        {new Date(u.createdAt).toLocaleDateString("ru-RU", {
-                          day: "numeric", month: "long", year: "numeric",
-                        })}
-                        {!u.isPublic && " · только для администратора"}
+              <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+                <p className="section-label">История обновлений</p>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {currentCase.updates.map((u, idx) => (
+                    <div key={u.id} style={{ display: "flex", gap: ".875rem" }}>
+                      {/* Timeline line */}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, paddingTop: ".25rem" }}>
+                        <div style={{
+                          width: 8, height: 8, borderRadius: "50%",
+                          background: u.isPublic ? "var(--primary)" : "var(--border)",
+                          flexShrink: 0,
+                        }} />
+                        {idx < currentCase.updates.length - 1 && (
+                          <div style={{ width: 1, flex: 1, background: "var(--border)", margin: ".375rem 0" }} />
+                        )}
                       </div>
-                      <div style={{ fontSize: ".9rem" }}>{u.text}</div>
-                    </li>
+
+                      {/* Content */}
+                      <div style={{ flex: 1, paddingBottom: idx < currentCase.updates.length - 1 ? "1.25rem" : 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: ".5rem", marginBottom: ".25rem" }}>
+                          <span style={{ fontSize: ".8125rem", color: "var(--text-muted)" }}>
+                            {new Date(u.createdAt).toLocaleDateString("ru-RU", {
+                              day: "numeric", month: "long", year: "numeric",
+                            })}
+                          </span>
+                          {!u.isPublic && (
+                            <span style={{
+                              fontSize: ".6875rem", padding: ".125rem .375rem",
+                              borderRadius: 4,
+                              background: "var(--bg)",
+                              border: "1px solid var(--border)",
+                              color: "var(--text-muted)",
+                              fontWeight: 500,
+                            }}>
+                              скрыто
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ fontSize: ".875rem", color: "var(--text-2)", lineHeight: 1.6 }}>
+                          {u.text}
+                        </p>
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             )}
+
+            {/* ── Feature 2: Document upload ── */}
+            <UploadForm
+              caseId={currentCase.id}
+              documents={currentCase.documents.map(d => ({ id: d.id, name: d.name, url: d.url }))}
+            />
           </>
         )}
+
+        {/* ── Feature 5: Delete client ── */}
+        <div className="card" style={{ marginTop: "1.5rem", padding: "1.5rem", border: "1px solid #fca5a5" }}>
+          <p className="section-label" style={{ color: "var(--danger)" }}>Опасная зона</p>
+          <p style={{ fontSize: ".875rem", color: "var(--text-muted)", marginBottom: "1rem" }}>
+            Это действие необратимо — все данные клиента будут удалены
+          </p>
+          <form action={async () => {
+            "use server";
+            await db.user.delete({ where: { id } });
+            redirect("/admin");
+          }}>
+            <button className="btn btn-danger" type="submit" style={{ fontSize: ".8125rem" }}>
+              Удалить клиента
+            </button>
+          </form>
+        </div>
+
       </main>
     </div>
   );

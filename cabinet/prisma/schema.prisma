@@ -70,6 +70,7 @@ model Case {
 
   title       String     // напр. «Банкротство Иванов И.И.»
   status      CaseStatus @default(DOCUMENTS)
+  debtAmount  Float?     // размер долга в рублях
   description String?    // внутренние заметки администратора
 
   updates     CaseUpdate[]

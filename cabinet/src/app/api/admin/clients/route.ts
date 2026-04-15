@@ -4,6 +4,8 @@ import { auth } from "@/auth";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { sendWelcomeEmail } from "@/lib/email";
+import { rateLimit, getIp } from "@/lib/rateLimit";
 
 const schema = z.object({
   name:     z.string().trim().min(2, "Введите имя"),
@@ -13,6 +15,11 @@ const schema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 30 запросов в час с одного IP
+  if (!rateLimit(`clients:${getIp(req)}`, 30, 60 * 60_000)) {
+    return NextResponse.json({ error: "Слишком много запросов" }, { status: 429 });
+  }
+
   // Только администратор может создавать клиентов
   const session = await auth();
   if (!session || session.user.role !== "ADMIN") {
@@ -46,6 +53,13 @@ export async function POST(req: NextRequest) {
       role:         "CLIENT",
     },
   });
+
+  const cabinetUrl = process.env.AUTH_URL ?? "https://cabinet.basolution.ru";
+  try {
+    await sendWelcomeEmail({ to: email, name, password, cabinetUrl });
+  } catch (err) {
+    console.error("Welcome email failed:", err);
+  }
 
   return NextResponse.json({ id: user.id }, { status: 201 });
 }
