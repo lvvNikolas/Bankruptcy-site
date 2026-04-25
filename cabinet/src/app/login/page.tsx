@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -110,7 +111,7 @@ export default function LoginPage() {
         </div>
 
         <p style={{ fontSize: ".75rem", color: "#374151" }}>
-          Банкротство Солюшен © 2024
+          Банкротство Солюшен © 2026
         </p>
       </div>
 
@@ -173,7 +174,12 @@ export default function LoginPage() {
             </div>
 
             <div className="field">
-              <label className="label" htmlFor="password">Пароль</label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <label className="label" htmlFor="password">Пароль</label>
+                <Link href="/forgot-password" style={{ fontSize: ".75rem", color: "var(--text-muted)" }}>
+                  Забыли пароль?
+                </Link>
+              </div>
               <input
                 id="password"
                 className="input"

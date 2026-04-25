@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
+import { PrismaNeonHTTP } from "@prisma/adapter-neon";
 
-// Синглтон Prisma Client — предотвращает создание множества подключений
-// в режиме разработки из-за hot-reload Next.js
+// PrismaNeonHTTP отправляет каждый запрос через HTTP — не держит TCP-соединение,
+// поэтому работает даже когда Neon compute "спит" (решает E57P01 / Can't reach server)
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -10,9 +11,8 @@ const globalForPrisma = globalThis as unknown as {
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: process.env.NODE_ENV === "development"
-      ? ["query", "error", "warn"]
-      : ["error"],
+    adapter: new PrismaNeonHTTP(process.env.DATABASE_URL!, {}),
+    log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 
 if (process.env.NODE_ENV !== "production") {

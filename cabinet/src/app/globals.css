@@ -21,6 +21,7 @@
   --transition:   .15s ease;
 }
 
+
 body {
   font-family: inherit, -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
@@ -163,6 +164,7 @@ textarea.input { line-height: 1.55; }
 @media (min-width: 768px) {
   .login-sidebar { display: flex !important; }
 }
+
 
 /* ── Mobile ───────────────────────────────────────────── */
 @media (max-width: 640px) {

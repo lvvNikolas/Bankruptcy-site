@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { sendWelcomeEmail } from "@/lib/email";
 import { rateLimit, getIp } from "@/lib/rateLimit";
+import { logAction } from "@/lib/auditLog";
 
 const schema = z.object({
   name:     z.string().trim().min(2, "Введите имя"),
@@ -60,6 +61,14 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error("Welcome email failed:", err);
   }
+
+  await logAction({
+    adminId:    session.user.id,
+    adminEmail: session.user.email ?? "",
+    action:     "CLIENT_CREATED",
+    targetId:   user.id,
+    meta:       { name, email },
+  });
 
   return NextResponse.json({ id: user.id }, { status: 201 });
 }

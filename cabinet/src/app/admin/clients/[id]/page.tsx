@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { CaseStatus } from "@prisma/client";
 import { sendStatusChangeEmail, sendUpdateEmail } from "@/lib/email";
+import { logAction } from "@/lib/auditLog";
 import { UploadForm } from "./UploadForm";
 
 const STATUS_ORDER: CaseStatus[] = ["DOCUMENTS","FILED","COURT","HEARING","DECISION","CLOSED"];
@@ -35,6 +36,9 @@ type Props = { params: Promise<{ id: string }> };
 export default async function ClientDetailPage({ params }: Props) {
   const session = await auth();
   if (!session || session.user.role !== "ADMIN") redirect("/dashboard");
+
+  const adminId    = session.user.id;
+  const adminEmail = session.user.email ?? "";
 
   const { id } = await params;
 
@@ -206,6 +210,52 @@ export default async function ClientDetailPage({ params }: Props) {
           )}
         </div>
 
+        {/* ── Edit client info ── */}
+        <div className="card" style={{ padding: "1.5rem", marginBottom: "1.25rem" }}>
+          <p className="section-label">Редактировать данные</p>
+          <form action={async (formData: FormData) => {
+            "use server";
+            const name  = (formData.get("name")  as string).trim() || null;
+            const phone = (formData.get("phone") as string).trim() || null;
+            await db.user.update({ where: { id }, data: { name, phone } });
+            await logAction({
+              adminId, adminEmail,
+              action:   "CLIENT_EDITED",
+              targetId: id,
+              meta:     { name, phone },
+            });
+            redirect(`/admin/clients/${id}`);
+          }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: ".75rem", alignItems: "end" }}>
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label className="label" htmlFor="editName">Полное имя</label>
+                <input
+                  id="editName"
+                  name="name"
+                  type="text"
+                  className="input"
+                  defaultValue={client.name ?? ""}
+                  placeholder="Иванов Иван Иванович"
+                />
+              </div>
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label className="label" htmlFor="editPhone">Телефон</label>
+                <input
+                  id="editPhone"
+                  name="phone"
+                  type="tel"
+                  className="input"
+                  defaultValue={client.phone ?? ""}
+                  placeholder="+7 (___) ___-__-__"
+                />
+              </div>
+              <button className="btn btn-ghost" type="submit" style={{ whiteSpace: "nowrap" }}>
+                Сохранить
+              </button>
+            </div>
+          </form>
+        </div>
+
         {/* ── No case state — Feature 4: detailed create form ── */}
         {!currentCase ? (
           <div className="card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
@@ -217,8 +267,14 @@ export default async function ClientDetailPage({ params }: Props) {
               const rawDebt = formData.get("debtAmount") as string;
               const debtAmount = rawDebt ? parseFloat(rawDebt.replace(/\s/g, "")) : null;
               const status = (formData.get("status") as CaseStatus) || "DOCUMENTS";
-              await db.case.create({
+              const created = await db.case.create({
                 data: { clientId: id, title, status, debtAmount },
+              });
+              await logAction({
+                adminId, adminEmail,
+                action:   "STATUS_CHANGED",
+                targetId: created.id,
+                meta:     { status, title },
               });
               redirect(`/admin/clients/${id}`);
             }}>
@@ -325,8 +381,13 @@ export default async function ClientDetailPage({ params }: Props) {
                 const debtAmount = rawDebt ? parseFloat(rawDebt.replace(/\s/g, "")) : null;
                 await db.case.update({ where: { id: currentCase.id }, data: { status, debtAmount } });
 
-                // Feature 1: email on status change
                 if (status !== currentCase.status) {
+                  await logAction({
+                    adminId, adminEmail,
+                    action:   "STATUS_CHANGED",
+                    targetId: currentCase.id,
+                    meta:     { from: currentCase.status, to: status },
+                  });
                   try {
                     await sendStatusChangeEmail({
                       to: client.email,
@@ -389,6 +450,12 @@ export default async function ClientDetailPage({ params }: Props) {
                 const isPublic = formData.get("isPublic") === "on";
                 if (!text) return;
                 await db.caseUpdate.create({ data: { caseId: currentCase.id, text, isPublic } });
+                await logAction({
+                  adminId, adminEmail,
+                  action:   "UPDATE_ADDED",
+                  targetId: currentCase.id,
+                  meta:     { isPublic, preview: text.slice(0, 80) },
+                });
 
                 // Feature 1: email on public update
                 if (isPublic) {
@@ -499,6 +566,12 @@ export default async function ClientDetailPage({ params }: Props) {
           </p>
           <form action={async () => {
             "use server";
+            await logAction({
+              adminId, adminEmail,
+              action:   "CLIENT_DELETED",
+              targetId: id,
+              meta:     { name: client.name, email: client.email },
+            });
             await db.user.delete({ where: { id } });
             redirect("/admin");
           }}>

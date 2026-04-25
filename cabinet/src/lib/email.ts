@@ -74,6 +74,31 @@ export async function sendWelcomeEmail(opts: {
   });
 }
 
+export async function sendPasswordResetEmail(opts: {
+  to: string; name: string | null; resetUrl: string;
+}) {
+  const name = opts.name ?? opts.to;
+  await getTransporter().sendMail({
+    from: `"Банкротство Солюшен" <${process.env.SMTP_FROM}>`,
+    to: opts.to,
+    subject: `Сброс пароля — Банкротство Солюшен`,
+    html: `
+      <div style="font-family:sans-serif;max-width:520px;margin:0 auto;padding:32px 24px">
+        <div style="background:#2563eb;width:32px;height:32px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:24px">
+          <span style="color:#fff;font-size:12px;font-weight:700">БС</span>
+        </div>
+        <h2 style="margin:0 0 8px;font-size:18px;color:#111827">Сброс пароля</h2>
+        <p style="margin:0 0 24px;color:#6b7280;font-size:14px">Здравствуйте, ${name}. Вы запросили сброс пароля.</p>
+        <a href="${opts.resetUrl}" style="display:inline-block;background:#2563eb;color:#fff;text-decoration:none;padding:10px 20px;border-radius:6px;font-size:14px;font-weight:600">
+          Задать новый пароль
+        </a>
+        <p style="margin-top:24px;font-size:13px;color:#6b7280">Ссылка действительна 1 час. Если вы не запрашивали сброс пароля — просто проигнорируйте это письмо.</p>
+        <p style="margin-top:32px;font-size:12px;color:#9ca3af">Банкротство Солюшен · cabinet.basolution.ru</p>
+      </div>
+    `,
+  });
+}
+
 export async function sendUpdateEmail(opts: {
   to: string; name: string | null; text: string; caseTitle: string; cabinetUrl: string;
 }) {

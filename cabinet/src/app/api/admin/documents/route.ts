@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import { rateLimit, getIp } from "@/lib/rateLimit";
 
 // Разрешённые MIME-типы документов
@@ -82,4 +82,32 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json({ id: doc.id, name: doc.name, url: doc.url });
+}
+
+export async function DELETE(req: NextRequest) {
+  if (!rateLimit(getIp(req), 30, 60_000)) {
+    return NextResponse.json({ error: "Слишком много запросов" }, { status: 429 });
+  }
+
+  const session = await auth();
+  if (!session || session.user.role !== "ADMIN") {
+    return NextResponse.json({ error: "Нет доступа" }, { status: 403 });
+  }
+
+  const { docId } = await req.json() as { docId?: string };
+  if (!docId) return NextResponse.json({ error: "docId обязателен" }, { status: 400 });
+
+  const doc = await db.document.findUnique({ where: { id: docId } });
+  if (!doc) return NextResponse.json({ error: "Документ не найден" }, { status: 404 });
+
+  try {
+    await del(doc.url);
+  } catch (err) {
+    console.error("Blob delete failed:", err);
+    // продолжаем — удаляем запись из БД даже если Blob недоступен
+  }
+
+  await db.document.delete({ where: { id: docId } });
+
+  return NextResponse.json({ ok: true });
 }

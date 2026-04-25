@@ -101,6 +101,11 @@
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* В попапе форма в одну колонку — иначе поля слишком узкие */
+.epop__box .leadform-grid {
+  grid-template-columns: 1fr;
+}
+
 @media (max-width: 520px) {
   .epop__box {
     padding: 28px 20px 24px;

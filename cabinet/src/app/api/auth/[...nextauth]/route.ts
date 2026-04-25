@@ -21,5 +21,5 @@ export async function POST(req: NextRequest, ctx: { params: Promise<{ nextauth: 
     }
   }
 
-  return handlers.POST(req, ctx);
+  return handlers.POST(req);
 }

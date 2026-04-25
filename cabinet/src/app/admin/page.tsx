@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CaseStatus, Prisma } from "@prisma/client";
 import { Suspense } from "react";
 import { SearchBar } from "./SearchBar";
+import { ACTION_LABELS, type AuditAction } from "@/lib/auditLog";
 
 const STATUS_META: Record<CaseStatus, { label: string; color: string }> = {
   DOCUMENTS: { label: "Документы",    color: "#9ca3af" },
@@ -62,6 +63,11 @@ export default async function AdminPage({ searchParams }: Props) {
       cases: { some: { status: status as CaseStatus } },
     } : {}),
   };
+
+  const auditLogs = await db.auditLog.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 30,
+  });
 
   const clients = await db.user.findMany({
     where,
@@ -325,6 +331,65 @@ export default async function AdminPage({ searchParams }: Props) {
             })}
           </div>
         )}
+        {/* ── Audit log ── */}
+        {auditLogs.length > 0 && (
+          <div style={{ marginTop: "2rem" }}>
+            <h2 style={{ fontWeight: 600, fontSize: ".9375rem", color: "var(--text)", marginBottom: ".875rem" }}>
+              Журнал действий
+            </h2>
+            <div style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius)",
+              overflow: "hidden",
+            }}>
+              {auditLogs.map((log, idx) => {
+                const label = ACTION_LABELS[log.action as AuditAction] ?? log.action;
+                const isLast = idx === auditLogs.length - 1;
+                const meta = log.meta ? (() => { try { return JSON.parse(log.meta) as Record<string, unknown>; } catch { return null; } })() : null;
+
+                return (
+                  <div key={log.id} style={{
+                    display: "grid",
+                    gridTemplateColumns: "auto 1fr auto",
+                    gap: ".75rem",
+                    padding: ".75rem 1.5rem",
+                    alignItems: "center",
+                    borderBottom: isLast ? "none" : "1px solid var(--border)",
+                    fontSize: ".875rem",
+                  }}>
+                    <span style={{
+                      display: "inline-block",
+                      width: 7, height: 7, borderRadius: "50%",
+                      background: log.action.includes("DELETED") ? "var(--danger)"
+                               : log.action.includes("CREATED") ? "var(--success)"
+                               : "var(--primary)",
+                      flexShrink: 0,
+                    }} />
+                    <div>
+                      <span style={{ fontWeight: 500, color: "var(--text)" }}>{label}</span>
+                      {meta && (
+                        <span style={{ color: "var(--text-muted)", marginLeft: ".5rem" }}>
+                          {meta.name as string ?? meta.email as string ?? meta.to as string ?? ""}
+                          {meta.from && meta.to ? ` ${String(meta.from)} → ${String(meta.to)}` : ""}
+                        </span>
+                      )}
+                      <span style={{ color: "var(--text-light)", marginLeft: ".5rem", fontSize: ".8125rem" }}>
+                        · {log.adminEmail}
+                      </span>
+                    </div>
+                    <span style={{ color: "var(--text-muted)", fontSize: ".8125rem", whiteSpace: "nowrap" }}>
+                      {new Date(log.createdAt).toLocaleDateString("ru-RU", {
+                        day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
       </main>
     </div>
   );
