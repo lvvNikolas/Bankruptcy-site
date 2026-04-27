@@ -1,0 +1,169 @@
+// Prisma схема для личного кабинета клиентов банкротного агентства.
+// Деплой: npx prisma db push (Neon Postgres)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon использует connection pooling — directUrl нужен для миграций
+  directUrl = env("DATABASE_URL")
+}
+
+// ─── Роли ─────────────────────────────────────────────────────────────────────
+
+enum Role {
+  CLIENT // Клиент — видит только своё дело
+  ADMIN  // Администратор — видит всех клиентов и управляет делами
+}
+
+// ─── Статусы дела ─────────────────────────────────────────────────────────────
+
+enum CaseStatus {
+  DOCUMENTS // Сбор документов
+  FILED     // Заявление подано в суд
+  COURT     // Судебное заседание назначено
+  HEARING   // Слушание дела
+  DECISION  // Решение суда вынесено
+  CLOSED    // Дело закрыто (долги списаны)
+}
+
+// ─── Пользователь (клиент или администратор) ──────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  phone        String?
+  passwordHash String   // bcrypt хеш пароля
+  role         Role     @default(CLIENT)
+
+  cases             Case[]
+  sessions          Session[]
+  resetTokens       PasswordResetToken[]
+  pushSubscriptions PushSubscription[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ─── Сессии NextAuth ──────────────────────────────────────────────────────────
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+
+  @@map("sessions")
+}
+
+// ─── Дело клиента ─────────────────────────────────────────────────────────────
+
+model Case {
+  id          String     @id @default(cuid())
+  clientId    String
+  client      User       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  title       String     // напр. «Банкротство Иванов И.И.»
+  status      CaseStatus @default(DOCUMENTS)
+  debtAmount  Float?     // размер долга в рублях
+  description String?    // внутренние заметки администратора
+
+  // Ближайшее событие (суд, слушание и т.д.)
+  nextEventAt    DateTime? // дата/время события
+  nextEventLabel String?   // название: «Судебное заседание», «Слушание» и т.д.
+
+  // Куратор / юрист
+  lawyerName  String?
+  lawyerPhone String?
+
+  // Финансы
+  contractAmount Float? // стоимость договора
+  paidAmount     Float? // оплачено клиентом
+
+  updates     CaseUpdate[]
+  documents   Document[]
+
+  startedAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@map("cases")
+}
+
+// ─── Обновления по делу ───────────────────────────────────────────────────────
+
+model CaseUpdate {
+  id       String @id @default(cuid())
+  caseId   String
+  case     Case   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  text     String   // текст обновления от юриста
+  isPublic Boolean  @default(true) // false — только для администратора
+
+  createdAt DateTime @default(now())
+
+  @@map("case_updates")
+}
+
+// ─── Токен сброса пароля ───────────────────────────────────────────────────────
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique @default(cuid())
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("password_reset_tokens")
+}
+
+// ─── Push-подписки (Web Push API) ─────────────────────────────────────────────
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@map("push_subscriptions")
+}
+
+// ─── Журнал действий администратора ───────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  adminId    String
+  adminEmail String
+  action     String
+  targetId   String?
+  meta       String?  // JSON-строка с дополнительными данными
+  createdAt  DateTime @default(now())
+
+  @@map("audit_logs")
+}
+
+// ─── Документы по делу ────────────────────────────────────────────────────────
+
+model Document {
+  id     String @id @default(cuid())
+  caseId String
+  case   Case   @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  name String // отображаемое имя файла
+  url  String // URL в Vercel Blob
+
+  uploadedAt DateTime @default(now())
+
+  @@map("documents")
+}

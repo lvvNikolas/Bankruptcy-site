@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Route } from "next";
 import Image from "next/image";
 import "@styles/Navbar.css";
-import { PHONE_HREF, PHONE_DISPLAY } from "@/config";
+import { PHONE_HREF, PHONE_DISPLAY, CABINET_URL } from "@/config";
 
 /** Ссылки меню */
 const LINKS = [
@@ -115,8 +115,18 @@ export default function Navbar() {
             </ul>
           </nav>
 
-          {/* Правая часть: поиск + бургер */}
+          {/* Правая часть: поиск + кабинет + бургер */}
           <div className="nav__right">
+            {/* Личный кабинет (десктоп) */}
+            <a
+              href={CABINET_URL}
+              className="nav__cabinetBtn"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Личный кабинет
+            </a>
+
             {/* Кнопка поиска (десктоп) */}
             <button
               type="button"
@@ -213,6 +223,16 @@ export default function Navbar() {
                 </li>
               ))}
             </ul>
+
+            <a
+              href={CABINET_URL}
+              className="nav__mCabinet"
+              target="_blank"
+              rel="noreferrer"
+              onClick={closeMenu}
+            >
+              Личный кабинет
+            </a>
 
             <a href={PHONE_HREF} className="nav__mCta" onClick={closeMenu}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

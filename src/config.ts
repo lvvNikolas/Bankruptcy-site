@@ -29,6 +29,10 @@ export const WORKING_HOURS = "Ежедневно с 9:00 до 21:00";
  */
 export const WORKING_HOURS_SHORT = "9:00–21:00 МСК";
 
+// ─── Личный кабинет ───────────────────────────────────────────────────────────
+
+export const CABINET_URL = "https://cabinet.basolution.ru";
+
 // ─── Аналитика ────────────────────────────────────────────────────────────────
 
 export const METRIKA_ID = 107006423;

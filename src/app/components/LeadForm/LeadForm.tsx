@@ -26,6 +26,7 @@ import {
 const schema = z.object({
   name:  z.string().trim().min(2, "Введите имя"),
   phone: z.string().trim().regex(/^\+7\d{10}$/, "Формат: +7XXXXXXXXXX"),
+  email: z.string().trim().email("Некорректный email").optional().or(z.literal("")),
   debt:  z.string().trim().optional(),
   agree: z.boolean().refine((v) => v === true, { message: "Обязательное согласие" }),
 });
@@ -57,6 +58,11 @@ type Props = {
    * Для попапов и модалок оставлять false (форма остаётся на месте).
    */
   redirectOnSuccess?: boolean;
+  /**
+   * Показывать поле email.
+   * Если пользователь вводит email — автоматически создаётся аккаунт в личном кабинете.
+   */
+  showEmail?: boolean;
 };
 
 /* =========================
@@ -80,6 +86,7 @@ export default function LeadForm({
   onSuccess,
   actionUrl        = "/lead.php",
   redirectOnSuccess = false,
+  showEmail        = false,
 }: Props) {
   const router = useRouter();
 
@@ -102,7 +109,7 @@ export default function LeadForm({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     mode: "onTouched",
-    defaultValues: { name: "", phone: "", debt: "", agree: false },
+    defaultValues: { name: "", phone: "", email: "", debt: "", agree: false },
   });
 
   const phone = watch("phone");
@@ -311,6 +318,34 @@ export default function LeadForm({
             </span>
           )}
         </div>
+
+        {/* ── Email (опциональный) ── */}
+        {showEmail && (
+          <div className="leadform-row leadform-row--wide">
+            <label className="leadform-label" htmlFor="lf-email">
+              Email <span style={{ fontWeight: 400, opacity: .6 }}>(для личного кабинета)</span>
+            </label>
+            <div className={`lf-field ${errors.email ? "has-error" : ""}`}>
+              <span className="lf-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 4-8 5-8-5V6l8 5 8-5v2Z" fill="currentColor"/>
+                </svg>
+              </span>
+              <input
+                id="lf-email"
+                className="leadform-input"
+                type="email"
+                placeholder="your@email.com"
+                autoComplete="email"
+                {...register("email")}
+                aria-invalid={!!errors.email || undefined}
+              />
+            </div>
+            {errors.email && (
+              <span className="leadform-error" role="alert">{errors.email.message}</span>
+            )}
+          </div>
+        )}
 
         {/* ── Сумма долга ── */}
         <div className="leadform-row leadform-row--wide">

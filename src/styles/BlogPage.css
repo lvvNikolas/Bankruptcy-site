@@ -46,6 +46,7 @@
   transition: color 0.2s;
 }
 
+
 .blog-crumbs a:hover {
   color: #0f172a;
   text-decoration: underline;
