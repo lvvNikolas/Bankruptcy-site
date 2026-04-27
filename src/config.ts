@@ -31,7 +31,7 @@ export const WORKING_HOURS_SHORT = "9:00–21:00 МСК";
 
 // ─── Личный кабинет ───────────────────────────────────────────────────────────
 
-export const CABINET_URL = "https://cabinet.basolution.ru";
+export const CABINET_URL = "https://bankruptcy-site-sxzp.vercel.app";
 
 // ─── Аналитика ────────────────────────────────────────────────────────────────
 
