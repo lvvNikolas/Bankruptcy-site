@@ -40,15 +40,18 @@ function formatMoney(n: number) {
   }).format(n);
 }
 
+const PAGE_SIZE = 15;
+
 type Props = {
-  searchParams: Promise<{ q?: string; status?: string }>;
+  searchParams: Promise<{ q?: string; status?: string; page?: string }>;
 };
 
 export default async function AdminPage({ searchParams }: Props) {
   const session = await auth();
   if (!session || session.user.role !== "ADMIN") redirect("/dashboard");
 
-  const { q, status } = await searchParams;
+  const { q, status, page: pageStr } = await searchParams;
+  const page = Math.max(1, parseInt(pageStr ?? "1", 10));
 
   // Build Prisma where clause for filtering
   const where: Prisma.UserWhereInput = {
@@ -69,21 +72,23 @@ export default async function AdminPage({ searchParams }: Props) {
     take: 30,
   });
 
-  const clients = await db.user.findMany({
-    where,
-    include: { cases: { orderBy: { startedAt: "desc" } } },
-    orderBy: { createdAt: "desc" },
-  });
+  const [clients, totalFiltered, totalClients, debtResult, activeCases, closedCases] = await Promise.all([
+    db.user.findMany({
+      where,
+      include: { cases: { orderBy: { startedAt: "desc" } } },
+      orderBy: { createdAt: "desc" },
+      take: PAGE_SIZE,
+      skip: (page - 1) * PAGE_SIZE,
+    }),
+    db.user.count({ where }),
+    db.user.count({ where: { role: "CLIENT" } }),
+    db.case.aggregate({ _sum: { debtAmount: true } }),
+    db.user.count({ where: { role: "CLIENT", cases: { some: { status: { not: "CLOSED" } } } } }),
+    db.user.count({ where: { role: "CLIENT", cases: { some: { status: "CLOSED" } } } }),
+  ]);
 
-  // Stats always use all clients (unfiltered)
-  const allClients = await db.user.findMany({
-    where: { role: "CLIENT" },
-    include: { cases: true },
-  });
-
-  const totalDebt   = allClients.reduce((s, c) => s + c.cases.reduce((ss, cs) => ss + (cs.debtAmount ?? 0), 0), 0);
-  const activeCases = allClients.filter(c => c.cases.some(cs => cs.status !== "CLOSED")).length;
-  const closedCases = allClients.filter(c => c.cases.some(cs => cs.status === "CLOSED")).length;
+  const totalPages = Math.ceil(totalFiltered / PAGE_SIZE);
+  const totalDebt  = debtResult._sum.debtAmount ?? 0;
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
@@ -160,7 +165,7 @@ export default async function AdminPage({ searchParams }: Props) {
           <div className="card" style={{ padding: "1.25rem 1.5rem" }}>
             <div className="section-label" style={{ marginBottom: ".5rem" }}>Клиентов</div>
             <div style={{ fontSize: "1.75rem", fontWeight: 700, lineHeight: 1, color: "var(--text)", letterSpacing: "-.03em" }}>
-              {allClients.length}
+              {totalClients}
             </div>
             <div style={{ fontSize: ".8125rem", color: "var(--text-muted)", marginTop: ".375rem" }}>
               {closedCases > 0 ? `${closedCases} дел закрыто` : "Все дела в работе"}
@@ -193,9 +198,14 @@ export default async function AdminPage({ searchParams }: Props) {
         {/* ── Clients table ── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: ".875rem" }}>
           <h2 style={{ fontWeight: 600, fontSize: ".9375rem", color: "var(--text)" }}>Клиенты</h2>
-          <span style={{ fontSize: ".8125rem", color: "var(--text-muted)" }}>
-            {clients.length} {clients.length === 1 ? "клиент" : clients.length < 5 ? "клиента" : "клиентов"}
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+            <span style={{ fontSize: ".8125rem", color: "var(--text-muted)" }}>
+              {totalFiltered} {totalFiltered === 1 ? "клиент" : totalFiltered < 5 ? "клиента" : "клиентов"}
+            </span>
+            <a href="/api/admin/export" className="btn btn-ghost" style={{ fontSize: ".75rem", padding: ".25rem .625rem" }}>
+              ↓ CSV
+            </a>
+          </div>
         </div>
 
         {/* Feature 6: Search bar */}
@@ -331,6 +341,30 @@ export default async function AdminPage({ searchParams }: Props) {
             })}
           </div>
         )}
+        {/* ── Pagination ── */}
+        {totalPages > 1 && (() => {
+          const buildHref = (p: number) => {
+            const params = new URLSearchParams();
+            if (q) params.set("q", q);
+            if (status) params.set("status", status);
+            params.set("page", String(p));
+            return `/admin?${params.toString()}`;
+          };
+          return (
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: ".5rem", marginTop: "1rem" }}>
+              {page > 1 && (
+                <a href={buildHref(page - 1)} className="btn btn-ghost" style={{ fontSize: ".8125rem" }}>← Назад</a>
+              )}
+              <span style={{ fontSize: ".8125rem", color: "var(--text-muted)", padding: "0 .5rem" }}>
+                {page} / {totalPages}
+              </span>
+              {page < totalPages && (
+                <a href={buildHref(page + 1)} className="btn btn-ghost" style={{ fontSize: ".8125rem" }}>Вперёд →</a>
+              )}
+            </div>
+          );
+        })()}
+
         {/* ── Audit log ── */}
         {auditLogs.length > 0 && (
           <div style={{ marginTop: "2rem" }}>

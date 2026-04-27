@@ -40,9 +40,10 @@ model User {
   passwordHash String   // bcrypt хеш пароля
   role         Role     @default(CLIENT)
 
-  cases       Case[]   // дела клиента (у ADMIN пустой массив)
-  sessions    Session[]
-  resetTokens PasswordResetToken[]
+  cases             Case[]
+  sessions          Session[]
+  resetTokens       PasswordResetToken[]
+  pushSubscriptions PushSubscription[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -73,6 +74,18 @@ model Case {
   status      CaseStatus @default(DOCUMENTS)
   debtAmount  Float?     // размер долга в рублях
   description String?    // внутренние заметки администратора
+
+  // Ближайшее событие (суд, слушание и т.д.)
+  nextEventAt    DateTime? // дата/время события
+  nextEventLabel String?   // название: «Судебное заседание», «Слушание» и т.д.
+
+  // Куратор / юрист
+  lawyerName  String?
+  lawyerPhone String?
+
+  // Финансы
+  contractAmount Float? // стоимость договора
+  paidAmount     Float? // оплачено клиентом
 
   updates     CaseUpdate[]
   documents   Document[]
@@ -110,6 +123,20 @@ model PasswordResetToken {
   createdAt DateTime @default(now())
 
   @@map("password_reset_tokens")
+}
+
+// ─── Push-подписки (Web Push API) ─────────────────────────────────────────────
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+
+  @@map("push_subscriptions")
 }
 
 // ─── Журнал действий администратора ───────────────────────────────────────────

@@ -188,7 +188,13 @@ textarea.input { line-height: 1.55; }
   .case-form-grid { grid-template-columns: 1fr !important; }
   .case-form-grid button { width: 100%; }
 
-  /* Header padding */
-  header { padding: 0 1rem !important; }
-  main { padding: 1.25rem 1rem !important; }
+  /* Header */
+  header { padding: 0 .875rem !important; }
+  main { padding: 1.25rem .875rem !important; }
+
+  /* Убираем подзаголовок "Личный кабинет" на очень маленьких экранах */
+  .header-subtitle { display: none; }
+
+  /* Admin form grids: stack to 1 column */
+  .admin-case-form-row { grid-template-columns: 1fr !important; }
 }

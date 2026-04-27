@@ -9,19 +9,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Слишком много запросов" }, { status: 429 });
   }
 
-  const { email } = await req.json() as { email?: string };
-  if (!email) return NextResponse.json({ error: "Email обязателен" }, { status: 400 });
+  const body = await req.json().catch(() => ({})) as { email?: unknown };
+  const raw = typeof body.email === "string" ? body.email.toLowerCase().trim() : "";
+  if (!raw || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
+    return NextResponse.json({ ok: true }); // не раскрываем ошибку валидации
+  }
 
-  const user = await db.user.findUnique({ where: { email: email.toLowerCase().trim() } });
+  const user = await db.user.findUnique({ where: { email: raw } });
 
   // Всегда возвращаем 200, чтобы не раскрывать существование email
-  if (!user) return NextResponse.json({ ok: true });
+  if (!user) return NextResponse.json({ ok: true }); // не раскрываем наличие email
 
   // Инвалидируем старые токены
-  await db.passwordResetToken.updateMany({
-    where: { userId: user.id, used: false },
-    data: { used: true },
-  });
+  await db.passwordResetToken.updateMany({ where: { userId: user.id, used: false }, data: { used: true } });
 
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 час
 

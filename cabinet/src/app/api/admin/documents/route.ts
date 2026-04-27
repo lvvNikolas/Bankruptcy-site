@@ -18,16 +18,11 @@ const ALLOWED_TYPES = new Set([
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-function sanitizeFileName(name: string): string {
-  return name
-    .replace(/[^a-zA-Zа-яА-ЯёЁ0-9._\- ]/g, "_") // только безопасные символы
-    .replace(/\.{2,}/g, "_")                        // запрет ../
-    .slice(0, 200);                                  // ограничение длины
-}
+import { sanitizeFileName } from "@/lib/utils";
 
 export async function POST(req: NextRequest) {
   // Rate limit: 20 загрузок в минуту с одного IP
-  if (!rateLimit(getIp(req), 20, 60_000)) {
+  if (!rateLimit(`docs:upload:${getIp(req)}`, 20, 60_000)) {
     return NextResponse.json({ error: "Слишком много запросов" }, { status: 429 });
   }
 
@@ -85,7 +80,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!rateLimit(getIp(req), 30, 60_000)) {
+  if (!rateLimit(`docs:delete:${getIp(req)}`, 30, 60_000)) {
     return NextResponse.json({ error: "Слишком много запросов" }, { status: 429 });
   }
 

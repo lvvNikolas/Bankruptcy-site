@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { CaseStatus } from "@prisma/client";
 import { sendStatusChangeEmail, sendUpdateEmail } from "@/lib/email";
+import { sendPushToUser } from "@/lib/pushNotify";
 import { logAction } from "@/lib/auditLog";
 import { UploadForm } from "./UploadForm";
 
@@ -379,7 +380,23 @@ export default async function ClientDetailPage({ params }: Props) {
                 const status   = formData.get("status") as CaseStatus;
                 const rawDebt  = formData.get("debtAmount") as string;
                 const debtAmount = rawDebt ? parseFloat(rawDebt.replace(/\s/g, "")) : null;
-                await db.case.update({ where: { id: currentCase.id }, data: { status, debtAmount } });
+
+                const rawContract = formData.get("contractAmount") as string;
+                const contractAmount = rawContract ? parseFloat(rawContract.replace(/\s/g, "")) : null;
+                const rawPaid = formData.get("paidAmount") as string;
+                const paidAmount = rawPaid ? parseFloat(rawPaid.replace(/\s/g, "")) : null;
+
+                const nextEventLabel = (formData.get("nextEventLabel") as string).trim() || null;
+                const nextEventRaw   = (formData.get("nextEventAt") as string).trim();
+                const nextEventAt    = nextEventRaw ? new Date(nextEventRaw) : null;
+
+                const lawyerName  = (formData.get("lawyerName")  as string).trim() || null;
+                const lawyerPhone = (formData.get("lawyerPhone") as string).trim() || null;
+
+                await db.case.update({
+                  where: { id: currentCase.id },
+                  data: { status, debtAmount, contractAmount, paidAmount, nextEventAt, nextEventLabel, lawyerName, lawyerPhone },
+                });
 
                 if (status !== currentCase.status) {
                   await logAction({
@@ -399,44 +416,116 @@ export default async function ClientDetailPage({ params }: Props) {
                   } catch (err) {
                     console.error("Email send failed (status change):", err);
                   }
+                  try {
+                    await sendPushToUser(
+                      client.id,
+                      "Статус дела изменён",
+                      `Новый статус: ${STATUS_META[status].label}`,
+                    );
+                  } catch (err) {
+                    console.error("Push send failed (status):", err);
+                  }
                 }
 
                 redirect(`/admin/clients/${id}`);
               }}>
                 <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr auto",
+                  display: "flex",
+                  flexDirection: "column",
                   gap: ".75rem",
-                  alignItems: "end",
                   padding: "1rem",
                   background: "var(--bg)",
                   borderRadius: "var(--radius-sm)",
                   border: "1px solid var(--border)",
                 }}>
-                  <div className="field" style={{ marginBottom: 0 }}>
-                    <label className="label" htmlFor="status">Статус</label>
-                    <select id="status" name="status" defaultValue={currentCase.status} className="input">
-                      {(Object.keys(STATUS_META) as CaseStatus[]).map((s) => (
-                        <option key={s} value={s}>{STATUS_META[s].label}</option>
-                      ))}
-                    </select>
+                  {/* Строка 1: статус + долг */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem" }}>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="status">Статус</label>
+                      <select id="status" name="status" defaultValue={currentCase.status} className="input">
+                        {(Object.keys(STATUS_META) as CaseStatus[]).map((s) => (
+                          <option key={s} value={s}>{STATUS_META[s].label}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="debtAmount">Размер долга, ₽</label>
+                      <input
+                        id="debtAmount" name="debtAmount" type="number" min="0" step="1000"
+                        className="input" placeholder="1 500 000"
+                        defaultValue={currentCase.debtAmount ?? ""}
+                      />
+                    </div>
                   </div>
-                  <div className="field" style={{ marginBottom: 0 }}>
-                    <label className="label" htmlFor="debtAmount">Размер долга, ₽</label>
-                    <input
-                      id="debtAmount"
-                      name="debtAmount"
-                      type="number"
-                      min="0"
-                      step="1000"
-                      className="input"
-                      placeholder="1 500 000"
-                      defaultValue={currentCase.debtAmount ?? ""}
-                    />
+
+                  {/* Строка 2: ближайшее событие */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem" }}>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="nextEventLabel">Название события</label>
+                      <input
+                        id="nextEventLabel" name="nextEventLabel" type="text"
+                        className="input" placeholder="Судебное заседание"
+                        defaultValue={currentCase.nextEventLabel ?? ""}
+                      />
+                    </div>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="nextEventAt">Дата события</label>
+                      <input
+                        id="nextEventAt" name="nextEventAt" type="datetime-local"
+                        className="input"
+                        defaultValue={currentCase.nextEventAt
+                          ? new Date(currentCase.nextEventAt.getTime() - currentCase.nextEventAt.getTimezoneOffset() * 60000)
+                              .toISOString().slice(0, 16)
+                          : ""}
+                      />
+                    </div>
                   </div>
-                  <button className="btn btn-primary" type="submit" style={{ whiteSpace: "nowrap" }}>
-                    Сохранить
-                  </button>
+
+                  {/* Строка 3: юрист */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem" }}>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="lawyerName">Юрист-куратор</label>
+                      <input
+                        id="lawyerName" name="lawyerName" type="text"
+                        className="input" placeholder="Иванова Мария Сергеевна"
+                        defaultValue={currentCase.lawyerName ?? ""}
+                      />
+                    </div>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="lawyerPhone">Телефон юриста</label>
+                      <input
+                        id="lawyerPhone" name="lawyerPhone" type="tel"
+                        className="input" placeholder="+7 (___) ___-__-__"
+                        defaultValue={currentCase.lawyerPhone ?? ""}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Строка 4: финансы */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".75rem" }}>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="contractAmount">Стоимость договора, ₽</label>
+                      <input
+                        id="contractAmount" name="contractAmount" type="number" min="0" step="1000"
+                        className="input" placeholder="150 000"
+                        defaultValue={currentCase.contractAmount ?? ""}
+                      />
+                    </div>
+                    <div className="field" style={{ marginBottom: 0 }}>
+                      <label className="label" htmlFor="paidAmount">Оплачено, ₽</label>
+                      <input
+                        id="paidAmount" name="paidAmount" type="number" min="0" step="1000"
+                        className="input" placeholder="75 000"
+                        defaultValue={currentCase.paidAmount ?? ""}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <button className="btn btn-primary" type="submit" style={{ whiteSpace: "nowrap" }}>
+                      Сохранить изменения
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -457,8 +546,8 @@ export default async function ClientDetailPage({ params }: Props) {
                   meta:     { isPublic, preview: text.slice(0, 80) },
                 });
 
-                // Feature 1: email on public update
                 if (isPublic) {
+                  // Email
                   try {
                     await sendUpdateEmail({
                       to: client.email,
@@ -469,6 +558,16 @@ export default async function ClientDetailPage({ params }: Props) {
                     });
                   } catch (err) {
                     console.error("Email send failed (update):", err);
+                  }
+                  // Push
+                  try {
+                    await sendPushToUser(
+                      client.id,
+                      "Новое обновление от юриста",
+                      text.length > 100 ? text.slice(0, 97) + "…" : text,
+                    );
+                  } catch (err) {
+                    console.error("Push send failed:", err);
                   }
                 }
 

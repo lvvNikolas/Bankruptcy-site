@@ -30,6 +30,7 @@ type QuizRow = [string, string];
 const schema = z.object({
   name: z.string().trim().min(2),
   phone: z.string().trim().regex(/^\+7\d{10}$/),
+  email: z.string().trim().email().optional().or(z.literal("")),
   debt: z.string().trim().optional(),
   agree: z.boolean(),
   context: z.string().optional(),
@@ -376,9 +377,26 @@ export async function POST(req: Request) {
       from: `"Заявки с сайта" <${SMTP_USER}>`,
       to: MAIL_TO,
       subject,
-      text, // fallback
-      html, // красивое оформление
+      text,
+      html,
     });
+
+    // Если клиент оставил email — создаём аккаунт в личном кабинете
+    if (data.email) {
+      const cabinetUrl = process.env.CABINET_URL;
+      const secret     = process.env.CABINET_INTERNAL_SECRET;
+      if (cabinetUrl && secret) {
+        try {
+          await fetch(`${cabinetUrl}/api/internal/create-client`, {
+            method:  "POST",
+            headers: { "Content-Type": "application/json", "x-internal-secret": secret },
+            body:    JSON.stringify({ name: data.name, email: data.email, phone: data.phone }),
+          });
+        } catch (err) {
+          console.error("Cabinet create-client failed:", err);
+        }
+      }
+    }
 
     return NextResponse.json({ ok: true });
   } catch (e: unknown) {

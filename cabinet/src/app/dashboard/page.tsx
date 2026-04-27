@@ -3,6 +3,8 @@ import { auth, signOut } from "@/auth";
 import { db } from "@/lib/db";
 import { CaseStatus } from "@prisma/client";
 import { ChangePasswordForm } from "./ChangePasswordForm";
+import { CountdownBadge } from "./CountdownBadge";
+import { NotificationButton } from "./NotificationButton";
 
 const STATUS_ORDER: CaseStatus[] = [
   "DOCUMENTS", "FILED", "COURT", "HEARING", "DECISION", "CLOSED",
@@ -29,26 +31,31 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session) redirect("/login");
 
-  const user = await db.user.findUnique({
-    where: { id: session.user.id },
-    select: { name: true, email: true, phone: true, createdAt: true },
-  });
+  const userId = session.user.id;
 
-  const caseData = await db.case.findFirst({
-    where: { clientId: session.user.id },
-    include: {
-      updates:   { where: { isPublic: true }, orderBy: { createdAt: "desc" } },
-      documents: { orderBy: { uploadedAt: "desc" } },
-    },
-  });
+  const [user, caseData] = await Promise.all([
+    db.user.findUnique({
+      where: { id: userId },
+      select: { name: true, email: true, phone: true, createdAt: true },
+    }),
+    db.case.findFirst({
+      where: { clientId: userId },
+      include: {
+        updates:   { where: { isPublic: true }, orderBy: { createdAt: "desc" } },
+        documents: { orderBy: { uploadedAt: "desc" } },
+      },
+    }),
+  ]);
 
   const currentStep = caseData ? STATUS_ORDER.indexOf(caseData.status) : -1;
   const progressPct = caseData
     ? Math.round(((currentStep + 1) / STATUS_ORDER.length) * 100)
     : 0;
 
-  const displayName = user?.name ?? session.user.email ?? "Клиент";
-  const firstName   = displayName.split(" ")[0];
+  const displayName  = user?.name ?? session.user.email ?? "Клиент";
+  const nameParts    = displayName.split(" ");
+  // ФИО: [0]=Фамилия [1]=Имя [2]=Отчество — берём Имя, если есть
+  const firstName    = nameParts.length > 1 ? nameParts[1] : nameParts[0];
   const avatarLetter = displayName[0].toUpperCase();
 
   return (
@@ -58,7 +65,7 @@ export default async function DashboardPage() {
       <header style={{
         background: "var(--surface)",
         borderBottom: "1px solid var(--border)",
-        padding: "0 1.5rem",
+        padding: "0 1rem",
         height: 52,
         display: "flex",
         alignItems: "center",
@@ -66,8 +73,9 @@ export default async function DashboardPage() {
         position: "sticky",
         top: 0,
         zIndex: 10,
+        gap: ".5rem",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: ".75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: ".625rem", minWidth: 0 }}>
           <div style={{
             width: 30, height: 30, borderRadius: "50%",
             background: "#2563eb",
@@ -78,11 +86,14 @@ export default async function DashboardPage() {
           }}>
             {avatarLetter}
           </div>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: ".9375rem", color: "var(--text)", lineHeight: 1.2 }}>
+          <div style={{ minWidth: 0 }}>
+            <div style={{
+              fontWeight: 600, fontSize: ".9375rem", color: "var(--text)", lineHeight: 1.2,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
               {displayName}
             </div>
-            <div style={{ fontSize: ".75rem", color: "var(--text-muted)" }}>
+            <div className="header-subtitle" style={{ fontSize: ".75rem", color: "var(--text-muted)" }}>
               Личный кабинет
             </div>
           </div>
@@ -91,7 +102,7 @@ export default async function DashboardPage() {
         <form action={async () => {
           "use server";
           await signOut({ redirectTo: "/login" });
-        }}>
+        }} style={{ flexShrink: 0 }}>
           <button className="btn btn-ghost" type="submit" style={{ fontSize: ".8125rem" }}>
             Выйти
           </button>
@@ -114,112 +125,111 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <>
-            {/* ── Hero greeting ── */}
-            <div style={{ marginBottom: "1.5rem" }}>
-              <h1 style={{
-                fontWeight: 700, fontSize: "1.25rem", letterSpacing: "-.02em",
-                color: "var(--text)", marginBottom: ".25rem",
-              }}>
-                Добрый день, {firstName}
-              </h1>
-              <p style={{ fontSize: ".875rem", color: "var(--text-muted)" }}>
-                {caseData.title}
-              </p>
-            </div>
-
-            {/* ── Info cards ── */}
-            <div className="dashboard-info-grid" style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "1rem",
-              marginBottom: "1.25rem",
+            {/* ── Hero card ── */}
+            <div style={{
+              background: "linear-gradient(135deg, #0f172a 0%, #1a2e4a 55%, #1e3a8a 100%)",
+              borderRadius: "var(--radius)",
+              padding: "1.75rem 2rem",
+              marginBottom: "1rem",
+              position: "relative",
+              overflow: "hidden",
+              color: "#fff",
             }}>
-              {/* Client info */}
-              <div className="card" style={{ padding: "1.25rem 1.5rem" }}>
-                <p className="section-label">Ваши данные</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
-                  <Row label="Имя"      value={user?.name ?? "—"} />
-                  <Row label="Email"    value={user?.email ?? "—"} />
-                  <Row label="Телефон"  value={user?.phone ?? "—"} />
-                  <Row label="Клиент с" value={
-                    new Date(user!.createdAt).toLocaleDateString("ru-RU", {
-                      day: "numeric", month: "long", year: "numeric",
-                    })
-                  } />
-                </div>
-              </div>
-
-              {/* Debt */}
+              {/* Декоративные кружки */}
               <div style={{
-                borderRadius: "var(--radius)",
-                background: "#111827",
-                padding: "1.25rem 1.5rem",
-                color: "#fff",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-              }}>
-                <p style={{
-                  fontSize: ".6875rem", fontWeight: 600,
-                  color: "#6b7280",
-                  textTransform: "uppercase", letterSpacing: ".08em",
-                  marginBottom: ".625rem",
-                }}>
-                  Размер долга
+                position: "absolute", top: -50, right: -50,
+                width: 200, height: 200, borderRadius: "50%",
+                background: "rgba(59,130,246,.1)", pointerEvents: "none",
+              }} />
+              <div style={{
+                position: "absolute", bottom: -70, right: 60,
+                width: 150, height: 150, borderRadius: "50%",
+                background: "rgba(37,99,235,.07)", pointerEvents: "none",
+              }} />
+
+              <div style={{ position: "relative", zIndex: 1 }}>
+                {/* Приветствие */}
+                <p style={{ fontSize: ".8125rem", color: "#93c5fd", fontWeight: 500, marginBottom: ".2rem" }}>
+                  Добрый день
                 </p>
-                <div>
-                  <div style={{ fontSize: "1.75rem", fontWeight: 700, lineHeight: 1.15, letterSpacing: "-.03em" }}>
-                    {caseData.debtAmount != null ? formatMoney(caseData.debtAmount) : "—"}
-                  </div>
+                <h1 style={{
+                  fontWeight: 700, fontSize: "1.625rem", letterSpacing: "-.03em",
+                  color: "#fff", marginBottom: "1.5rem",
+                }}>
+                  {firstName}
+                </h1>
+
+                {/* Долг + статус */}
+                <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap", alignItems: "flex-end", marginBottom: "1.5rem" }}>
                   {caseData.debtAmount != null && (
-                    <div style={{ fontSize: ".8125rem", color: "#6b7280", marginTop: ".25rem" }}>
-                      подлежит списанию
+                    <div>
+                      <div style={{ fontSize: ".6875rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: ".08em", marginBottom: ".25rem" }}>
+                        Долг к списанию
+                      </div>
+                      <div style={{ fontSize: "2rem", fontWeight: 800, letterSpacing: "-.04em", lineHeight: 1 }}>
+                        {formatMoney(caseData.debtAmount)}
+                      </div>
                     </div>
                   )}
+                  <div>
+                    <div style={{ fontSize: ".6875rem", color: "#6b7280", textTransform: "uppercase", letterSpacing: ".08em", marginBottom: ".375rem" }}>
+                      Статус
+                    </div>
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: ".4rem",
+                      padding: ".3rem .75rem",
+                      background: "rgba(255,255,255,.08)",
+                      border: "1px solid rgba(255,255,255,.12)",
+                      borderRadius: 99,
+                      fontSize: ".8125rem", fontWeight: 500, color: "#e2e8f0",
+                    }}>
+                      <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#60a5fa", display: "inline-block", flexShrink: 0 }} />
+                      {STATUS_META[caseData.status].label}
+                    </div>
+                  </div>
                 </div>
-                <div style={{
-                  marginTop: "1rem",
-                  padding: ".375rem .75rem",
-                  background: "rgba(255,255,255,.08)",
-                  border: "1px solid rgba(255,255,255,.1)",
-                  borderRadius: "var(--radius-sm)",
-                  fontSize: ".8125rem",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: ".4rem",
-                  alignSelf: "flex-start",
-                  color: "#e5e7eb",
-                  fontWeight: 500,
-                }}>
-                  {STATUS_META[caseData.status].label}
+
+                {/* Прогресс */}
+                <div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: ".4rem" }}>
+                    <span style={{ fontSize: ".75rem", color: "#94a3b8" }}>Прогресс дела</span>
+                    <span style={{ fontSize: ".75rem", color: "#93c5fd", fontWeight: 600 }}>{progressPct}%</span>
+                  </div>
+                  <div style={{ height: 5, background: "rgba(255,255,255,.1)", borderRadius: 99, overflow: "hidden" }}>
+                    <div style={{
+                      height: "100%", width: `${progressPct}%`,
+                      background: "linear-gradient(90deg, #3b82f6, #60a5fa)",
+                      borderRadius: 99,
+                    }} />
+                  </div>
                 </div>
+
+                {/* Countdown */}
+                {caseData.nextEventAt && (
+                  <CountdownBadge
+                    eventAt={caseData.nextEventAt.toISOString()}
+                    label={caseData.nextEventLabel ?? "Ближайшее событие"}
+                  />
+                )}
               </div>
             </div>
 
-            {/* ── Case progress ── */}
-            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
-                <p className="section-label" style={{ marginBottom: 0 }}>Прогресс дела</p>
-                <span style={{ fontSize: ".8125rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                  {progressPct}%
-                </span>
+            {/* ── Ваши данные (компактно) ── */}
+            <div className="card" style={{ padding: "1.125rem 1.5rem", marginBottom: "1rem" }}>
+              <p className="section-label">Ваши данные</p>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".5rem .75rem" }}>
+                <InfoItem icon="👤" label="Имя"      value={user?.name ?? "—"} />
+                <InfoItem icon="✉️"  label="Email"    value={user?.email ?? "—"} />
+                <InfoItem icon="📞" label="Телефон"  value={user?.phone ?? "—"} />
+                <InfoItem icon="📅" label="Клиент с" value={
+                  new Date(user!.createdAt).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" })
+                } />
               </div>
+            </div>
 
-              {/* Progress bar */}
-              <div style={{
-                height: 3,
-                background: "var(--border)",
-                borderRadius: 99,
-                marginBottom: "1.5rem",
-                overflow: "hidden",
-              }}>
-                <div style={{
-                  height: "100%",
-                  width: `${progressPct}%`,
-                  background: "#2563eb",
-                  borderRadius: 99,
-                }} />
-              </div>
+            {/* ── Этапы дела ── */}
+            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+              <p className="section-label" style={{ marginBottom: "1.25rem" }}>Этапы дела</p>
 
               {/* Steps — horizontal stepper */}
               <div className="stepper-wrap" style={{ display: "flex", alignItems: "flex-start", overflowX: "auto", paddingBottom: ".25rem" }}>
@@ -318,35 +328,144 @@ export default async function DashboardPage() {
                 <p className="section-label">Документы</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: ".375rem" }}>
                   {caseData.documents.map((doc) => (
-                    <a
-                      key={doc.id}
-                      href={doc.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: ".625rem",
-                        padding: ".5rem .75rem",
-                        background: "var(--bg)",
-                        border: "1px solid var(--border)",
-                        borderRadius: "var(--radius-sm)",
-                        fontSize: ".875rem",
-                        color: "var(--text-2)",
-                        transition: "border-color .15s ease, background .15s ease",
-                      }}
-                    >
-                      <span style={{ fontSize: ".875rem", color: "var(--text-muted)" }}>↗</span>
-                      {doc.name}
-                    </a>
+                    <div key={doc.id} style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: ".625rem",
+                      padding: ".5rem .75rem",
+                      background: "var(--bg)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "var(--radius-sm)",
+                    }}>
+                      <span style={{ fontSize: ".875rem", color: "var(--text-2)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {doc.name}
+                      </span>
+                      <a
+                        href={doc.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn btn-ghost"
+                        style={{ fontSize: ".75rem", padding: ".25rem .625rem", flexShrink: 0 }}
+                      >
+                        Открыть
+                      </a>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
+          {/* ── Юрист-куратор ── */}
+          {caseData.lawyerName && (
+            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+              <p className="section-label">Ваш юрист</p>
+              <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: "50%",
+                  background: "#dbeafe", color: "#1d4ed8",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontWeight: 700, fontSize: ".875rem", flexShrink: 0,
+                }}>
+                  {caseData.lawyerName.split(" ").map((w: string) => w[0]).slice(0, 2).join("").toUpperCase()}
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: 600, fontSize: ".9375rem", color: "var(--text)" }}>
+                    {caseData.lawyerName}
+                  </div>
+                  {caseData.lawyerPhone && (
+                    <a
+                      href={`tel:${caseData.lawyerPhone}`}
+                      style={{ fontSize: ".875rem", color: "var(--primary)", textDecoration: "none", marginTop: ".125rem", display: "block" }}
+                    >
+                      {caseData.lawyerPhone}
+                    </a>
+                  )}
+                </div>
+                {caseData.lawyerPhone && (
+                  <a
+                    href={`tel:${caseData.lawyerPhone}`}
+                    className="btn btn-ghost"
+                    style={{ fontSize: ".8125rem", flexShrink: 0 }}
+                  >
+                    Позвонить
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ── Финансы ── */}
+          {caseData.contractAmount != null && (
+            <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+              <p className="section-label">Оплата по договору</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: ".625rem" }}>
+                <FinRow label="Стоимость договора" value={formatMoney(caseData.contractAmount)} />
+                {caseData.paidAmount != null && (
+                  <>
+                    <FinRow label="Оплачено" value={formatMoney(caseData.paidAmount)} accent="#16a34a" />
+                    <FinRow
+                      label="Остаток"
+                      value={formatMoney(Math.max(0, caseData.contractAmount - caseData.paidAmount))}
+                      accent={caseData.paidAmount >= caseData.contractAmount ? "#16a34a" : "#dc2626"}
+                    />
+                    <div style={{ marginTop: ".25rem" }}>
+                      <div style={{
+                        height: 6, background: "var(--border)", borderRadius: 99, overflow: "hidden",
+                      }}>
+                        <div style={{
+                          height: "100%",
+                          width: `${Math.min(100, Math.round((caseData.paidAmount / caseData.contractAmount) * 100))}%`,
+                          background: "#16a34a",
+                          borderRadius: 99,
+                          transition: "width .3s ease",
+                        }} />
+                      </div>
+                      <div style={{ fontSize: ".75rem", color: "var(--text-muted)", marginTop: ".375rem" }}>
+                        {Math.min(100, Math.round((caseData.paidAmount / caseData.contractAmount) * 100))}% оплачено
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
           </>
         )}
 
-        {/* ── Feature 3: Change password ── */}
+        {/* ── Push-уведомления ── */}
+        <div style={{ marginBottom: "1rem" }}>
+          <NotificationButton />
+        </div>
+
+        {/* ── Редактирование профиля ── */}
+        <div className="card" style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+          <p className="section-label">Редактировать профиль</p>
+          <form action={async (formData: FormData) => {
+            "use server";
+            const name  = (formData.get("name")  as string).trim() || null;
+            const phone = (formData.get("phone") as string).trim() || null;
+            await db.user.update({ where: { id: userId }, data: { name, phone } });
+            redirect("/dashboard");
+          }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr auto", gap: ".75rem", alignItems: "end" }}>
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label className="label" htmlFor="pName">Полное имя</label>
+                <input id="pName" name="name" type="text" className="input"
+                  defaultValue={user?.name ?? ""} placeholder="Иванов Иван Иванович" />
+              </div>
+              <div className="field" style={{ marginBottom: 0 }}>
+                <label className="label" htmlFor="pPhone">Телефон</label>
+                <input id="pPhone" name="phone" type="tel" className="input"
+                  defaultValue={user?.phone ?? ""} placeholder="+7 (___) ___-__-__" />
+              </div>
+              <button className="btn btn-ghost" type="submit" style={{ whiteSpace: "nowrap" }}>
+                Сохранить
+              </button>
+            </div>
+          </form>
+        </div>
+
+        {/* ── Смена пароля ── */}
         <ChangePasswordForm />
 
       </main>
@@ -354,11 +473,27 @@ export default async function DashboardPage() {
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function InfoItem({ icon, label, value }: { icon: string; label: string; value: string }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", fontSize: ".875rem" }}>
-      <span style={{ color: "var(--text-muted)", flexShrink: 0 }}>{label}</span>
-      <span style={{ fontWeight: 500, color: "var(--text-2)", textAlign: "right" }}>{value}</span>
+    <div style={{ display: "flex", flexDirection: "column", gap: ".125rem" }}>
+      <span style={{ fontSize: ".6875rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: ".25rem" }}>
+        <span style={{ fontSize: ".625rem" }}>{icon}</span> {label}
+      </span>
+      <span style={{
+        fontSize: ".875rem", fontWeight: 500, color: "var(--text-2)",
+        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+      }}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
+function FinRow({ label, value, accent }: { label: string; value: string; accent?: string }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem", fontSize: ".875rem" }}>
+      <span style={{ color: "var(--text-muted)" }}>{label}</span>
+      <span style={{ fontWeight: 600, color: accent ?? "var(--text)" }}>{value}</span>
     </div>
   );
 }
