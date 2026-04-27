@@ -132,22 +132,25 @@
 .nav__cabinetBtn {
   display: flex;
   align-items: center;
-  padding: 7px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--nav-text);
+  background: linear-gradient(135deg, #f6d879 0%, #e6c05b 100%);
+  color: #1c1200;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 800;
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 16px rgba(246, 216, 121, 0.28);
+  transition: filter 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 }
 
 .nav__cabinetBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.4);
+  filter: brightness(1.08);
   transform: translateY(-1px);
+  box-shadow: 0 6px 22px rgba(246, 216, 121, 0.42);
 }
 
 /* ===== Кнопка поиска ===== */
@@ -157,10 +160,10 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(246, 216, 121, 0.35);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.07);
-  color: var(--nav-text);
+  background: rgba(246, 216, 121, 0.07);
+  color: #f6d879;
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -171,14 +174,14 @@
 }
 
 .nav__searchBtn:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(246, 216, 121, 0.14);
+  border-color: rgba(246, 216, 121, 0.6);
   transform: translateY(-1px);
 }
 
 .nav--transparent .nav__searchBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(246, 216, 121, 0.08);
+  border-color: rgba(246, 216, 121, 0.3);
 }
 
 .nav__searchLabel {
