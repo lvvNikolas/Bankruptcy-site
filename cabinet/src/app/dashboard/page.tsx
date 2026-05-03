@@ -342,7 +342,7 @@ export default async function DashboardPage() {
                         {doc.name}
                       </span>
                       <a
-                        href={doc.url}
+                        href={`/api/documents/${doc.id}`}
                         target="_blank"
                         rel="noreferrer"
                         className="btn btn-ghost"

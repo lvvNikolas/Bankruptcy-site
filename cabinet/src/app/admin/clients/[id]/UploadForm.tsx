@@ -79,7 +79,7 @@ export function UploadForm({ caseId, documents }: { caseId: string; documents: D
               }}
             >
               <a
-                href={doc.url}
+                href={`/api/documents/${doc.id}`}
                 target="_blank"
                 rel="noreferrer"
                 style={{

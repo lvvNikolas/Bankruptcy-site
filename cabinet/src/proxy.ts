@@ -15,8 +15,13 @@ export default auth((req) => {
   const isLoggedIn = !!session;
   const role       = session?.user?.role;
 
-  const isLoginPage = nextUrl.pathname === "/login";
-  const isAdminPage = nextUrl.pathname.startsWith("/admin");
+  const isLoginPage  = nextUrl.pathname === "/login";
+  const isAdminPage  = nextUrl.pathname.startsWith("/admin");
+  // Страницы доступные без авторизации
+  const isPublicPage =
+    isLoginPage ||
+    nextUrl.pathname.startsWith("/forgot-password") ||
+    nextUrl.pathname.startsWith("/reset-password");
 
   // Авторизованный пользователь на странице логина → редирект на дашборд
   if (isLoggedIn && isLoginPage) {
@@ -24,8 +29,8 @@ export default auth((req) => {
     return NextResponse.redirect(new URL(dest, nextUrl));
   }
 
-  // Неавторизованный → на логин
-  if (!isLoggedIn && !isLoginPage) {
+  // Неавторизованный → на логин (публичные страницы пропускаем)
+  if (!isLoggedIn && !isPublicPage) {
     return NextResponse.redirect(new URL("/login", nextUrl));
   }
 

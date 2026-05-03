@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
   const safeName = sanitizeFileName(file.name);
 
   const blob = await put(`cases/${caseId}/${Date.now()}-${safeName}`, file, {
-    access: "public",
+    access: "private",
     contentType: file.type,
   });
 

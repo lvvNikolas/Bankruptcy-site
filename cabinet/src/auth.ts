@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { logAction } from "@/lib/auditLog";
 
 // ─── Схема валидации логина ────────────────────────────────────────────────────
 
@@ -18,7 +19,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
 
   // Используем JWT сессии (stateless) — не требует хранения в БД
-  session: { strategy: "jwt" },
+  // maxAge: 30 минут — JWT истекает через 30 мин (SessionGuard предупредит)
+  session: { strategy: "jwt", maxAge: 30 * 60 },
+
+  cookies: {
+    sessionToken: {
+      options: {
+        httpOnly: true,
+        sameSite: "lax" as const,
+        path: "/",
+        secure: process.env.NODE_ENV === "production",
+        // Без maxAge → session cookie: браузер удаляет при закрытии всех окон
+      },
+    },
+  },
 
   pages: {
     signIn: "/login", // кастомная страница входа
@@ -59,11 +73,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
 
   callbacks: {
-    // Добавляем role в JWT токен
+    // Добавляем role в JWT токен + логируем вход
     async jwt({ token, user }) {
       if (user) {
         token.id   = user.id;
         token.role = (user as { role: string }).role;
+        // Логируем вход (fire-and-forget, не блокируем выдачу токена)
+        logAction({
+          adminId:    user.id ?? "",
+          adminEmail: (user as { email: string }).email ?? "",
+          action:     "LOGIN",
+        }).catch(console.error);
       }
       return token;
     },

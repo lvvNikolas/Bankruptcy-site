@@ -7,7 +7,8 @@ export type AuditAction =
   | "STATUS_CHANGED"
   | "UPDATE_ADDED"
   | "DOC_UPLOADED"
-  | "DOC_DELETED";
+  | "DOC_DELETED"
+  | "LOGIN";
 
 export const ACTION_LABELS: Record<AuditAction, string> = {
   CLIENT_CREATED: "Клиент создан",
@@ -17,6 +18,7 @@ export const ACTION_LABELS: Record<AuditAction, string> = {
   UPDATE_ADDED:   "Обновление добавлено",
   DOC_UPLOADED:   "Документ загружен",
   DOC_DELETED:    "Документ удалён",
+  LOGIN:          "Вход в систему",
 };
 
 export async function logAction(opts: {

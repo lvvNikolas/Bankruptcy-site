@@ -17,9 +17,16 @@ export default function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    // Ставим маркер ДО signIn — чтобы SessionGuard не выбросил нас
+    // при смене статуса сессии на "authenticated"
+    sessionStorage.setItem("session_active", "1");
     const res = await signIn("credentials", { email, password, redirect: false });
     setLoading(false);
-    if (res?.error) { setError("Неверный email или пароль"); return; }
+    if (res?.error) {
+      sessionStorage.removeItem("session_active"); // убираем маркер при ошибке
+      setError("Неверный email или пароль");
+      return;
+    }
     router.refresh();
     router.push("/");
   };
